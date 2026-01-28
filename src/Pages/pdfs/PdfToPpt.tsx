@@ -4,10 +4,17 @@ import api from "../../utils/axios";
 import PdfFile from "../../components/layout/PdfFile";
 import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfToPpt = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const setLoading = useFilesStore((state) => state.setLoading);
   const [file, setFile] = useState<File | null>(null);
   const [fileSelected, setFileSelected] = useState(false);
@@ -58,6 +65,8 @@ const PdfToPpt = () => {
     try {
       await handleUpload();
       clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -79,6 +88,7 @@ const PdfToPpt = () => {
         accept=".pdf"
         label="Select a file"
         btnText="Download Ppt"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

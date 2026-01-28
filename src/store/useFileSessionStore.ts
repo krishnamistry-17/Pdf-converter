@@ -9,6 +9,10 @@ interface FileSessionStore {
   results: any[];
   setResults: (results: any[]) => void;
   clearResults: () => void;
+
+  downloadCompleted: boolean;
+  setDownloadCompleted: (completed: boolean) => void;
+  clearDownloadCompleted: () => void;
 }
 
 export const useFileSessionStore = create<FileSessionStore>((set) => ({
@@ -31,4 +35,9 @@ export const useFileSessionStore = create<FileSessionStore>((set) => ({
       selectedFile: null,
       previewUrl: null,
     }),
+
+  downloadCompleted: false,
+  setDownloadCompleted: (completed: boolean) =>
+    set({ downloadCompleted: completed }),
+  clearDownloadCompleted: () => set({ downloadCompleted: false }),
 }));

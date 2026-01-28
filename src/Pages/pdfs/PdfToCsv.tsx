@@ -3,10 +3,17 @@ import useUploadData from "../../hooks/useUploadData";
 import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfToCsv = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const selectedFile = useFilesStore((state) => state.selectedFile);
   const { convertPdfToCsv } = useUploadData();
   const setLoading = useFilesStore((state) => state.setLoading);
@@ -33,8 +40,10 @@ const PdfToCsv = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await convertPdfToCsv(selectedFile as File);
-      clearSelectedFile();
       toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -56,6 +65,7 @@ const PdfToCsv = () => {
         accept=".pdf"
         label="Select a file"
         btnText="Download Csv"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

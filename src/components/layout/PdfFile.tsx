@@ -5,6 +5,7 @@ import useFilesStore from "../../store/useSheetStore";
 import UploadModal from "../UploadModal";
 import { IoMdClose } from "react-icons/io";
 import ToastError from "../ToastError";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -24,6 +25,7 @@ interface PdfFileProps {
   accept: string;
   label: string;
   btnText: string;
+  isDownloadCompleted: boolean;
 }
 const PdfFile = ({
   previewFileDesign,
@@ -35,9 +37,13 @@ const PdfFile = ({
   accept,
   label,
   btnText,
+  isDownloadCompleted,
 }: PdfFileProps) => {
+  console.log("isDownloadCompleted", isDownloadCompleted);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const clearDownloadCompleted = useFileSessionStore(
+    (state) => state.clearDownloadCompleted
+  );
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
 
   useEffect(() => {
@@ -65,14 +71,15 @@ const PdfFile = ({
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-10">
           <div className="flex flex-col items-center gap-4">
-            {fileSelected === false && (
+            {(!fileSelected || isDownloadCompleted) && (
               <button
                 onClick={() => {
                   setModalOpen(true);
                   setSelectedFile(null);
+                  clearDownloadCompleted();
                 }}
                 className="
-               w-full sm:w-auto
+               w-full sm:w-full max-w-md mx-auto
               px-10 py-4
               border-2 border-dashed border-gray-300
               rounded-xl text-gray-600 font-medium
@@ -91,7 +98,7 @@ const PdfFile = ({
             <PreviewFile previewFileDesign={previewFileDesign as any} />
           </div>
 
-          {fileSelected && (
+          {fileSelected && !isDownloadCompleted && (
             <div className="mt-10 flex justify-center">
               <button
                 onClick={handleConvert}
@@ -135,3 +142,12 @@ const PdfFile = ({
 };
 
 export default PdfFile;
+
+{
+  /*
+  show file select
+  file select- download btn
+  after download show file select btn
+  
+  */
+}

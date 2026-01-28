@@ -5,10 +5,17 @@ import { useState } from "react";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdftoExcel = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const setLoading = useFilesStore((state) => state.setLoading);
 
   const [file, setFile] = useState<File | null>(null);
@@ -61,8 +68,10 @@ const PdftoExcel = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      clearSelectedFile();
       toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -84,6 +93,7 @@ const PdftoExcel = () => {
         accept=".pdf"
         label="Select a file"
         btnText="Download Excel"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

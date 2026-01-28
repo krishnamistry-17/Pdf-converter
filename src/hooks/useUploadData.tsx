@@ -100,6 +100,7 @@ const useUploadData = () => {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
       const a = document.createElement("a");
       a.href = url;
       a.download = `${selectedFile.name}.json`;

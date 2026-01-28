@@ -3,11 +3,18 @@ import useUploadData from "../../hooks/useUploadData";
 import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfToJson = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const selectedFile = useFilesStore((state) => state.selectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const { convertPdfToJson } = useUploadData();
 
@@ -39,8 +46,10 @@ const PdfToJson = () => {
       });
       const url = URL.createObjectURL(blob);
       window.open(url);
-      clearSelectedFile();
       toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
       return;
     } catch (error) {
       console.error(error);
@@ -63,6 +72,7 @@ const PdfToJson = () => {
         accept=".pdf"
         label="Select a file"
         btnText="Download JSON"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

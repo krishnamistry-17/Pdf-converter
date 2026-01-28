@@ -3,11 +3,18 @@ import useUploadData from "../../hooks/useUploadData";
 import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const JpgToPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
     null
+  );
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
   );
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
@@ -33,8 +40,10 @@ const JpgToPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await ConvertJpgToPdf();
-      clearSelectedFile();
       toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -56,6 +65,7 @@ const JpgToPdf = () => {
         accept=".jpg,.jpeg,.png"
         label="Select a file"
         btnText="Download Pdf"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

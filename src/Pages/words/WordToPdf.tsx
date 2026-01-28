@@ -4,11 +4,19 @@ import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const WordToPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+
   const [file, setFile] = useState<File | null>(null);
   const [fileSelected, setFileSelected] = useState(false);
   const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
@@ -54,9 +62,11 @@ const WordToPdf = () => {
       URL.revokeObjectURL(data.downloadUrl);
 
       toast.success("Conversion successful!");
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
-      toast.error("Conversion failed!");  
+      toast.error("Conversion failed!");
     }
   };
 
@@ -87,6 +97,7 @@ const WordToPdf = () => {
         label="Select a file"
         btnText="Download Pdf"
         previewFileDesign={previewFileDesign}
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

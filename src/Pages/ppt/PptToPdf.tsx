@@ -3,11 +3,19 @@ import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
+import { toast } from "react-toastify";
 
 const PptToPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const [fileSelected, setFileSelected] = useState(false);
 
   const [file, setFile] = useState<File | null>(null);
@@ -37,6 +45,7 @@ const PptToPdf = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("response", response);
 
       const data = await response.data;
 
@@ -44,9 +53,15 @@ const PptToPdf = () => {
         alert("Conversion failed!");
         return;
       }
-      window.open(data.downloadUrl, "_blank");
-      URL.revokeObjectURL(data.downloadUrl);
-      alert("Conversion successful!");
+
+      const pdfUrl = response.data.downloadUrl;
+      console.log("pdfUrl", pdfUrl);
+
+      const a = document.createElement("a");
+      a.href = pdfUrl;
+      a.download = "converted.pdf";
+      a.click();
+      URL.revokeObjectURL(pdfUrl);
     } catch (error) {
       console.error(error);
       alert("Download failed!");
@@ -58,7 +73,10 @@ const PptToPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
+      toast.success("Conversion successful!");
       clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       alert("Conversion failed!");
@@ -80,6 +98,7 @@ const PptToPdf = () => {
         btnText="Download Pdf"
         PreviewFileType="pptx"
         previewFileDesign={previewFileDesign as unknown as string}
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

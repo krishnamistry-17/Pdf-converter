@@ -4,10 +4,18 @@ import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
 
 import { useState } from "react";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const ExcelToCsv = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
+  const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
   const setLoading = useFilesStore((state) => state.setLoading);
   const { ConvertExcelToCsv } = useUploadData();
   const [fileSelected, setFileSelected] = useState(false);
@@ -30,6 +38,10 @@ const ExcelToCsv = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await ConvertExcelToCsv();
+      toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -50,6 +62,7 @@ const ExcelToCsv = () => {
         accept=".xlsx"
         label="Select a file"
         btnText="Download Csv"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

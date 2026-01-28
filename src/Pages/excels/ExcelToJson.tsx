@@ -4,9 +4,17 @@ import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
 
 import { useState } from "react";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const ExcelToJson = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+  const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const { ConvertExcelToJson } = useUploadData();
@@ -30,6 +38,10 @@ const ExcelToJson = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await ConvertExcelToJson();
+      toast.success("Conversion successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -50,6 +62,7 @@ const ExcelToJson = () => {
         accept=".xlsx"
         label="Select a file"
         btnText="Download Json"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

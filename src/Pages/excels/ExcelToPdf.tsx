@@ -4,11 +4,18 @@ import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const ExcelToPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setDownloadFilePreview = useFilesStore(
     (state) => state.setDownloadFilePreview
+  );
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
   );
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
@@ -57,7 +64,7 @@ const ExcelToPdf = () => {
       a.download = data.fileName;
       a.click();
       URL.revokeObjectURL(data.downloadUrl);
-      toast.success("Conversion successful!");
+      
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -69,7 +76,10 @@ const ExcelToPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
+      toast.success("Conversion successful!");
       clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -91,6 +101,7 @@ const ExcelToPdf = () => {
         label="Select a file"
         btnText="Download Pdf"
         previewFileDesign={previewFileDesign}
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );

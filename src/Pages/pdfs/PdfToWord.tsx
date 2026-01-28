@@ -3,14 +3,24 @@ import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
+import { toast } from "react-toastify";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfToWord = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
 
   const [file, setFile] = useState<File | null>(null);
-  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(null);
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
   const [fileSelected, setFileSelected] = useState(false);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,11 +47,13 @@ const PdfToWord = () => {
       const response = await api.post(API_ROUTES.PDFS.PDF_TO_WORD, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      const docxUrl = response.data.url;
 
-      const wordUrl = response.data.url;
-      window.open(wordUrl, "_blank");
-
-      alert(" Conversion successful!");
+      URL.revokeObjectURL(docxUrl);
+      window.open(docxUrl, "_blank");
+      toast.success(" Conversion successful!");
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       alert("Conversion failed!");
@@ -75,6 +87,7 @@ const PdfToWord = () => {
         accept=".pdf"
         label="Select a file"
         btnText="Download Word"
+        isDownloadCompleted={downloadCompleted}
       />
     </>
   );
