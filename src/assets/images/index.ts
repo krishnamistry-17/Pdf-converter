@@ -1,0 +1,1 @@
+export { default as pdfUploadBg } from "./upload.png";

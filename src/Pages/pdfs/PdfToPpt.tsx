@@ -1,0 +1,87 @@
+import useFilesStore from "../../store/useSheetStore";
+import { useState } from "react";
+import api from "../../utils/axios";
+import PdfFile from "../../components/layout/PdfFile";
+import { API_ROUTES } from "../../constance/apiConstance";
+import { toast } from "react-toastify";
+
+const PdfToPpt = () => {
+  const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
+  const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setLoading = useFilesStore((state) => state.setLoading);
+  const [file, setFile] = useState<File | null>(null);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      toast.error("Please select a file");
+      return;
+    }
+    setSelectedFile(file as any);
+    setFile(file as any);
+    setPreviewFileDesign(URL.createObjectURL(file as File));
+    e.target.value = "";
+    setFileSelected(true);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return toast.error("Select a PDF file first");
+
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    try {
+      const response = await api.post(API_ROUTES.PDFS.PDF_TO_PPT, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const pptUrl = response.data.url;
+      window.open(pptUrl, "_blank");
+
+      toast.success("Conversion successful!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Conversion failed!");
+    }
+  };
+
+  const handleConvert = async () => {
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 100));
+    try {
+      await handleUpload();
+      clearSelectedFile();
+    } catch (error) {
+      console.error(error);
+      toast.error("Conversion failed!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <PdfFile
+        heading="Convert PDF to Ppt"
+        para="Convert a PDF file to a Ppt file. This tool will convert a PDF file to a Ppt file."
+        onFileUpload={handleFileUpload}
+        fileSelected={fileSelected}
+        handleConvert={handleConvert}
+        previewFileDesign={previewFileDesign}
+        PreviewFileType="pptx"
+        accept=".pdf"
+        label="Select a file"
+        btnText="Download Ppt"
+      />
+    </>
+  );
+};
+
+export default PdfToPpt;
