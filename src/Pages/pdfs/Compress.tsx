@@ -1,4 +1,3 @@
-import InputField from "../../components/InputField";
 import PreviewFile from "../../components/PreviewFile";
 import SelectFile from "../../components/SelectFile";
 import useFilesStore from "../../store/useSheetStore";
@@ -7,15 +6,21 @@ import { useState } from "react";
 import { compressPdfOptions } from "../../constance/ConvertOptions";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
+import CustomInputModal from "../../components/CustomInputModal";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const CompressPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const setDownloadCompleted = useFileSessionStore((state) => state.setDownloadCompleted);
+  const downloadCompleted = useFileSessionStore((state) => state.downloadCompleted);
+  const clearDownloadCompleted = useFileSessionStore((state) => state.clearDownloadCompleted);
   const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
     null
   );
   const results = useFilesStore((state) => state.results);
+  console.log(results);
   const setResults = useFilesStore((state) => state.setResults);
   const { compressPdf } = useUploadData();
 
@@ -27,14 +32,16 @@ const CompressPdf = () => {
     if (!file) return;
 
     setSelectedFile(file);
-    setResults([{
-      name: file.name,
-      blob: file,
-      url: URL.createObjectURL(file),
-      rotation: 0,
-      fileName: file.name,
-      pages: 1,
-    }]);
+    setResults([
+      {
+        name: file.name,
+        blob: file,
+        url: URL.createObjectURL(file),
+        rotation: 0,
+        fileName: file.name,
+        pages: 1,
+      },
+    ]);
     setPreviewFileDesign(URL.createObjectURL(file as File));
     e.target.value = "";
     setFileSelected(true);
@@ -45,8 +52,11 @@ const CompressPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await compressPdf();
-      clearSelectedFile();
       toast.success("Compression successful!");
+      clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
+      setResults([]);
     } catch (error) {
       console.error(error);
       toast.error("Compression failed!");
@@ -58,26 +68,28 @@ const CompressPdf = () => {
     <div className="relative flex min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
       <div
         className={`flex-1 transition-all duration-300 
-          bg-white rounded-2xl shadow-lg border border-gray-100 sm:p-10
+          
           ${fileSelected ? "md:mr-[320px]" : ""}`}
       >
-        <div className="flex flex-col items-center w-full sm:px-0 px-4">
+        <div className="max-w-5xl mx-auto">
           <SelectFile
             heading="Compress PDF"
             description="Compress a PDF file to reduce its size."
           />
-
-          {results.length === 0 && (
-            <div className="w-full flex justify-center">
-            <InputField
-              handleFileUpload={handleFileUpload}
-              accept=".pdf"
-                label="Select a file"
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            {results.length === 0 && (
+              <CustomInputModal
+                fileSelected={fileSelected}
+                label="Select a PDF"
+                accept=".pdf"
+                isDownloadCompleted={downloadCompleted}
+                clearDownloadCompleted={clearDownloadCompleted}
+                onFileUpload={handleFileUpload}
               />
-            </div>
-          )}
+            )}
 
-          <PreviewFile previewFileDesign={previewFileDesign} />
+            <PreviewFile previewFileDesign={previewFileDesign} />
+          </div>
         </div>
       </div>
 

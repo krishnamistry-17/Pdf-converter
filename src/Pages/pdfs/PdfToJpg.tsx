@@ -5,8 +5,9 @@ import { toast } from "react-toastify";
 import JSZip from "jszip";
 import useImageStore from "../../store/useImageStore";
 import SelectFile from "../../components/SelectFile";
-import InputField from "../../components/InputField";
 import ImagePreviewGrid from "../../components/ImagePreviewGrid";
+import CustomInputModal from "../../components/CustomInputModal";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfToJpg = () => {
   const zip = new JSZip();
@@ -15,6 +16,13 @@ const PdfToJpg = () => {
   const selectedFile = useFilesStore((s) => s.selectedFile);
   const setLoading = useFilesStore((s) => s.setLoading);
   const clearResults = useImageStore((s) => s.clearResults);
+  const setDownloadCompleted = useFileSessionStore(
+    (s) => s.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore((s) => s.downloadCompleted);
+  const clearDownloadCompleted = useFileSessionStore(
+    (s) => s.clearDownloadCompleted
+  );
 
   const setResults = useImageStore((s) => s.setResults);
   const results = useImageStore((s) => s.results);
@@ -22,6 +30,7 @@ const PdfToJpg = () => {
   const { ConvertPdfToPng, downloadBlob } = useUploadData();
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [fileSelected, setFileSelected] = useState(false);
 
   const isFileSelected = !!selectedFile;
 
@@ -31,6 +40,7 @@ const PdfToJpg = () => {
 
     setSelectedFile(file);
     setLoading(true);
+    setFileSelected(true);
 
     try {
       const { previews, blobs } = await ConvertPdfToPng(file);
@@ -57,6 +67,8 @@ const PdfToJpg = () => {
       downloadBlob(blob.blob, `page-${index + 1}.png`)
     );
     clearResults();
+    setFileSelected(false);
+    setDownloadCompleted(true);
   };
 
   const handleDownloadZip = async () => {
@@ -69,44 +81,51 @@ const PdfToJpg = () => {
     const zipBlob = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipBlob, `${selectedFile?.name}.zip`);
     clearResults();
+    setFileSelected(false);
+    setDownloadCompleted(true);
   };
 
   return (
-    <div className="min-h-screen px-4 py-12 bg-gray-50">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow p-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+      <div className="max-w-5xl mx-auto">
         <SelectFile
           heading="Convert PDF to JPG"
           description="Upload a PDF and download all pages as JPG images"
         />
-        {results.length === 0 && (
-          <InputField
-            handleFileUpload={handleFileUpload}
-            accept=".pdf"
-            label="Select a PDF"
-          />
-        )}
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          {results.length === 0 && (
+            <CustomInputModal
+              fileSelected={fileSelected}
+              label="Select a PDF"
+              accept=".pdf"
+              isDownloadCompleted={downloadCompleted}
+              clearDownloadCompleted={clearDownloadCompleted}
+              onFileUpload={handleFileUpload}
+            />
+          )}
 
-        {isFileSelected && previewImages.length > 0 && (
-          <>
-            <ImagePreviewGrid images={previewImages} />
+          {isFileSelected && previewImages.length > 0 && !downloadCompleted && (
+            <>
+              <ImagePreviewGrid images={previewImages} />
 
-            <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-              <button
-                onClick={handleDownloadAll}
-                className="bg-blue-600 text-white px-6 py-3 rounded-md"
-              >
-                Download All JPG
-              </button>
+              <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
+                <button
+                  onClick={handleDownloadAll}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-md"
+                >
+                  Download All JPG
+                </button>
 
-              <button
-                onClick={handleDownloadZip}
-                className="bg-green-600 text-white px-6 py-3 rounded-md"
-              >
-                Download ZIP
-              </button>
-            </div>
-          </>
-        )}
+                <button
+                  onClick={handleDownloadZip}
+                  className="bg-green-600 text-white px-6 py-3 rounded-md"
+                >
+                  Download ZIP
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

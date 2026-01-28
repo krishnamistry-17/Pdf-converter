@@ -4,7 +4,6 @@ import PreviewFile from "../PreviewFile";
 import useFilesStore from "../../store/useSheetStore";
 import UploadModal from "../UploadModal";
 import { IoMdClose } from "react-icons/io";
-import ToastError from "../ToastError";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
@@ -90,7 +89,6 @@ const PdfFile = ({
                 {label}
               </button>
             )}
-            <ToastError />
             <p className="text-xs text-gray-400">Supported format: {accept}</p>
           </div>
 
@@ -142,12 +140,3 @@ const PdfFile = ({
 };
 
 export default PdfFile;
-
-{
-  /*
-  show file select
-  file select- download btn
-  after download show file select btn
-  
-  */
-}
