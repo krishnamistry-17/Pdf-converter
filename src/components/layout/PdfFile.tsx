@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 
 import PreviewFile from "../PreviewFile";
-import useFilesStore from "../../store/useSheetStore";
-import UploadModal from "../UploadModal";
-import { IoMdClose } from "react-icons/io";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
+import CustomInputModal from "../CustomInputModal";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -39,11 +37,10 @@ const PdfFile = ({
   isDownloadCompleted,
 }: PdfFileProps) => {
   console.log("isDownloadCompleted", isDownloadCompleted);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, _setModalOpen] = useState(false);
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
 
   useEffect(() => {
     if (modalOpen) {
@@ -68,29 +65,24 @@ const PdfFile = ({
           <p className="text-gray-600 max-w-2xl mx-auto">{para}</p>
         </div>
 
-        <div className="bg-white/40  rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-10">
-          <div className="flex flex-col items-center gap-4">
-            {(!fileSelected || isDownloadCompleted) && (
-              <button
-                onClick={() => {
-                  setModalOpen(true);
-                  setSelectedFile(null);
-                  clearDownloadCompleted();
-                }}
-                className="
-               w-full sm:w-full max-w-md mx-auto
-              px-10 py-4
-              border-2 border-dashed border-gray-300
-              rounded-xl text-gray-600 font-medium
-              hover:border-blue hover:text-teal
-              transition
-            "
-              >
-                {label}
-              </button>
-            )}
-            <p className="text-xs text-gray-400">Supported format: {accept}</p>
-          </div>
+        <div
+          className="bg-white/40 text-blue rounded-2xl shadow-lg
+         border border-gray-100 p-6 sm:pt-10"
+        >
+          <CustomInputModal
+            fileSelected={fileSelected}
+            label={label}
+            accept={accept}
+            isDownloadCompleted={isDownloadCompleted}
+            clearDownloadCompleted={clearDownloadCompleted}
+            onFileUpload={onFileUpload}
+          />
+
+          {!fileSelected && !isDownloadCompleted && (
+            <p className="text-gray-500 mt-8 text-center">
+              Upload a file to start
+            </p>
+          )}
 
           <div className="mt-10">
             <PreviewFile previewFileDesign={previewFileDesign as any} />
@@ -113,28 +105,6 @@ const PdfFile = ({
           )}
         </div>
       </div>
-
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg relative">
-            <button
-              className="absolute sm:top-4 sm:right-4 top-1 right-2 text-gray-500"
-              onClick={() => setModalOpen(false)}
-            >
-              <IoMdClose size={24} />
-            </button>
-
-            <UploadModal
-              handleFileUpload={(e) => {
-                onFileUpload(e);
-                setModalOpen(false);
-              }}
-              accept={accept}
-              label={label}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

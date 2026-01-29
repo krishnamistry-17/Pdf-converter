@@ -62,7 +62,8 @@ const OrganizePreviewGrid = () => {
 
   return (
     <div className="my-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3">
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}

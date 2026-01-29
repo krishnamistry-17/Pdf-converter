@@ -26,17 +26,18 @@ const SplitPreviewGrid = () => {
         checkedPages.add(i);
     }
   }, [activeMode, selectedRange, selectedPages]);
-  
-  const imagesLength = results.length > 3 ? 3 : results.length;
 
   return (
-    <div className="my-4">
-      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(${imagesLength},1fr)] gap-4`}>
+    <div>
+      <div
+        className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3"
+      >
         {results.map((file, index) => {
           return (
             <div
               key={index}
-              className="bg-white/40 text-blue rounded-xl shadow-md p-4 flex flex-col relative"
+              className="bg-white/40 text-blue rounded-xl shadow-md p-4 flex flex-col relative mb-6"
             >
               <div className="flex-1">
                 <iframe

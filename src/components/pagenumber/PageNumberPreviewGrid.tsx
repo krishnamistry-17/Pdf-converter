@@ -2,7 +2,8 @@ const PageNumberPreviewGrid = ({ images }: { images: string[] }) => {
   console.log(images);
   return (
     <div className="my-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3">
         {images.map((image, index) => (
           <div
             key={`${image}-${index}`}

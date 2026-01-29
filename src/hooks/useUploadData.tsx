@@ -4,16 +4,14 @@ import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import { PDFDocument, PDFFont, PDFPage, rgb, StandardFonts } from "pdf-lib";
 import useSplitStore from "../store/useSplitStore";
-import * as pdfjsLib from "pdfjs-dist";
-import pdfWorker from "pdfjs-dist/build/pdf.worker?url";
 import mammoth from "mammoth";
 import autoTable from "jspdf-autotable";
 import { degrees } from "pdf-lib";
 import type { PageNumberOptions, PageResult } from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
 import { toast } from "react-toastify";
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
@@ -349,8 +347,7 @@ const useUploadData = () => {
       canvas.height = viewport.height;
 
       const ctx = canvas.getContext("2d")!;
-      await page.render({ canvasContext: ctx, viewport, canvas: canvas })
-        .promise;
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
       previews.push(canvas.toDataURL("image/png"));
 

@@ -87,7 +87,7 @@ const PdfToJpg = () => {
 
   return (
     <div className="min-h-screen  px-4 py-12">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <SelectFile
           heading="Convert PDF to JPG"
           description="Upload a PDF and download all pages as JPG images"
@@ -102,6 +102,12 @@ const PdfToJpg = () => {
               clearDownloadCompleted={clearDownloadCompleted}
               onFileUpload={handleFileUpload}
             />
+          )}
+
+          {results.length === 0 && (
+            <p className="text-gray-500 mt-8 text-center">
+              Upload a PDF to start
+            </p>
           )}
 
           {isFileSelected && previewImages.length > 0 && !downloadCompleted && (

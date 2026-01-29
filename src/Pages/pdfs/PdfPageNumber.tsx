@@ -53,7 +53,7 @@ const PdfPageNumber = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
         >
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <SelectFile
               heading="Add Page Number"
               description="Add page numbers to a PDF file. This tool will add page numbers to a PDF file."

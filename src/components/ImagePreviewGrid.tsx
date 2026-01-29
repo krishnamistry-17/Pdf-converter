@@ -1,7 +1,8 @@
 const ImagePreviewGrid = ({ images }: { images: string[] }) => {
   return (
     <div className="mt-4 mb-10">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center gap-4">
+      <div className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3">
         {images.map((image, index) => (
           <div
             key={index}

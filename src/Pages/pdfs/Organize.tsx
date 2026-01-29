@@ -71,7 +71,7 @@ const Organize = () => {
     input.type = "file";
     input.accept = ".pdf";
     if (results.length >= 4) {
-      toast.error("You can only organize up to 3 extra files");
+      toast.error("This pdf range is already full, you can not upload more files");
       return;
     }
 
@@ -196,7 +196,7 @@ const Organize = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <SelectFile
             heading="Organize PDF"
             description="Sort, add, delete, reorder, rotate pages and more."

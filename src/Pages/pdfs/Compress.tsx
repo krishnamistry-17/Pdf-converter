@@ -78,12 +78,13 @@ const CompressPdf = () => {
           
           ${fileSelected ? "md:mr-[320px]" : ""}`}
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <SelectFile
             heading="Compress PDF"
             description="Compress a PDF file to reduce its size."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-blue rounded-2xl shadow-lg 
+          border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={fileSelected}
@@ -93,6 +94,11 @@ const CompressPdf = () => {
                 clearDownloadCompleted={clearDownloadCompleted}
                 onFileUpload={handleFileUpload}
               />
+            )}
+             {results.length === 0 && (
+              <p className="text-gray-500 mt-8 text-center">
+                Upload a PDF to start
+              </p>
             )}
 
             <PreviewFile previewFileDesign={previewFileDesign} />

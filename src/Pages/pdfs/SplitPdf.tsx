@@ -1,3 +1,4 @@
+
 import SelectFile from "../../components/SelectFile";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -85,12 +86,13 @@ const SplitPdfComponent = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <SelectFile
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-blue rounded-2xl shadow-lg
+           border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={results.length > 0}

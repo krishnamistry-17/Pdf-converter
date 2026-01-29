@@ -91,7 +91,7 @@ const MergePdfComponent = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".pdf";
-    if (results.length >= 3) {
+    if (results.length >= 2) {
       toast.error("You can only merge up to 2 files");
       return;
     }
@@ -206,12 +206,15 @@ const MergePdfComponent = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
       >
-        <div className="max-w-6xl mx-auto  ">
+        <div className="max-w-4xl mx-auto  ">
           <SelectFile
             heading="Merge PDFs"
             description="Merge two PDF files into one."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14  ">
+          <div
+            className="bg-white/40 text-blue rounded-2xl shadow-lg
+           border border-gray-100 p-6 sm:pt-10 sm:pb-14"
+          >
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={results.length > 0}
@@ -228,50 +231,54 @@ const MergePdfComponent = () => {
               </p>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-4 gap-10 sm:pb-0 pb-6 ">
-              <div className="  mb-6 flex justify-center items-center  ">
-                {pdfPreview1 && (
-                  <div className="w-64 h-72 border rounded-md">
-                    <object
-                      data={pdfPreview1}
-                      title="PDF Preview1"
-                      className="w-full h-full object-cover"
-                    >
-                      <embed src={pdfPreview1} type="application/pdf" />
-                    </object>
-                    {mergeFile1 && (
-                      <div>
-                        <p>{mergeFile1.name}</p>
-                      </div>
-                    )}
+            <div
+              className="
+              flex flex-col md:flex-row
+              justify-center items-center mx-auto gap-5 "
+            >
+              {pdfPreview1 && (
+                <div className="w-64">
+                  <div className="h-72 border rounded-md overflow-hidden bg-gray-100">
+                    <iframe
+                      src={pdfPreview1}
+                      title="PDF Preview 1"
+                      className="w-full h-full"
+                    />
                   </div>
-                )}
-              </div>
-              <div className="  mb-6 flex justify-center items-center  ">
-                {pdfPreview2 && (
-                  <div className="w-64 h-72 border rounded-md">
-                    <object
-                      data={pdfPreview2}
-                      title="PDF Preview2"
-                      className="w-full h-full object-cover"
-                    >
-                      <embed src={pdfPreview2} type="application/pdf" />
-                    </object>
-                    {mergeFile2 && (
-                      <div>
-                        <p>{mergeFile2.name}</p>
-                      </div>
-                    )}
+                  {mergeFile1 && (
+                    <p className="mt-2 text-sm text-center truncate">
+                      {mergeFile1.name}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {pdfPreview2 && (
+                <div className="w-64">
+                  <div className="h-72 border rounded-md overflow-hidden bg-gray-100">
+                    <iframe
+                      src={pdfPreview2}
+                      title="PDF Preview 2"
+                      className="w-full h-full"
+                    />
                   </div>
-                )}
-              </div>
+                  {mergeFile2 && (
+                    <p className="mt-2 text-sm text-center truncate">
+                      {mergeFile2.name}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       {!isMobile && isSidebarVisible && (
-        <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">
+        <aside
+          className="fixed top-0 right-0 h-full w-[380px] 
+         bg-sea border-l border-blue shadow-lg z-50"
+        >
           <div className="p-6">
             <button className="absolute top-5 right-5" onClick={handleReset}>
               <IoMdClose />

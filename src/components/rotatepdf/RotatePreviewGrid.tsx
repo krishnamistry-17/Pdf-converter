@@ -23,7 +23,8 @@ const RotatePreviewGrid = () => {
 
   return (
     <div className="my-6 w-full">
-      <div className="  grid grid-cols-1 sm:grid-cols-2  justify-center items-center gap-4">
+      <div className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3">
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
