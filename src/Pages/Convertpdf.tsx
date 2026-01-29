@@ -13,7 +13,7 @@ const ConvertPdf = () => {
       <div className="flex flex-col">
         {convertOptions.map((section: any, idx: number) => (
           <div key={idx} className=" p-4 hover:bg-gray-100">
-            <h3 className="font-semibold mb-2">{section.title}</h3>
+            <h3 className="font-bold mb-2 text-blue">{section.title}</h3>
             <ul className="space-y-1 items-center justify-center">
               {section.options.map((item: any, i: number) => (
                 <li key={i} className="text-center">
@@ -22,10 +22,10 @@ const ConvertPdf = () => {
                       navigate(item.path);
                       close();
                     }}
-                    className="block w-full text-left px-2 py-1 rounded hover:bg-gray-100"
+                    className="block w-full text-left px-2 py-1 rounded hover:bg-blue/10"
                   >
                     <div className="flex items-center gap-2 justify-start">
-                      <item.icon className=" text-red-500 text-lg" />
+                      <item.icon className=" text-blue text-lg" />
                       <span className="text-sm">{item.label}</span>
                     </div>
                   </button>

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 const SplitPreviewGrid = () => {
   const results = useSplitStore((s) => s.results);
-  console.log("results", results);
   const selectedPages = useSplitStore((s) => s.pageRange);
   const selectedRange = useSplitStore((s) => s.activeRange);
 

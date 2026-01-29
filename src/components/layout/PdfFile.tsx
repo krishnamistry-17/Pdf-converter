@@ -36,7 +36,6 @@ const PdfFile = ({
   btnText,
   isDownloadCompleted,
 }: PdfFileProps) => {
-  console.log("isDownloadCompleted", isDownloadCompleted);
   const [modalOpen, _setModalOpen] = useState(false);
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted

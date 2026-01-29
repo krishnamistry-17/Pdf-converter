@@ -26,6 +26,7 @@ import Organize from "../Pages/pdfs/Organize";
 import PdfPageNumber from "../Pages/pdfs/PdfPageNumber";
 import RotatePdf from "../Pages/pdfs/RotatePdf";
 import PdfToJpg from "../Pages/pdfs/PdfToJpg";
+import WaterMarkPdfComponent from "../Pages/pdfs/WaterMarkPdf";
 
 const routes = createBrowserRouter([
   {
@@ -135,6 +136,10 @@ const routes = createBrowserRouter([
       {
         path: "/pdf-to-jpg",
         element: <PdfToJpg />,
+      },
+      {
+        path: "/water-mark-pdf",
+        element: <WaterMarkPdfComponent />,
       },
     ],
   },

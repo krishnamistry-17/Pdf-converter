@@ -1,8 +1,10 @@
-const PageNumberPreviewGrid = ({ images }: { images: string[] }) => {
+const WaterMarkPreviewGrid = ({ images }: { images: string[] }) => {
   return (
     <div className="my-6 w-full">
-      <div className=" flex justify-center items-center 
-      flex-wrap mx-auto gap-3">
+      <div
+        className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3"
+      >
         {images.map((image, index) => (
           <div
             key={`${image}-${index}`}
@@ -13,10 +15,9 @@ const PageNumberPreviewGrid = ({ images }: { images: string[] }) => {
               title={`page-${index + 1}`}
               className="w-full h-60 border rounded"
             />
-
             <div className="mt-3">
-              <p className="font-medium truncate">{`page-${index + 1}`}</p>
-              <p className="text-sm text-gray-500">Page {index + 1}</p>
+              <p className="font-medium truncate">{`watermark-${index + 1}`}</p>
+              <p className="text-sm text-gray-500">Watermark {index + 1}</p>
             </div>
           </div>
         ))}
@@ -25,4 +26,4 @@ const PageNumberPreviewGrid = ({ images }: { images: string[] }) => {
   );
 };
 
-export default PageNumberPreviewGrid;
+export default WaterMarkPreviewGrid;

@@ -26,7 +26,6 @@ const CompressPdf = () => {
     null
   );
   const results = useFilesStore((state) => state.results);
-  console.log(results);
   const clearResults = useFilesStore((state) => state.clearResults);
   const setResults = useFilesStore((state) => state.setResults);
   const { compressPdf } = useUploadData();

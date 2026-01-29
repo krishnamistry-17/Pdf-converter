@@ -45,7 +45,6 @@ const PptToPdf = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("response", response);
 
       const data = await response.data;
 
@@ -55,7 +54,6 @@ const PptToPdf = () => {
       }
 
       const pdfUrl = response.data.downloadUrl;
-      console.log("pdfUrl", pdfUrl);
 
       const a = document.createElement("a");
       a.href = pdfUrl;

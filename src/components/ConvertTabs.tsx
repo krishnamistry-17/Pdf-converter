@@ -40,7 +40,7 @@ const ConvertTabs = () => {
               outline-none
               ${
                 activeTab === index
-                  ? "bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold transition-all duration-300 "
+                  ? "bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold transition-all duration-300 underline underline-offset-8 decoration-blue  pt-1 "
                   : "text-blue hover:text-teal"
               }
             `}

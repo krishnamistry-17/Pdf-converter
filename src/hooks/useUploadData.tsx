@@ -590,7 +590,6 @@ const useUploadData = () => {
     const originalPdf = await PDFDocument.load(arrayBuffer);
 
     const totalPages = originalPdf.getPageCount();
-    console.log(totalPages, "totalPages");
     return totalPages;
   };
 

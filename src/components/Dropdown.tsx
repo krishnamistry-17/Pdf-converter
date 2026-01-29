@@ -28,10 +28,10 @@ const Dropdown = ({ close }: { close: () => void }) => {
                       navigate(item.path);
                       close();
                     }}
-                    className="block w-full text-left px-2 py-1 rounded hover:bg-gray-100"
+                    className="block w-full text-left px-2 py-1 rounded hover:bg-blue/10"
                   >
                     <div className="flex items-center gap-2 justify-start">
-                      <item.icon className=" text-red-500 text-lg" />
+                      <item.icon className=" text-blue text-lg" />
                       <span className="text-sm">{item.label}</span>
                     </div>
                   </button>

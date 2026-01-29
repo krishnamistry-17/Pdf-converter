@@ -20,7 +20,6 @@ const Range = ({
   const activeRange = useSplitStore((state) => state.activeRange);
   const setActiveRange = useSplitStore((state) => state.setActiveRange);
   const pageRange = useSplitStore((state) => state.pageRange);
-  console.log("pageRange", pageRange);
   const setPageRange = useSplitStore((state) => state.setPageRange);
 
   const handleAddRange = () => {
@@ -63,7 +62,6 @@ const Range = ({
     }
 
     setActiveRange(updated);
-    console.log("Updated activeRange:", updated);
   };
 
   const handleSplit = async () => {
@@ -89,7 +87,6 @@ const Range = ({
         setResults(rangeResults.flat() as any);
       } else if (activeMode === "fixed") {
         const size = Number(pageRange);
-        console.log("size", size);
         if (!size || size <= 0) {
           toast.error(
             "Enter a valid page size,fixed range acccpets only single value"
