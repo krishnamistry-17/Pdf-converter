@@ -111,12 +111,12 @@ const PageSidebar = () => {
           </div>
         </div>
 
-        <div className="sm:flex gap-3 mt-3 flex-col">
-          <div>
+        <div className="sm:flex gap-3 mt-3 sm:flex-row w-full flex-col">
+          <div className="w-full">
             <p className="font-semibold mb-2">Position:</p>
             <NumberPosition />
           </div>
-          <div>
+          <div className="w-full">
             <p className="font-semibold mb-2">Margin:</p>
             <div
               className="relative w-full h-10 border rounded-md p-2 cursor-pointer"
@@ -151,7 +151,7 @@ const PageSidebar = () => {
           </div>
         </div>
 
-        <div className="sm:flex gap-3 flex-col">
+        <div className="sm:flex gap-3 sm:flex-row flex-col">
           <div className="w-full">
             <p className="font-semibold mb-2">First Page Number:</p>
             <input
@@ -299,7 +299,7 @@ const PageSidebar = () => {
         <button
           onClick={handleApply}
           disabled={!results.length}
-          className="bg-blue-500 text-white py-2 rounded-md disabled:opacity-50"
+          className="bg-blue-500 text-white py-2 rounded-md disabled:opacity-50 max-w-md sm:w-auto"
         >
           Apply Page Numbers
         </button>

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 const SplitPreviewGrid = () => {
   const results = useSplitStore((s) => s.results);
+  console.log("results", results);
   const selectedPages = useSplitStore((s) => s.pageRange);
   const selectedRange = useSplitStore((s) => s.activeRange);
 
@@ -30,35 +31,12 @@ const SplitPreviewGrid = () => {
     <div className="my-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {results.map((file, index) => {
-          const filePages: number[] = file.pages
-            .split(",")
-            .flatMap((p: string) =>
-              p.includes("-")
-                ? Array.from(
-                    {
-                      length:
-                        Number(p.split("-")[1]) - Number(p.split("-")[0]) + 1,
-                    },
-                    (_, i) => Number(p.split("-")[0]) + i
-                  )
-                : [Number(p)]
-            );
-         
-          const isSelected = filePages.some((p) => checkedPages.has(p));
-
           return (
             <div
               key={index}
               className="bg-white rounded-xl shadow-md p-4 flex flex-col relative"
             >
               <div className="flex-1">
-                <div className="absolute top-2 right-2">
-                  {isSelected && (
-                    <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded">
-                      <input type="checkbox" checked readOnly />
-                    </div>
-                  )}
-                </div>
                 <iframe
                   src={file.url}
                   title={file.name}

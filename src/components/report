@@ -21,7 +21,7 @@ pdf-to-jpg change ---y
 merge pdf
 work but change merge ui
 
-split pdf-work but
+split pdf-work but----y
 change split ui
 show selected file
 
@@ -29,9 +29,9 @@ show selected file
 compress pdf-change btn ui
 on download close sidebar and show input
 
-organized-all work only change btn ui
-page-number -all work only change btn ui
-rotate-pdf -all work only change btn ui
+organized-all work only change btn ui---y
+page-number -all work only change btn ui ---y
+rotate-pdf -all work only change btn ui ---y
 
 
 *****

@@ -1,18 +1,24 @@
 import { useEffect, useState } from "react";
-import InputField from "../../components/InputField";
 import SelectFile from "../../components/SelectFile";
 import { usePdfPageNumbersStore } from "../../store/usePdfPageNumbers";
 import PageNumberPreviewGrid from "../../components/pagenumber/PageNumberPreviewGrid";
 import { IoMdClose } from "react-icons/io";
 import useUploadData from "../../hooks/useUploadData";
 import PageSidebar from "../../components/pagenumber/PageSidebar";
+import CustomInputModal from "../../components/CustomInputModal";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const PdfPageNumber = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { results, setResults, setSelectPdfPageNumberFile, clearResults } =
     usePdfPageNumbersStore();
   const { extractAllPages } = useUploadData();
-
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+  const clearDownloadCompleted = useFileSessionStore(
+    (state) => state.clearDownloadCompleted
+  );
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
@@ -43,36 +49,38 @@ const PdfPageNumber = () => {
     <>
       <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
         <div
-          className={`flex-1 bg-white rounded-2xl shadow-lg border
-           border-gray-100 transition-all duration-300 sm:p-10
+          className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
         >
-          <div className="flex flex-col items-center px-4 sm:px-10 lg:py-0 py-4">
-            <div className="max-w-lg">
-              <SelectFile
-                heading="Add Page Number"
-                description="Add page numbers to a PDF file. This tool will add page numbers to a PDF file."
-              />
-            </div>
-            {results.length === 0 && (
-              <div className="w-full flex justify-center">
-                <InputField
-                  handleFileUpload={handleFileUpload}
+          <div className="max-w-5xl mx-auto">
+            <SelectFile
+              heading="Add Page Number"
+              description="Add page numbers to a PDF file. This tool will add page numbers to a PDF file."
+            />
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+              {results.length === 0 && (
+                <CustomInputModal
+                  fileSelected={results.length > 0}
+                  label="Select a PDF"
                   accept=".pdf"
-                  label="Select a file"
+                  isDownloadCompleted={downloadCompleted}
+                  clearDownloadCompleted={clearDownloadCompleted}
+                  onFileUpload={handleFileUpload}
                 />
-              </div>
-            )}
+              )}
 
-            {results.length === 0 && (
-              <p className="text-gray-500 mt-8">Upload a PDF to start</p>
-            )}
-            {results.length > 0 && (
-              <PageNumberPreviewGrid
-                images={results.map((result) => result.url)}
-              />
-            )}
+              {results.length === 0 && (
+                <p className="text-gray-500 mt-8 text-center">
+                  Upload a PDF to start
+                </p>
+              )}
+              {results.length > 0 && (
+                <PageNumberPreviewGrid
+                  images={results.map((result) => result.url)}
+                />
+              )}
+            </div>
           </div>
         </div>
         {isMobile && results.length > 0 && (

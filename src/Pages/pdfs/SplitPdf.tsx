@@ -1,34 +1,46 @@
 import SelectFile from "../../components/SelectFile";
-import InputField from "../../components/InputField";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Range from "../../components/split/Range";
 import useSplitStore from "../../store/useSplitStore";
-import PreviewFile from "../../components/PreviewFile";
 import SplitPreviewGrid from "../../components/split/SplitPreviewGrid";
 import Pages from "../../components/split/Pages";
 import Size from "../../components/split/Size";
 import { PDFDocument } from "pdf-lib";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
-import useFilesStore from "../../store/useSheetStore";
+import CustomInputModal from "../../components/CustomInputModal";
 
 const SplitPdfComponent = () => {
   const { selectedFile, setSelectedFile, clearSelectedFile } =
     useFileSessionStore();
+
   const fileSelected = !!selectedFile;
 
   const clearResults = useSplitStore((state) => state.clearResults);
-  const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
-
   const results = useSplitStore((state) => state.results);
-
+  const setResults = useSplitStore((state) => state.setResults);
+  const setSplitRangeType = useSplitStore((state) => state.setSplitRangeType);
+  const setTotalPages = useSplitStore((state) => state.setTotalPages);
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+  const clearDownloadCompleted = useFileSessionStore(
+    (state) => state.clearDownloadCompleted
+  );
   const splitRangeType = useSplitStore((state) => state.splitRangeType);
 
   const [isTabChanged, setIsTabChanged] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const setSplitRangeType = useSplitStore((state) => state.setSplitRangeType);
-  const setTotalPages = useSplitStore((state) => state.setTotalPages);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -40,7 +52,16 @@ const SplitPdfComponent = () => {
     const totalPages = pdf.getPageCount();
     setTotalPages(totalPages);
 
-    setPreviewFile(URL.createObjectURL(file));
+    setResults([
+      {
+        name: file.name,
+        blob: file,
+        url: URL.createObjectURL(file),
+        rotation: 0,
+        fileName: file.name,
+        pages: 1,
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -55,64 +76,49 @@ const SplitPdfComponent = () => {
     }
   }, [selectedFile, clearResults]);
 
+  const isSidebarVisible = results.length > 0;
+
   return (
-    <div className=" relative flex min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className=" relative lg:flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
       <div
         className={` flex-1 transition-all duration-300
-           bg-white rounded-2xl shadow-lg border border-gray-100 sm:p-10
-        ${isSidebarOpen ? "md:mr-[320px]" : ""}
+           
+        ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
-        <div className="flex flex-col items-center justify-center w-full sm:px-0 px-4">
+        <div className="max-w-5xl mx-auto">
           <SelectFile
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
           />
-          <div className="w-full flex items-center justify-center">
-            <InputField
-              handleFileUpload={handleFileUpload}
-              accept=".pdf"
-              label="Select a file"
-            />
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            {results.length === 0 && (
+              <CustomInputModal
+                fileSelected={results.length > 0}
+                label="Select a PDF"
+                accept=".pdf"
+                isDownloadCompleted={downloadCompleted}
+                clearDownloadCompleted={clearDownloadCompleted}
+                onFileUpload={handleFileUpload}
+              />
+            )}
+
+            {results.length === 0 && (
+              <p className="text-gray-500 mt-8 text-center">
+                Upload a PDF to start
+              </p>
+            )}
+
+            {results.length > 0 && <SplitPreviewGrid />}
           </div>
-
-          {!fileSelected && (
-            <p className="text-gray-500 mt-8">Upload a PDF to start</p>
-          )}
-
-          {fileSelected && results.length === 0 && (
-            <PreviewFile previewFileDesign={null} />
-          )}
-
-          {selectedFile && results.length > 0 && <SplitPreviewGrid />}
         </div>
       </div>
 
-      <aside
-        className={` fixed top-0 right-0 h-full w-full md:w-[380px] z-50
-          bg-white  shadow-lg border-l border-gray-200
-          transform transition-transform duration-300
-          ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}
-        `}
-      >
-        <div className="p-6">
-          <button
-            className="absolute top-5 right-5"
-            onClick={() => {
-              clearSelectedFile();
-              clearResults();
-            }}
-          >
-            <IoMdClose
-              onClick={() => {
-                clearSelectedFile();
-                clearResults();
-              }}
-            />
-          </button>
-          <h2 className="text-lg font-semibold mb-4">Split PDF</h2>
+      {isMobile && results.length > 0 && (
+        <div className=" flex flex-col gap-3 mt-3">
+          <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
           <div className=" space-y-2">
-            <div className="flex items-center justify-between sm:gap-0 gap-2">
+            <div className="flex items-center justify-start sm:gap-0 gap-2">
               <>
                 {["Range", "Pages", "Size"].map((tab) => (
                   <button
@@ -120,7 +126,6 @@ const SplitPdfComponent = () => {
                     onClick={() => {
                       setSplitRangeType(tab as "Range" | "Pages" | "Size");
                       setIsTabChanged(true);
-                      clearResults();
                     }}
                     className={`
                       ${
@@ -148,7 +153,70 @@ const SplitPdfComponent = () => {
             )}
           </div>
         </div>
-      </aside>
+      )}
+
+      {!isMobile && isSidebarVisible && (
+        <aside
+          className={` fixed top-0 right-0 h-full w-[380px] z-50
+          bg-white  shadow-lg border-l border-gray-200
+          transform transition-transform duration-300
+          ${isSidebarVisible ? "translate-x-0" : "translate-x-full"}
+        `}
+        >
+          <div className="p-6">
+            <button
+              className="absolute top-5 right-5"
+              onClick={() => {
+                clearSelectedFile();
+                clearResults();
+              }}
+            >
+              <IoMdClose
+                onClick={() => {
+                  clearSelectedFile();
+                  clearResults();
+                }}
+              />
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Split PDF</h2>
+            <div className=" space-y-2">
+              <div className="flex items-center justify-between sm:gap-0 gap-2">
+                <>
+                  {["Range", "Pages", "Size"].map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => {
+                        setSplitRangeType(tab as "Range" | "Pages" | "Size");
+                        setIsTabChanged(true);
+                      }}
+                      className={`
+                      ${
+                        splitRangeType === tab
+                          ? "bg-black text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }
+                      px-6 py-2 rounded-md
+                    `}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </>
+              </div>
+
+              {splitRangeType === "Range" && (
+                <Range setIsSidebarOpen={setIsSidebarOpen} />
+              )}
+              {splitRangeType === "Pages" && (
+                <Pages setIsSidebarOpen={setIsSidebarOpen} />
+              )}
+              {splitRangeType === "Size" && (
+                <Size setIsSidebarOpen={setIsSidebarOpen} />
+              )}
+            </div>
+          </div>
+        </aside>
+      )}
     </div>
   );
 };

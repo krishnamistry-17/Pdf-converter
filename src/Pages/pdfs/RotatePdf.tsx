@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRotatedPdfStore } from "../../store/useRotatePdfStore";
 import SelectFile from "../../components/SelectFile";
-import InputField from "../../components/InputField";
 import RotatePreviewGrid from "../../components/rotatepdf/RotatePreviewGrid";
 import {
   IoMdAdd,
@@ -13,6 +12,8 @@ import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
 import { FaRotateLeft, FaRotateRight } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import CustomInputModal from "../../components/CustomInputModal";
+import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const RotatePdf = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -28,6 +29,8 @@ const RotatePdf = () => {
   const { displayPdf, rotatePdfDownload } = useUploadData();
 
   const [newSelectedFiles, setNewSelectedFiles] = useState<File[]>([]);
+  const downloadCompleted = useFileSessionStore((state) => state.downloadCompleted);
+  const clearDownloadCompleted = useFileSessionStore((state) => state.clearDownloadCompleted);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -182,27 +185,28 @@ const RotatePdf = () => {
   return (
     <>
       <div className="relative lg:flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
-        <div className="flex-1 bg-white rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 sm:p-10">
-          <div className="flex flex-col items-center px-4 sm:px-10 lg:py-0 py-4">
-            <div className="max-w-lg">
-              <SelectFile
-                heading="Rotate PDF"
-                description="Rotate a PDF file by 90 degrees."
-              />
-            </div>
-            {results.length === 0 && (
-              <div className="w-full flex justify-center">
-                <InputField
-                  handleFileUpload={handleFileUpload}
+        <div className="flex-1  transition-all duration-300 ">
+          <div className="max-w-5xl mx-auto">
+            <SelectFile
+              heading="Rotate PDF"
+              description="Rotate a PDF file by 90 degrees."
+            />
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+              {results.length === 0 && (
+                <CustomInputModal
+                  fileSelected={results.length > 0}
+                  label="Select a PDF"
                   accept=".pdf"
-                  label="Select a file"
+                  isDownloadCompleted={downloadCompleted}
+                  clearDownloadCompleted={clearDownloadCompleted}
+                  onFileUpload={handleFileUpload}
                 />
-              </div>
-            )}
-            {results.length === 0 && (
-              <p className="text-gray-500 mt-8">Upload a PDF to start</p>
-            )}
-            {results.length > 0 && <RotatePreviewGrid />}
+              )}
+              {results.length === 0 && (
+                <p className="text-gray-500 mt-8 text-center">Upload a PDF to start</p>
+              )}
+              {results.length > 0 && <RotatePreviewGrid />}
+            </div>
           </div>
         </div>
 

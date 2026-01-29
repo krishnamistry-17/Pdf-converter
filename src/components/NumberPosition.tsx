@@ -19,7 +19,7 @@ const NumberPosition = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-2 w-25 my-3">
+      <div className="grid grid-cols-3 gap-2 sm:w-25 w-20 max-w-full  my-3">
         {positions.map((p) => (
           <button
             key={p.value}
