@@ -29,8 +29,12 @@ const RotatePdf = () => {
   const { displayPdf, rotatePdfDownload } = useUploadData();
 
   const [newSelectedFiles, setNewSelectedFiles] = useState<File[]>([]);
-  const downloadCompleted = useFileSessionStore((state) => state.downloadCompleted);
-  const clearDownloadCompleted = useFileSessionStore((state) => state.clearDownloadCompleted);
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+  const clearDownloadCompleted = useFileSessionStore(
+    (state) => state.clearDownloadCompleted
+  );
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -63,6 +67,10 @@ const RotatePdf = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".pdf";
+    if (results.length >= 3) {
+      toast.error("You can only rotate up to 3 extra files");
+      return;
+    }
 
     input.onchange = async () => {
       const file = input.files?.[0];
@@ -153,7 +161,7 @@ const RotatePdf = () => {
             >
               {selectRotateFile?.name}
               <button
-                className="text-blue-500 cursor-pointer underline text-md"
+                className=" text-blue cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedFile}
               >
                 <IoMdTrash />
@@ -168,7 +176,7 @@ const RotatePdf = () => {
             >
               {file.name}
               <button
-                className="text-blue-500 cursor-pointer underline text-md"
+                className="text-blue cursor-pointer underline text-md"
                 onClick={() => handleDeleteExtraFile(file.name)}
               >
                 <IoMdTrash />
@@ -184,14 +192,18 @@ const RotatePdf = () => {
 
   return (
     <>
-      <div className="relative lg:flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
-        <div className="flex-1  transition-all duration-300 ">
-          <div className="max-w-5xl mx-auto">
+      <div className="relative lg:flex flex-col min-h-screen  px-4 py-12">
+        <div
+          className={`flex-1  transition-all duration-300 
+        ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
+        `}
+        >
+          <div className="max-w-6xl mx-auto">
             <SelectFile
               heading="Rotate PDF"
               description="Rotate a PDF file by 90 degrees."
             />
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
                 <CustomInputModal
                   fileSelected={results.length > 0}
@@ -203,7 +215,9 @@ const RotatePdf = () => {
                 />
               )}
               {results.length === 0 && (
-                <p className="text-gray-500 mt-8 text-center">Upload a PDF to start</p>
+                <p className="text-gray-500 mt-8 text-center">
+                  Upload a PDF to start
+                </p>
               )}
               {results.length > 0 && <RotatePreviewGrid />}
             </div>
@@ -213,10 +227,30 @@ const RotatePdf = () => {
         {isMobile && results.length > 0 && (
           <div className=" flex flex-col mt-4">
             <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
+            <div className="flex flex-col gap-2 my-4">
+              <div
+                className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
+                onClick={() => handleRotateFromRight()}
+              >
+                <div className="bg-teal p-1 rounded-md">
+                  <FaRotateRight className=" " />
+                </div>
+                <p>Rotate From Right</p>
+              </div>
+              <div
+                className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
+                onClick={() => handleRotateFromLeft()}
+              >
+                <div className="bg-teal p-1 rounded-md">
+                  <FaRotateLeft className=" " />
+                </div>
+                <p>Rotate From Left</p>
+              </div>
+            </div>
             {mergeDisplayFiles()}
 
             <button
-              className="bg-blue-500 text-white w-full py-2 rounded-md flex justify-center items-center"
+              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
               onClick={handleDownloadRotatedPdf}
             >
               Download Rotated PDF <IoMdArrowForward className="ml-2" />
@@ -225,21 +259,21 @@ const RotatePdf = () => {
         )}
 
         {!isMobile && isSidebarVisible && (
-          <aside className="fixed top-0 right-0 h-full w-[380px] bg-white border-l shadow-lg z-50">
+          <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">
             <div className="p-6">
               <button className="absolute top-5 right-5" onClick={handleReset}>
                 <IoMdClose />
               </button>
 
-              <h2 className="text-xl font-semibold border-b pb-4">
+              <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">
                 Rotate PDF
               </h2>
 
               <div className="flex justify-between mt-6">
-                <p className="font-semibold">Files</p>
+                <p className="font-semibold text-blue">Files</p>
                 <button
                   onClick={handleReset}
-                  className="text-blue-500 underline"
+                  className="text-blue text-sm underline"
                 >
                   Reset All
                 </button>
@@ -247,25 +281,25 @@ const RotatePdf = () => {
 
               {mergeDisplayFiles()}
 
-              <div className=" my-4 bg-gray-50 p-4 rounded-md hover:bg-gray-100 transition cursor-pointer">
+              <div className=" my-4 bg-blue/10 text-blue border border-blue p-4 rounded-md hover:bg-blue transition cursor-pointer">
                 <p>Mouse over below to see the rotation of the pages</p>
               </div>
 
               <div className="flex flex-col gap-2 my-4">
                 <div
-                  className="flex items-center gap-2 bg-blue-400 text-white p-2 rounded-md"
+                  className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
                   onClick={() => handleRotateFromRight()}
                 >
-                  <div className="bg-blue-600 p-1 rounded-md">
+                  <div className="bg-teal p-1 rounded-md">
                     <FaRotateRight className=" " />
                   </div>
                   <p>Rotate From Right</p>
                 </div>
                 <div
-                  className="flex items-center gap-2 bg-blue-400 text-white p-2 rounded-md"
+                  className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
                   onClick={() => handleRotateFromLeft()}
                 >
-                  <div className="bg-blue-600 p-1 rounded-md">
+                  <div className="bg-teal p-1 rounded-md">
                     <FaRotateLeft className=" " />
                   </div>
                   <p>Rotate From Left</p>
@@ -273,17 +307,17 @@ const RotatePdf = () => {
               </div>
 
               <button
-                className="bg-blue-500 text-white w-full py-2 rounded-md flex justify-center items-center"
+                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
                 onClick={handleDownloadRotatedPdf}
               >
                 Download Rotated PDF <IoMdArrowForward className="ml-2" />
               </button>
             </div>
 
-            <div className="absolute top-1/5 -left-8 flex flex-col gap-3">
+            <div className=" fixed  top-[20%]  z-50 flex flex-col gap-3 -ml-8">
               <button
                 onClick={handleAddMoreFiles}
-                className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+                className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
               >
                 <IoMdAdd />
               </button>
@@ -296,7 +330,7 @@ const RotatePdf = () => {
             <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
               <button
                 onClick={handleAddMoreFiles}
-                className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+                className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
               >
                 <IoMdAdd />
               </button>

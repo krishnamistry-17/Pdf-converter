@@ -33,7 +33,7 @@ export const steps = [
     title: "Upload File",
     description: "Select or drag & drop your file securely.",
     icon: FaUpload,
-    color: "from-blue-500 to-blue-400",
+    color: "from-blue to-teal ",
   },
   {
     title: "Convert",

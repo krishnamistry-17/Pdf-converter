@@ -35,9 +35,9 @@ const CustomInputModal = ({
             className="
                w-full sm:w-full max-w-md mx-auto
               px-10 py-4
-              border-2 border-dashed border-gray-300
+              border-2 border-dashed border-blue/30
               rounded-xl text-gray-600 font-medium
-              hover:border-blue-500 hover:text-blue-600
+              hover:border-blue 
               transition
             "
           >
@@ -48,9 +48,9 @@ const CustomInputModal = ({
       </div>
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg relative">
+          <div className="bg-white text-blue rounded-xl p-6 w-full max-w-lg relative">
             <button
-              className="absolute sm:top-4 sm:right-4 top-1 right-2 text-gray-500"
+              className="absolute sm:top-4 sm:right-4 top-1 right-2 text-blue"
               onClick={() => setModalOpen(false)}
             >
               <IoMdClose size={24} />

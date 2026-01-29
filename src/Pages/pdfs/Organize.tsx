@@ -41,7 +41,7 @@ const Organize = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
     handleResize();
@@ -70,6 +70,10 @@ const Organize = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".pdf";
+    if (results.length >= 4) {
+      toast.error("You can only organize up to 3 extra files");
+      return;
+    }
 
     input.onchange = async () => {
       const file = input.files?.[0];
@@ -156,7 +160,7 @@ const Organize = () => {
             >
               {selectOrganizeFile?.name}
               <button
-                className="text-blue-500 cursor-pointer underline text-md"
+                className="text-blue cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedFile}
               >
                 <IoMdTrash />
@@ -171,7 +175,7 @@ const Organize = () => {
             >
               {file.name}
               <button
-                className="text-blue-500 cursor-pointer underline text-md"
+                className="text-blue cursor-pointer underline text-md"
                 onClick={() => {
                   handleDeleteExtraFile(file.name);
                 }}
@@ -186,7 +190,7 @@ const Organize = () => {
   };
 
   return (
-    <div className="relative lg:flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className="relative lg:flex flex-col min-h-screen  px-4 py-12">
       <div
         className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -197,7 +201,7 @@ const Organize = () => {
             heading="Organize PDF"
             description="Sort, add, delete, reorder, rotate pages and more."
           />
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={results.length > 0}
@@ -224,7 +228,7 @@ const Organize = () => {
           <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
           {mergeDisplayFiles()}
           <button
-            className="bg-blue-500 text-white w-full py-2 rounded-md flex justify-center items-center"
+            className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
             onClick={handleOrganizePdf}
           >
             Organize <IoMdArrowForward className="ml-2" />
@@ -233,19 +237,22 @@ const Organize = () => {
       )}
 
       {!isMobile && isSidebarVisible && (
-        <aside className="fixed top-0 right-0 h-full w-[380px] bg-white border-l shadow-lg z-50">
+        <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">
           <div className="p-6">
             <button className="absolute top-5 right-5" onClick={handleReset}>
               <IoMdClose />
             </button>
 
-            <h2 className="text-xl font-semibold border-b pb-4">
+            <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">
               Organize PDF
             </h2>
 
             <div className="flex justify-between mt-6">
-              <p className="font-semibold">Files</p>
-              <button onClick={handleReset} className="text-blue-500 underline">
+              <p className="font-semibold text-blue">Files</p>
+              <button
+                onClick={handleReset}
+                className="text-blue text-sm underline"
+              >
                 Reset All
               </button>
             </div>
@@ -254,24 +261,24 @@ const Organize = () => {
             {mergeDisplayFiles()}
 
             <button
-              className="bg-blue-500 text-white w-full py-2 rounded-md flex justify-center items-center"
+              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
               onClick={handleOrganizePdf}
             >
               Organize <IoMdArrowForward className="ml-2" />
             </button>
           </div>
 
-          <div className="absolute top-1/3 -left-6 flex flex-col gap-3">
+          <div className=" fixed  top-[20%]  z-50 flex flex-col gap-3 -ml-8">
             <button
               onClick={handleAddMoreFiles}
-              className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
             >
               <IoMdAdd />
             </button>
 
             <button
               onClick={handleSortFiles}
-              className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
             >
               {isSorted ? <FaSortNumericUp /> : <FaSortNumericDownAlt />}
             </button>
@@ -284,14 +291,14 @@ const Organize = () => {
           <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
             <button
               onClick={handleAddMoreFiles}
-              className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
             >
               <IoMdAdd />
             </button>
 
             <button
               onClick={handleSortFiles}
-              className="bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
             >
               {isSorted ? <FaSortNumericUp /> : <FaSortNumericDownAlt />}
             </button>

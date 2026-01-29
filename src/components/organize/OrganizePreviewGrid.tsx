@@ -66,7 +66,7 @@ const OrganizePreviewGrid = () => {
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white rounded-xl shadow-md p-4 relative"
+            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative"
           >
             <iframe
               src={file.url}

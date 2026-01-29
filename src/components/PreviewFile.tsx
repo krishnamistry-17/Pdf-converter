@@ -194,7 +194,7 @@ const PreviewFile = ({
               href={previewFileDesign}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 text-sm underline"
+              className="text-blue text-sm underline"
             >
               Open PDF in new tab
             </a>

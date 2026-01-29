@@ -86,15 +86,17 @@ const PageSidebar = () => {
 
   return (
     <div className="flex flex-col">
-      <h2 className="text-xl font-semibold border-b pb-4">Add Page Number</h2>
+      <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">Add Page Number</h2>
 
       <div className="flex flex-col gap-3 my-4">
         <div>
-          <p className="font-semibold mb-2">Page Mode:</p>
+          <p className="font-semibold mb-2 text-blue">Page Mode:</p>
           <div className="flex gap-2">
             <button
               className={`px-4 py-2 rounded-md text-white ${
-                pageMode === "single" ? "bg-blue-600" : "bg-blue-500"
+                pageMode === "single"
+                  ? "bg-gradient-to-r from-blue to-teal"
+                  : "bg-teal"
               }`}
               onClick={() => setPageMode("single")}
             >
@@ -102,7 +104,9 @@ const PageSidebar = () => {
             </button>
             <button
               className={`px-4 py-2 rounded-md text-white ${
-                pageMode === "multiple" ? "bg-blue-600" : "bg-blue-500"
+                pageMode === "multiple"
+                  ? "bg-gradient-to-r from-blue to-teal"
+                  : "bg-teal"
               }`}
               onClick={() => setPageMode("multiple")}
             >
@@ -113,11 +117,11 @@ const PageSidebar = () => {
 
         <div className="sm:flex gap-3 mt-3 sm:flex-row w-full flex-col">
           <div className="w-full">
-            <p className="font-semibold mb-2">Position:</p>
+            <p className="font-semibold mb-2 text-blue">Position:</p>
             <NumberPosition />
           </div>
           <div className="w-full">
-            <p className="font-semibold mb-2">Margin:</p>
+            <p className="font-semibold mb-2 text-blue">Margin:</p>
             <div
               className="relative w-full h-10 border rounded-md p-2 cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -153,16 +157,16 @@ const PageSidebar = () => {
 
         <div className="sm:flex gap-3 sm:flex-row flex-col">
           <div className="w-full">
-            <p className="font-semibold mb-2">First Page Number:</p>
+            <p className="font-semibold mb-2 text-blue">First Page Number:</p>
             <input
               type="number"
               value={firstNumber}
               onChange={(e) => setFirstNumber(Number(e.target.value))}
-              className="w-full border rounded-md p-2"
+              className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
             />
           </div>
           <div className="w-full sm:mt-0 mt-3">
-            <p className="font-semibold mb-2">Number Type:</p>
+            <p className="font-semibold mb-2 text-blue">Number Type:</p>
             <div className="flex gap-2 items-center">
               <input
                 type="radio"
@@ -173,7 +177,7 @@ const PageSidebar = () => {
                 onChange={(e) =>
                   setSelectedNumberType(e.target.value as "arabic" | "roman")
                 }
-                className="w-4 h-4"
+                className="w-4 h-4 accent-blue "
               />
               <label htmlFor="arabic">1,2,...</label>
               <input
@@ -185,7 +189,7 @@ const PageSidebar = () => {
                 onChange={(e) =>
                   setSelectedNumberType(e.target.value as "arabic" | "roman")
                 }
-                className="w-4 h-4"
+                className="w-4 h-4 accent-blue"
               />
               <label htmlFor="roman">i,ii,...</label>
             </div>
@@ -193,7 +197,7 @@ const PageSidebar = () => {
         </div>
 
         <div>
-          <p className="font-semibold mb-2">
+          <p className="font-semibold mb-2 text-blue">
             Which pages do you want to number?
           </p>
           {activeRange.map((range, index) => (
@@ -202,14 +206,14 @@ const PageSidebar = () => {
                 type="number"
                 value={range.from}
                 onChange={(e) => handleRangeChange(e, index, "from")}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
                 placeholder="From"
               />
               <input
                 type="number"
                 value={range.to}
                 onChange={(e) => handleRangeChange(e, index, "to")}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
                 placeholder="To"
               />
             </div>
@@ -217,7 +221,7 @@ const PageSidebar = () => {
         </div>
 
         <div>
-          <p className="font-semibold mb-2">Select Range Type:</p>
+          <p className="font-semibold mb-2 text-blue">Select Range Type:</p>
           <div className="flex gap-2 items-center">
             <input
               type="radio"
@@ -228,7 +232,7 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4"
+              className="w-4 h-4 accent-blue"
             />
             <label htmlFor="all">All</label>
             <input
@@ -240,7 +244,7 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4"
+              className="w-4 h-4 accent-blue"
             />
             <label htmlFor="odd">Odd</label>
             <input
@@ -252,16 +256,16 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4"
+              className="w-4 h-4 accent-blue"
             />
             <label htmlFor="even">Even</label>
           </div>
         </div>
 
         <div>
-          <p className="font-semibold mb-2">Text:</p>
+          <p className="font-semibold mb-2 text-blue">Text:</p>
           <div
-            className="relative border rounded-md p-2 cursor-pointer"
+            className="relative border rounded-md p-2 cursor-pointer text-blue bg-sea border-blue/30"
             onClick={() => setTextMenuOpen(!textMenuOpen)}
           >
             <div className="flex justify-between items-center">
@@ -299,7 +303,7 @@ const PageSidebar = () => {
         <button
           onClick={handleApply}
           disabled={!results.length}
-          className="bg-blue-500 text-white py-2 rounded-md disabled:opacity-50 max-w-md sm:w-auto"
+          className="bg-gradient-to-r from-blue to-teal text-white py-2 rounded-md disabled:opacity-50 max-w-md sm:w-auto"
         >
           Apply Page Numbers
         </button>

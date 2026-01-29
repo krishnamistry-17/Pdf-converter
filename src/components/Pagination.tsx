@@ -16,7 +16,7 @@ const Pagination = ({
       <button
         onClick={onPrevious}
         disabled={currentPage === 1}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
+        className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md transition"
       >
         Previous
       </button>
@@ -29,7 +29,7 @@ const Pagination = ({
       <button
         onClick={onNext}
         disabled={currentPage === totalPages}
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
+        className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md transition"
       >
         Next
       </button>

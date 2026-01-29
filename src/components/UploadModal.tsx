@@ -63,9 +63,9 @@ const UploadModal = ({
         />
 
         <div
-          className={`border-2 border-dashed rounded-lg p-8 transition-all
+          className={`border-2 border-dashed rounded-lg p-8 transition-all shadow-card
           w-full max-w-sm h-auto flex flex-col items-center justify-center cursor-pointer
-          ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
+          ${isDragging ? "border-blue hover:border-teal" : "border-gray-300"}`}
           onDragEnter={handleDragEnter}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -77,7 +77,7 @@ const UploadModal = ({
             alt="pdf upload bg"
             className="w-full h-full object-cover"
           />
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md transition">
+          <button className=" bg-blue hover:bg-teal text-white px-4 py-2 rounded-md transition">
             Browse
           </button>
           <p className="text-gray-600 pt-4">{label}</p>

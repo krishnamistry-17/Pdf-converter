@@ -42,13 +42,13 @@ const Size = ({
 
   return (
     <div className="flex flex-col gap-2 py-2">
-      <p className="text-sm text-g  ray-500">
+      <p className="text-sm text-blue">
         Original File Size:
         <b className="pl-2">
           {(selectedFile?.size ? selectedFile.size / 1024 : 0).toFixed(2)} KB
         </b>
       </p>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-blue">
         Total Pages: <b>{totalPages}</b>
       </p>
 
@@ -58,7 +58,7 @@ const Size = ({
           <input
             type="number"
             placeholder={value.toString()}
-            className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-0"
+            className="w-full border border-blue rounded-md p-3 focus:outline-none focus:ring-0 text-blue bg-sea "
             value={value}
             onChange={(e) => setValue(parseInt(e.target.value))}
           />
@@ -69,7 +69,7 @@ const Size = ({
       </div>
 
       <div>
-        <p className="text-sm text-gray-500 py-3 bg-gray-100 rounded-md p-2">
+        <p className="text-sm text-blue py-3 bg-blue/10 border border-blue rounded-md p-2">
           This pdf will be no longer split than this size 5 kB each
         </p>
       </div>
@@ -87,7 +87,7 @@ const Size = ({
       <div className="mt-3 w-full">
         <button
           onClick={handleSplitPdfBySize}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+          className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md w-full"
         >
           Split pdf by size
         </button>

@@ -59,7 +59,7 @@ const PdfFile = ({
   }, [modalOpen]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className="min-h-screen px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
@@ -68,7 +68,7 @@ const PdfFile = ({
           <p className="text-gray-600 max-w-2xl mx-auto">{para}</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-10">
+        <div className="bg-white/40  rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-10">
           <div className="flex flex-col items-center gap-4">
             {(!fileSelected || isDownloadCompleted) && (
               <button
@@ -82,7 +82,7 @@ const PdfFile = ({
               px-10 py-4
               border-2 border-dashed border-gray-300
               rounded-xl text-gray-600 font-medium
-              hover:border-blue-500 hover:text-blue-600
+              hover:border-blue hover:text-teal
               transition
             "
               >
@@ -101,10 +101,10 @@ const PdfFile = ({
               <button
                 onClick={handleConvert}
                 className="
-                bg-blue-600 text-white font-semibold
+                bg-blue hover:bg-gradient-to-r from-blue to-teal text-white font-semibold
                 px-10 py-4 rounded-xl
-                hover:bg-blue-700 transition
-                shadow-md
+                transition
+                shadow-card
               "
               >
                 {btnText}

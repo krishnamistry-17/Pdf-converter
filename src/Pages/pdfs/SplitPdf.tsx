@@ -79,10 +79,9 @@ const SplitPdfComponent = () => {
   const isSidebarVisible = results.length > 0;
 
   return (
-    <div className=" relative lg:flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className=" relative lg:flex flex-col min-h-screen  px-4 py-12">
       <div
-        className={` flex-1 transition-all duration-300
-           
+        className={` flex-1 transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
@@ -91,7 +90,7 @@ const SplitPdfComponent = () => {
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
           />
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={results.length > 0}
@@ -130,8 +129,8 @@ const SplitPdfComponent = () => {
                     className={`
                       ${
                         splitRangeType === tab
-                          ? "bg-black text-white"
-                          : "bg-gray-200 text-gray-800"
+                          ? "bg-gradient-to-r from-blue to-teal text-white"
+                          : "bg-teal text-white"
                       }
                       px-6 py-2 rounded-md
                     `}
@@ -158,7 +157,7 @@ const SplitPdfComponent = () => {
       {!isMobile && isSidebarVisible && (
         <aside
           className={` fixed top-0 right-0 h-full w-[380px] z-50
-          bg-white  shadow-lg border-l border-gray-200
+          bg-sea  shadow-lg border-l border-blue
           transform transition-transform duration-300
           ${isSidebarVisible ? "translate-x-0" : "translate-x-full"}
         `}
@@ -192,8 +191,8 @@ const SplitPdfComponent = () => {
                       className={`
                       ${
                         splitRangeType === tab
-                          ? "bg-black text-white"
-                          : "bg-gray-200 text-gray-800"
+                            ? "bg-gradient-to-r from-blue to-teal text-white"
+                          : "bg-teal text-white"
                       }
                       px-6 py-2 rounded-md
                     `}

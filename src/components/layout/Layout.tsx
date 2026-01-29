@@ -6,14 +6,15 @@ import GlobalLoader from "../GlobalLoader";
 
 const Layout = () => {
   return (
-    <div>
-      <GlobalLoader />
-
+    <div className="min-h-screen flex flex-col  bg-main-gradient">
       <Navbar />
       <ScrollWindow>
+        <GlobalLoader />
         <Outlet />
       </ScrollWindow>
-      <Footer />
+      <div className="mt-auto">
+        <Footer />
+      </div>
     </div>
   );
 };

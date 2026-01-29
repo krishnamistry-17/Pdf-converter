@@ -47,7 +47,7 @@ const PdfPageNumber = () => {
 
   return (
     <>
-      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen  px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -58,7 +58,7 @@ const PdfPageNumber = () => {
               heading="Add Page Number"
               description="Add page numbers to a PDF file. This tool will add page numbers to a PDF file."
             />
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
                 <CustomInputModal
                   fileSelected={results.length > 0}
@@ -89,7 +89,7 @@ const PdfPageNumber = () => {
           </div>
         )}
         {!isMobile && isSidebarVisible && (
-          <aside className="fixed top-0 right-0 h-full w-[380px] bg-white border-l shadow-lg z-50 overflow-y-auto">
+          <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto">
             <div className="p-6">
               <button
                 className="absolute top-5 right-5"

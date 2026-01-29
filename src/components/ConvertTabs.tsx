@@ -26,23 +26,22 @@ const ConvertTabs = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       <Tabs selectedIndex={activeTab} onSelect={setActiveTab}>
-        <div className="hidden md:flex justify-center mb-10">
+        <div className="hidden lg:flex justify-center mb-10">
           <TabList
-            className="flex md:flex-row flex-row justify-between sm:bg-white bg-transparent sm:w-auto w-full 
+            className="flex md:flex-row flex-row justify-between sm:bg-white/30 bg-transparent sm:w-auto w-full 
             sm:rounded-full shadow-md sm:p-2 p-4 gap-2"
-            // style={{ scrollbarWidth: "none" }}
           >
             {tabs.map((tab: any, index: number) => {
               return (
                 <Tab
                   key={index}
                   className={`
-              cursor-pointer px-6 sm:py-3 py-2 text-lg font-semibold rounded-full text-center 
-              transition-all duration-300 outline-none
+              cursor-pointer px-6 sm:py-3 py-2 md:text-md xl:text-lg font-semibold rounded-full text-center 
+              outline-none
               ${
                 activeTab === index
-                  ? "bg-gradient-to-r bg-clip-text text-transparent from-pink-800 via-purple-600 to-red-500 font-semibold "
-                  : "text-gray-500 hover:text-gray-900"
+                  ? "bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold transition-all duration-300 "
+                  : "text-blue hover:text-teal"
               }
             `}
                 >
@@ -52,20 +51,20 @@ const ConvertTabs = () => {
             })}
           </TabList>
         </div>
-        <div className="sm:block md:hidden  lg:mb-0 mb-4 relative z-40">
+        <div className="sm:block lg:hidden  lg:mb-0 mb-4 relative z-40">
           <div
             onClick={() => {
               setActiveTab(activeTab);
               handleMenuOpen();
             }}
-            className=" bg-white rounded-3xl shadow-sm border border-gray-100 cursor-pointer
+            className=" bg-white/30 rounded-3xl shadow-sm border border-gray-100 cursor-pointer
           py-4 px-6 flex items-center justify-between w-full"
           >
             <label
-              className={`text-md text-center cursor-pointer
+              className={`text-sm md:text-md xl:text-lg text-center cursor-pointer
                 ${
                   activeTab === activeTab
-                    ? "  bg-gradient-to-r bg-clip-text text-transparent from-pink-800 via-purple-500 to-red-500 font-semibold"
+                    ? "  bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold"
                     : "text-gray-500 hover:text-gray-900"
                 }
                 `}
@@ -78,14 +77,14 @@ const ConvertTabs = () => {
           </div>
           {menuOpen && (
             <div
-              className="flex flex-col gap-4 w-full mt-4 bg-white rounded-3xl 
-            shadow-sm border border-gray-100 p-4 sm:p-10 transition-all duration-150"
+              className="flex flex-col gap-4 w-full mt-4 bg-white/30 rounded-3xl text-blue
+            shadow-sm border border-gray-100 p-4 md:p-6 xl:p-10 transition-all duration-150"
             >
               {tabs.map((tab: any, index: number) => {
                 return (
                   <button
                     key={index}
-                    className="text-sm font-medium text-gray-500 cursor-pointer"
+                    className="text-sm font-medium text-blue cursor-pointer"
                     onClick={() => {
                       setActiveTab(index);
                       handleMenuOpen();
@@ -99,7 +98,7 @@ const ConvertTabs = () => {
           )}
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10">
+        <div className="bg-white/40 rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10">
           <TabPanel>
             <AllTab />
           </TabPanel>

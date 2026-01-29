@@ -19,7 +19,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 left-0 right-0 z-50 ">
+    <header className=" text-white shadow-md sticky top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue via-teal to-blue">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center relative ">
         <Link to="/" className="text-xl font-bold cursor-pointer">
           PDF Converter
@@ -65,7 +65,7 @@ const Navbar = () => {
         {mobileMenu && (
           <div
             onMouseLeave={() => setMobileMenu(false)}
-            className="absolute top-18 z-50 right-0 mt-2 p-4 w-[250px] bg-white shadow-lg rounded-md text-sm"
+            className="absolute top-14 z-50 right-0 mt-2 p-4 w-[250px] bg-white text-blue shadow-lg rounded-md text-sm"
           >
             <div className="absolute top-3 right-3 cursor-pointer">
               <IoMdClose

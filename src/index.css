@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@theme {
+  --color-primary: #09637E;
+  --color-teal: #088395;
+  --color-gradient: #7AB2B2;
+  --color-sea: #EBF4F6;
+  --color-background: #EBF4F6;
+  --color-text: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-border: #E2E8F0;
+  --color-input: #CBD5E1;
+
+  --bg-main-gradient: linear-gradient(135deg, #EBF4F6 0%, rgba(122,178,178,0.45) 50%, #EBF4F6 100%);
+}

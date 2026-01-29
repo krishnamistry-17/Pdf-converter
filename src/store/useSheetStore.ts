@@ -45,6 +45,13 @@ interface FilesStore {
   clearMergeFile1: () => void;
   clearMergeFile2: () => void;
 
+  selectedMergeFile1: File | null;
+  selectedMergeFile2: File | null;
+  setSelectedMergeFile1: (file: File | null) => void;
+  setSelectedMergeFile2: (file: File | null) => void;
+  clearSelectedMergeFile1: () => void;
+  clearSelectedMergeFile2: () => void;
+
   mergedPdfPreview: string | null;
   setMergedPdfPreview: (preview: string | null) => void;
 
@@ -89,6 +96,13 @@ const useFilesStore = create<FilesStore>((set) => ({
   downloadFileUrl: null,
   setDownloadFileUrl: (file) => set({ downloadFileUrl: file }),
   clearDownloadFileUrl: () => set({ downloadFileUrl: null }),
+
+  selectedMergeFile1: null,
+  selectedMergeFile2: null,
+  setSelectedMergeFile1: (file) => set({ selectedMergeFile1: file }),
+  setSelectedMergeFile2: (file) => set({ selectedMergeFile2: file }),
+  clearSelectedMergeFile1: () => set({ selectedMergeFile1: null }),
+  clearSelectedMergeFile2: () => set({ selectedMergeFile2: null }),
 
   mergeFile1: null,
   mergeFile2: null,

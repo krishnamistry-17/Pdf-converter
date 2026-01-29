@@ -26,15 +26,17 @@ const SplitPreviewGrid = () => {
         checkedPages.add(i);
     }
   }, [activeMode, selectedRange, selectedPages]);
+  
+  const imagesLength = results.length > 3 ? 3 : results.length;
 
   return (
     <div className="my-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[repeat(${imagesLength},1fr)] gap-4`}>
         {results.map((file, index) => {
           return (
             <div
               key={index}
-              className="bg-white rounded-xl shadow-md p-4 flex flex-col relative"
+              className="bg-white/40 text-blue rounded-xl shadow-md p-4 flex flex-col relative"
             >
               <div className="flex-1">
                 <iframe
@@ -49,7 +51,7 @@ const SplitPreviewGrid = () => {
               <a
                 href={file.url}
                 download={file.name}
-                className="mt-4 text-center bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                className="mt-4 text-center bg-blue hover:bg-gradient-to-r from-blue to-teal text-white py-2 rounded-md hover:bg-blue"
               >
                 Download
               </a>

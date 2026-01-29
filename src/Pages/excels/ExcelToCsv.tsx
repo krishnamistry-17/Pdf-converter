@@ -34,8 +34,6 @@ const ExcelToCsv = () => {
   };
 
   const handleConvert = async () => {
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 100));
     try {
       await ConvertExcelToCsv();
       toast.success("Conversion successful!");

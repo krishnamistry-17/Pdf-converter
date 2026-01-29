@@ -177,8 +177,8 @@ const Pages = ({
           className={`
                 ${
                   pageExtractMode === "extractAll"
-                    ? " border border-black bg-gray-200"
-                    : "bg-gray-200 text-gray-800"
+                    ? " bg-blue/10 text-blue border border-blue"
+                    : "bg-blue/10 text-blue border "
                 }
                 px-6 py-2 rounded-md
             `}
@@ -190,8 +190,8 @@ const Pages = ({
           className={`
                 ${
                   pageExtractMode === "selectPages"
-                    ? " border border-black bg-gray-200"
-                    : "bg-gray-200 text-gray-800"
+                    ? "bg-blue/10 text-blue border border-blue"
+                    : "bg-blue/10 text-blue border "
                 }
                 px-6 py-2 rounded-md
             `}
@@ -205,7 +205,7 @@ const Pages = ({
             <div className=" w-full flex justify-center my-2">
               <button
                 onClick={handleSplit}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition w-full"
+                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
               >
                 Split
               </button>
@@ -216,7 +216,7 @@ const Pages = ({
             </p>
             <button
               onClick={handleDownloadAllPages}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition w-full"
+              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
             >
               Download All Pages
             </button>
@@ -229,7 +229,7 @@ const Pages = ({
               <input
                 type="text"
                 placeholder="1,2,5-10"
-                className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-0"
+                className="w-full border border-blue rounded-md p-3 focus:outline-none focus:ring-0 text-blue bg-sea "
                 value={pageInput}
                 onChange={handleInputChange}
               />
@@ -237,7 +237,7 @@ const Pages = ({
             <div className="mt-2 flex flex-col gap-2">
               <button
                 onClick={handleSplit}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition"
               >
                 Split
               </button>
@@ -247,7 +247,7 @@ const Pages = ({
               </p>
               <button
                 onClick={handleDownloadSelectedPages}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition w-full"
+                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
               >
                 Download Selected Pages
               </button>

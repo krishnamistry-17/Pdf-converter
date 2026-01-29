@@ -1,19 +1,18 @@
-import { useEffect } from "react";
 import useFilesStore from "../store/useSheetStore";
 
 const GlobalLoader = () => {
   const loading = useFilesStore((state) => state.loading);
-  const setLoading = useFilesStore((state) => state.setLoading);
+  // const setLoading = useFilesStore((state) => state.setLoading);
 
-  useEffect(() => {
-    if (!loading) return;
-    const id = setTimeout(() => {
-      if (loading) {
-        setLoading(false);
-      }
-    }, 8000);
-    return () => clearTimeout(id);
-  }, [loading, setLoading]);
+  // useEffect(() => {
+  //   if (!loading) return;
+  //   const id = setTimeout(() => {
+  //     if (loading) {
+  //       setLoading(false); 
+  //     }
+  //   }, 8000);
+  //   return () => clearTimeout(id);
+  // }, [loading, setLoading]);
 
   if (!loading) return null;
 
@@ -31,7 +30,7 @@ const GlobalLoader = () => {
       <div className="flex flex-col items-center gap-3">
         <div
           className="animate-spin rounded-full
-         h-15 w-15 border-t-2 border-b-2 border-gray-900"
+         h-16 w-16 border-t-2 border-b-2 border-gray-900"
         />
       </div>
     </div>

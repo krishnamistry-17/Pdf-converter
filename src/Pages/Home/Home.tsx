@@ -5,23 +5,25 @@ import ConversionFlow from "./Detail/ConversionFlow";
 
 const Home = () => {
   return (
-    <div className="w-full bg-gradient-to-b from-gray-50 to-white">
-      <section>
+    <div className="w-full">
+      <section className="py-8">
         <Herosection />
       </section>
 
-      <section className=" pt-4 pb-24">
+      <section className="pb-20">
         <ConvertTabs />
       </section>
 
-      <section className=" pt-4 md:pb-20 pb-10">
+      <section className="pt-4 md:pb-20 pb-10">
         <ConversionFlow />
       </section>
 
-      <section className=" pt-4 pb-24">
+      <section className="pt-4 pb-24">
         <Detail />
       </section>
     </div>
   );
 };
+
 export default Home;
+

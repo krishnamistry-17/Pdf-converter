@@ -23,16 +23,16 @@ const RotatePreviewGrid = () => {
 
   return (
     <div className="my-6 w-full">
-      <div className=" gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-center items-center ">
+      <div className="  grid grid-cols-1 sm:grid-cols-2  justify-center items-center gap-4">
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white max-w-96 rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
+            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
           >
             <iframe
               src={file.url}
               title={file.fileName}
-              className="w-full  h-72 border rounded"
+              className="w-full  h-80 border rounded"
               style={{ transform: `rotate(${file.rotation}deg)` }}
             />
 

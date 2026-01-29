@@ -14,14 +14,14 @@ const ConversionFlow = () => {
       </div>
 
       {/* Steps */}
-      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-10 ">
         {/* Line */}
-        <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gray-200 -z-10" />
+        {/* <div className="hidden md:block absolute top-1/2 left-0 right-0 h-[2px] bg-gray-200 -z-10" /> */}
 
         {steps.map((step: any, index: number) => (
           <div
             key={index}
-            className="group flex flex-col items-center text-center"
+            className="group flex flex-col items-center text-center bg-white/40 rounded-2xl p-6"
           >
             {/* Icon */}
             <div

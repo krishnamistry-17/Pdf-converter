@@ -86,13 +86,13 @@ const PdfToJpg = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className="min-h-screen  px-4 py-12">
       <div className="max-w-5xl mx-auto">
         <SelectFile
           heading="Convert PDF to JPG"
           description="Upload a PDF and download all pages as JPG images"
         />
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+        <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
           {results.length === 0 && (
             <CustomInputModal
               fileSelected={fileSelected}
@@ -111,14 +111,14 @@ const PdfToJpg = () => {
               <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
                 <button
                   onClick={handleDownloadAll}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-md"
+                  className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-6 py-3 rounded-md"
                 >
                   Download All JPG
                 </button>
 
                 <button
                   onClick={handleDownloadZip}
-                  className="bg-green-600 text-white px-6 py-3 rounded-md"
+                  className="bg-teal text-white px-6 py-3 rounded-md"
                 >
                   Download ZIP
                 </button>

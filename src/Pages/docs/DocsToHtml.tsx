@@ -50,6 +50,7 @@ const DocsToHtml = () => {
         accept=".docx"
         label="Select a file"
         btnText="Download Html"
+        isDownloadCompleted={false}
       />
     </>
   );

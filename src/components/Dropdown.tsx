@@ -12,7 +12,7 @@ const Dropdown = ({ close }: { close: () => void }) => {
     xl:right-0 md:right-[15px]
     mt-2 p-5
     w-[90vw] max-w-[500px]
-    bg-white shadow-lg rounded-md text-sm z-50
+    bg-white text-blue shadow-lg rounded-md text-sm z-50
     transition-all duration-300
      "
     >

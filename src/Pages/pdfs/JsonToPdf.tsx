@@ -36,7 +36,7 @@ const JsonToPdf = () => {
     setLoading(true);
 
     // allow loader to render
-    await new Promise((r) => setTimeout(r, 100));
+    // await new Promise((r) => setTimeout(r, 100));
 
     try {
       await ConvertJsonToPdf();

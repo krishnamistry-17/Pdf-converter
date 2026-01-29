@@ -13,14 +13,21 @@ const CompressPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
-  const setDownloadCompleted = useFileSessionStore((state) => state.setDownloadCompleted);
-  const downloadCompleted = useFileSessionStore((state) => state.downloadCompleted);
-  const clearDownloadCompleted = useFileSessionStore((state) => state.clearDownloadCompleted);
+  const setDownloadCompleted = useFileSessionStore(
+    (state) => state.setDownloadCompleted
+  );
+  const downloadCompleted = useFileSessionStore(
+    (state) => state.downloadCompleted
+  );
+  const clearDownloadCompleted = useFileSessionStore(
+    (state) => state.clearDownloadCompleted
+  );
   const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
     null
   );
   const results = useFilesStore((state) => state.results);
   console.log(results);
+  const clearResults = useFilesStore((state) => state.clearResults);
   const setResults = useFilesStore((state) => state.setResults);
   const { compressPdf } = useUploadData();
 
@@ -65,7 +72,7 @@ const CompressPdf = () => {
     }
   };
   return (
-    <div className="relative flex min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-12">
+    <div className="relative flex min-h-screen  px-4 py-12">
       <div
         className={`flex-1 transition-all duration-300 
           
@@ -76,7 +83,7 @@ const CompressPdf = () => {
             heading="Compress PDF"
             description="Compress a PDF file to reduce its size."
           />
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={fileSelected}
@@ -95,15 +102,21 @@ const CompressPdf = () => {
 
       <aside
         className={`
-          fixed lg:top-[11%] top-[12%] right-0 h-full w-full md:w-[320px] z-50
-          bg-white  shadow-lg border-l border-gray-200
+          fixed  top-0 right-0 h-full w-full md:w-[320px] z-50
+          bg-sea  shadow-lg border-l border-blue
           transform transition-transform duration-300
           ${fileSelected ? "translate-x-0" : "translate-x-full"}
         `}
       >
         <div className="p-6">
           <button className="absolute top-5 right-5">
-            <IoMdClose onClick={() => setFileSelected(false)} />
+            <IoMdClose
+              onClick={() => {
+                setFileSelected(false);
+                clearResults();
+                clearSelectedFile();
+              }}
+            />
           </button>
           <h2 className="text-lg font-semibold mb-4">Compression Level</h2>
 
@@ -117,8 +130,8 @@ const CompressPdf = () => {
                   transition
                   ${
                     selectedSize === option.value
-                      ? " bg-blue-400 text-white"
-                      : "border-gray-200 hover:bg-gray-50"
+                      ? " bg-teal text-white"
+                      : " border border-blue/30"
                   }
                 `}
               >
@@ -142,7 +155,8 @@ const CompressPdf = () => {
 
           <button
             onClick={handleCompress}
-            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition"
+            className="mt-6 w-full bg-blue hover:bg-gradient-to-r from-blue to-teal
+             text-white py-3 rounded-md font-semibold  transition"
           >
             Download Compressed PDF
           </button>
