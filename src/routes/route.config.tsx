@@ -27,6 +27,7 @@ import PdfPageNumber from "../Pages/pdfs/PdfPageNumber";
 import RotatePdf from "../Pages/pdfs/RotatePdf";
 import PdfToJpg from "../Pages/pdfs/PdfToJpg";
 import CropPdf from "../Pages/pdfs/CropPdf";
+import PdfToText from "../Pages/pdfs/PdfToText";
 
 const routes = createBrowserRouter([
   {
@@ -140,6 +141,10 @@ const routes = createBrowserRouter([
       {
         path: "/crop-pdf",
         element: <CropPdf />,
+      },
+      {
+        path: "/pdf-to-text",
+        element: <PdfToText />,
       },
     ],
   },

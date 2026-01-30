@@ -179,8 +179,14 @@ const allOptions = [
     description: "Crop a PDF file.",
   },
   {
-    label: "Convert PDF to Text",
+    label: "Convert Docs to Html",
     path: "/docs-to-html",
+    icon: FaFileWord,
+    description: "Convert a Docs file to a Html file.",
+  },
+  {
+    label: "Convert PDF to Text",
+    path: "/pdf-to-text",
     icon: FaFilePdf,
     description: "Convert a PDF file to a Text file.",
   },

@@ -11,9 +11,8 @@ import type { PageNumberOptions, PageResult } from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
 import { toast } from "react-toastify";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import html2pdf from "html2pdf.js";
 import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
-
+//this is for pdf to text conversion
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://unpkg.com/pdfjs-dist@4.2.67/build/pdf.worker.min.js";
 
@@ -1002,41 +1001,32 @@ const useUploadData = () => {
     URL.revokeObjectURL(url);
   };
 
-  const ConvertPdfToText = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const ConvertPdfToText = async (file: File): Promise<void> => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-    let fullText = "";
+      let fullText = "";
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum);
-      const content = await page.getTextContent();
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
 
-      const pageText = content.items.map((item: any) => item.str).join(" ");
+        const pageText = content.items.map((item: any) => item.str).join(" ");
 
-      fullText += pageText + "\n\n";
+        fullText += pageText + "\n\n" + '"\n\n';
+      }
+      const blob = new Blob([fullText], { type: "text/plain;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${file.name}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to convert PDF to Text");
     }
-
-    return fullText;
-  };
-
-  const ConvertHtmlToPdf = async (
-    html: string,
-    fileName = "document.pdf"
-  ): Promise<void> => {
-    const container = document.createElement("div");
-    container.innerHTML = html;
-
-    await html2pdf()
-      .set({
-        margin: 10,
-        filename: fileName,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(container)
-      .save();
   };
 
   return {
@@ -1072,7 +1062,6 @@ const useUploadData = () => {
     addPageNumberToPdf,
     ConvertPdfToPng,
     ConvertPdfToText,
-    ConvertHtmlToPdf,
   };
 };
 

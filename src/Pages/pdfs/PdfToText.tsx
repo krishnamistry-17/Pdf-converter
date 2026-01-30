@@ -5,21 +5,23 @@ import useFilesStore from "../../store/useSheetStore";
 import { useState } from "react";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 
-const DocsToHtml = () => {
-  const selectedFile = useFilesStore((state) => state.selectedFile);
+const PdfToText = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
-  const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
-  const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
+  const selectedFile = useFilesStore((state) => state.selectedFile);
+
+  const setLoading = useFilesStore((state) => state.setLoading);
   const setDownloadCompleted = useFileSessionStore(
     (state) => state.setDownloadCompleted
   );
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
-  const { ConvertDocsToHtml } = useUploadData();
+  const { ConvertPdfToText } = useUploadData();
   const [fileSelected, setFileSelected] = useState(false);
-
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -27,8 +29,9 @@ const DocsToHtml = () => {
       toast.error("Please select a file");
       return;
     }
+    console.log(file);
     setSelectedFile(file as any);
-    setPreviewFile(URL.createObjectURL(file as File) as string);
+    setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";
     setFileSelected(true);
   };
@@ -37,7 +40,7 @@ const DocsToHtml = () => {
     setLoading(true);
     // await new Promise((r) => setTimeout(r, 100));
     try {
-      await ConvertDocsToHtml(selectedFile as any);
+      await ConvertPdfToText(selectedFile as any);
       toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
@@ -53,19 +56,20 @@ const DocsToHtml = () => {
   return (
     <>
       <PdfFile
-        heading="Convert Docs to Html"
-        para="Convert a Docs file to a Html file. This tool will convert a Docs file to a Html file."
+        heading="Convert PDF to Text"
+        para="Convert a PDF file to a Text file. This tool will convert a PDF file to a Text file."
         onFileUpload={handleFileUpload}
         fileSelected={fileSelected}
         handleConvert={handleConvert}
-        PreviewFileType="html"
-        accept=".docx"
+        PreviewFileType="txt"
+        accept=".pdf"
         label="Select a file"
-        btnText="Download Html"
+        btnText="Download Text"
         isDownloadCompleted={downloadCompleted}
+        previewFileDesign={previewFileDesign}
       />
     </>
   );
 };
 
-export default DocsToHtml;
+export default PdfToText;

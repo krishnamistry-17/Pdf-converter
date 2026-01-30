@@ -19,7 +19,8 @@ interface PdfFileProps {
     | "pptx"
     | "doc"
     | "docx"
-    | "html";
+    | "html"
+    | "txt";
   accept: string;
   label: string;
   btnText: string;
@@ -65,9 +66,11 @@ const PdfFile = ({
           >
             {heading}
           </h1>
-          <p className="text-teal max-w-2xl mx-auto
+          <p
+            className="text-teal max-w-2xl mx-auto
           font-semibold text-center
-          ">
+          "
+          >
             {para}
           </p>
         </div>
@@ -86,9 +89,7 @@ const PdfFile = ({
           />
 
           {!fileSelected && !isDownloadCompleted && (
-            <p className="text-blue mt-8 text-center">
-              Upload a file to start
-            </p>
+            <p className="text-blue mt-8 text-center">Upload a file to start</p>
           )}
 
           <div className="mt-10">

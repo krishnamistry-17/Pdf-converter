@@ -11,7 +11,7 @@ const Herosection = () => {
       <p
         className="md:text-lg text-sm px-2  pt-2
       font-semibold text-center
-      bg-gradient-to-b bg-clip-text text-transparent from-blue to-gradient
+      text-teal
       "
       >
         This is a simple app that allows you to convert files to and from PDF.
