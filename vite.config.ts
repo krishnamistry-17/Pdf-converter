@@ -15,4 +15,17 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    chunkSizeWarningLimit: 800, // reduces noisy warnings (optional)
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom"],
+          pdf: ["pdfjs-dist"],
+          canvas: ["html2canvas"],
+          utils: ["dompurify"],
+        },
+      },
+    },
+  },
 });

@@ -174,8 +174,6 @@ const PreviewFile = ({
 
   const showPptPreview = () => <PptPreview />;
 
-  console.log("previewFileDesign", previewFileDesign);
-
   return (
     <div className="w-full flex flex-col items-center gap-3">
       <div className="w-full max-w-full sm:max-w-md my-4 flex flex-col items-center gap-2 px-2">

@@ -68,10 +68,6 @@ const MergePdfComponent = () => {
   const handleFileUpload1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setMergeFile1(file);
-    if (results.length >= 3) {
-      toast.error("You can only merge up to 2 files");
-      return;
-    }
     setSelectedMergeFile1(file as File);
     setPdfPreview1(URL.createObjectURL(file as File));
     setResults([
@@ -148,12 +144,17 @@ const MergePdfComponent = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await MergePdfs();
+
       clearMergeFile1();
       clearMergeFile2();
       clearResults();
       setPdfPreview1(null);
       setPdfPreview2(null);
-      toast.success("Merge pdf downloaded successfully!");
+      if (mergeFile1 && mergeFile2) {
+        toast.success("Merge pdf downloaded successfully!");
+      } else {
+        toast.error("Please select both PDF files to merge!");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Merge pdf download failed!");
@@ -171,7 +172,7 @@ const MergePdfComponent = () => {
               className="flex items-center justify-between  bg-gray-50 hover:bg-gray-100 transition cursor-pointer
               border border-gray-200 rounded-md p-3 "
             >
-              <p>{selectedMergeFile1.name}</p>
+              <p className="truncate">{selectedMergeFile1.name}</p>
               <button
                 className="text-blue cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedMergeFile1}
@@ -185,7 +186,7 @@ const MergePdfComponent = () => {
               className="flex items-center justify-between  bg-gray-50 hover:bg-gray-100 transition cursor-pointer
                 border border-gray-200 rounded-md p-3 "
             >
-              <p>{selectedMergeFile2.name}</p>
+              <p className="truncate">{selectedMergeFile2.name}</p>
               <button
                 className="text-blue cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedMergeFile2}

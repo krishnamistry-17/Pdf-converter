@@ -6,6 +6,7 @@ import {
   FaFileAlt,
   FaFilePdf,
   FaFileImage,
+  FaCrop,
 } from "react-icons/fa";
 export const navOptions = [
   { label: "Merge PDF", path: "/merge-pdfs" },
@@ -171,6 +172,12 @@ const allOptions = [
     icon: FaFilePdf,
     description: "Rotate a PDF file.",
   },
+  {
+    label: "Crop PDF",
+    path: "/crop-pdf",
+    icon: FaCrop,
+    description: "Crop a PDF file.",
+  },
 ];
 
 const organizedOptions = [
@@ -206,6 +213,12 @@ const editPdfOptions = [
     path: "/rotate-pdf",
     icon: FaFilePdf,
     description: "Rotate a PDF file.",
+  },
+  {
+    label: "Crop PDF",
+    path: "/crop-pdf",
+    icon: FaCrop,
+    description: "Crop a PDF file.",
   },
 ];
 

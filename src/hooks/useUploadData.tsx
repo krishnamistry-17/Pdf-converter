@@ -15,6 +15,12 @@ import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
+async function loadPdf(file: File) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  return pdf;
+}
+
 type TextItem = {
   str: string;
   transform: number[];
@@ -69,11 +75,7 @@ const useUploadData = () => {
       return;
     }
 
-    const arrayBuffer = await selectedFile.arrayBuffer();
-    const doc = await mammoth.extractRawText(
-      new Uint8Array(arrayBuffer) as any
-    );
-
+    const doc = await mammoth.extractRawText(selectedFile as any);
     const blob = new Blob([doc.value], { type: "text/html;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -156,8 +158,7 @@ const useUploadData = () => {
 
   // Pdf -> Json
   const convertPdfToJson = async (file: File) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pdf = await loadPdf(file);
 
     const pages: {
       pageNumber: number;
@@ -254,8 +255,7 @@ const useUploadData = () => {
   // Pdf -> csv
 
   const convertPdfToCsv = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pdf = await loadPdf(file);
 
     const rows: string[][] = [];
 
@@ -332,8 +332,7 @@ const useUploadData = () => {
   const ConvertPdfToPng = async (
     file: File
   ): Promise<{ previews: string[]; blobs: Blob[] }> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pdf = await loadPdf(file);
 
     const previews: string[] = [];
     const blobs: Blob[] = [];
@@ -992,6 +991,32 @@ const useUploadData = () => {
     downloadPdf(bytes, fileName);
   };
 
+  const CropPdf = async (
+    file: File,
+    crop: { x: number; y: number; width: number; height: number }
+  ) => {
+    const buffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(buffer);
+    const pages = pdf.getPageIndices();
+    const croppedPdf = await PDFDocument.create();
+    const croppedPages = await croppedPdf.copyPages(pdf, pages);
+    croppedPages.forEach((page) => {
+      page.setCropBox(crop.x, crop.y, crop.width, crop.height);
+      croppedPdf.addPage(page);
+    });
+    const bytes = await croppedPdf.save();
+    const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
+    downloadPdf(bytes, `cropped-${file.name}`);
+    return [
+      {
+        name: `cropped-${file.name}`,
+        blob,
+        url: URL.createObjectURL(blob),
+        pages: pdf.getPageCount().toString(),
+      },
+    ];
+  };
+
   return {
     ConvertExcelToJson,
     ConvertExcelToCsv,
@@ -1024,6 +1049,7 @@ const useUploadData = () => {
     rotatePdfDownload,
     addPageNumberToPdf,
     ConvertPdfToPng,
+    CropPdf,
   };
 };
 

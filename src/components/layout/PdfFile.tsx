@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+const PreviewFile = lazy(() => import("../PreviewFile"));
 
-import PreviewFile from "../PreviewFile";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import CustomInputModal from "../CustomInputModal";
+import GlobalLoader from "../GlobalLoader";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -84,7 +85,9 @@ const PdfFile = ({
           )}
 
           <div className="mt-10">
-            <PreviewFile previewFileDesign={previewFileDesign as any} />
+            <Suspense fallback={<GlobalLoader />}>
+              <PreviewFile previewFileDesign={previewFileDesign as any} />
+            </Suspense>
           </div>
 
           {fileSelected && !isDownloadCompleted && (
