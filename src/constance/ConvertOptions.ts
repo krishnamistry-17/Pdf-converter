@@ -6,7 +6,6 @@ import {
   FaFileAlt,
   FaFilePdf,
   FaFileImage,
-  FaWater,
 } from "react-icons/fa";
 export const navOptions = [
   { label: "Merge PDF", path: "/merge-pdfs" },
@@ -172,12 +171,6 @@ const allOptions = [
     icon: FaFilePdf,
     description: "Rotate a PDF file.",
   },
-  {
-    label: "WaterMark",
-    path: "/water-mark-pdf",
-    icon: FaWater,
-    description: "Add a watermark to a PDF file.",
-  },
 ];
 
 const organizedOptions = [
@@ -213,12 +206,6 @@ const editPdfOptions = [
     path: "/rotate-pdf",
     icon: FaFilePdf,
     description: "Rotate a PDF file.",
-  },
-  {
-    label: "WaterMark",
-    path: "/water-mark-pdf",
-    icon: FaWater,
-    description: "Add a watermark to a PDF file.",
   },
 ];
 

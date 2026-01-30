@@ -66,6 +66,7 @@ const PdfToJpg = () => {
     results.forEach((blob, index) =>
       downloadBlob(blob.blob, `page-${index + 1}.png`)
     );
+    toast.success("Conversion successful!");
     clearResults();
     setFileSelected(false);
     setDownloadCompleted(true);
@@ -80,6 +81,7 @@ const PdfToJpg = () => {
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipBlob, `${selectedFile?.name}.zip`);
+    toast.success("Conversion successful!");
     clearResults();
     setFileSelected(false);
     setDownloadCompleted(true);

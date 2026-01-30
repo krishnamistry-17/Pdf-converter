@@ -37,6 +37,15 @@ const PdfToWord = () => {
     setFileSelected(true);
   };
 
+  const downloadFile = (url: string, filename = "converted.docx") => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const handleUpload = async () => {
     if (!file) return alert("Select a PDF file first");
 
@@ -49,9 +58,8 @@ const PdfToWord = () => {
       });
       const docxUrl = response.data.url;
 
-      URL.revokeObjectURL(docxUrl);
-      window.open(docxUrl, "_blank");
-      toast.success(" Conversion successful!");
+      // URL.revokeObjectURL(docxUrl);
+      downloadFile(docxUrl);
       setDownloadCompleted(true);
       setFileSelected(false);
     } catch (error) {
@@ -65,6 +73,7 @@ const PdfToWord = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
+      toast.success("Conversion successful!");
       clearSelectedFile();
     } catch (error) {
       console.error(error);

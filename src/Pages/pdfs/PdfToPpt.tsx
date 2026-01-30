@@ -36,6 +36,15 @@ const PdfToPpt = () => {
     setFileSelected(true);
   };
 
+  const downloadFile = (url: string, filename = "converted.pptx") => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const handleUpload = async () => {
     if (!file) return toast.error("Select a PDF file first");
 
@@ -50,9 +59,8 @@ const PdfToPpt = () => {
       });
 
       const pptUrl = response.data.url;
-      window.open(pptUrl, "_blank");
-
-      toast.success("Conversion successful!");
+      downloadFile(pptUrl);
+      // window.open(pptUrl, "_blank");
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -64,6 +72,7 @@ const PdfToPpt = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
+      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

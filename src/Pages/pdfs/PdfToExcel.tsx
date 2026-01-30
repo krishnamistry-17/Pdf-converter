@@ -39,6 +39,15 @@ const PdftoExcel = () => {
     setFileSelected(true);
   };
 
+  const downloadFile = (url: string, filename = "converted.xlsx") => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const handleUpload = async () => {
     if (!file) return toast.error("Select a PDF file first");
 
@@ -53,10 +62,9 @@ const PdftoExcel = () => {
       });
 
       const excelUrl = response.data.url;
+      downloadFile(excelUrl);
 
-      window.open(excelUrl, "_blank");
-
-      toast.success(" Conversion successful!");
+      // window.open(excelUrl, "_blank");
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
