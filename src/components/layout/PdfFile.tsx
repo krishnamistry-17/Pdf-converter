@@ -59,10 +59,17 @@ const PdfFile = ({
     <div className="min-h-screen px-4 py-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+          <h1
+            className="text-3xl sm:text-4xl font-bold
+           text-blue leading-tight tracking-tight  mb-3"
+          >
             {heading}
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">{para}</p>
+          <p className="text-teal max-w-2xl mx-auto
+          font-semibold text-center
+          ">
+            {para}
+          </p>
         </div>
 
         <div
@@ -79,7 +86,7 @@ const PdfFile = ({
           />
 
           {!fileSelected && !isDownloadCompleted && (
-            <p className="text-gray-500 mt-8 text-center">
+            <p className="text-blue mt-8 text-center">
               Upload a file to start
             </p>
           )}

@@ -178,6 +178,12 @@ const allOptions = [
     icon: FaCrop,
     description: "Crop a PDF file.",
   },
+  {
+    label: "Convert PDF to Text",
+    path: "/docs-to-html",
+    icon: FaFilePdf,
+    description: "Convert a PDF file to a Text file.",
+  },
 ];
 
 const organizedOptions = [

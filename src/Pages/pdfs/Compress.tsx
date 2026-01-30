@@ -95,7 +95,7 @@ const CompressPdf = () => {
               />
             )}
              {results.length === 0 && (
-              <p className="text-gray-500 mt-8 text-center">
+              <p className="text-blue mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}

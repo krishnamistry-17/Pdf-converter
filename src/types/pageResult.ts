@@ -27,3 +27,11 @@ export interface ImageResult {
   url: string;
   blob: Blob;
 }
+
+export interface CropPdfResult {
+  name: string;
+  blob: Blob;
+  url: string;
+  pages: number;
+  fileName: string;
+}

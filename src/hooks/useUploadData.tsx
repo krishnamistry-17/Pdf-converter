@@ -11,7 +11,11 @@ import type { PageNumberOptions, PageResult } from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
 import { toast } from "react-toastify";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+import html2pdf from "html2pdf.js";
 import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://unpkg.com/pdfjs-dist@4.2.67/build/pdf.worker.min.js";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
@@ -67,22 +71,6 @@ const useUploadData = () => {
       a.click();
     };
     reader.readAsArrayBuffer(selectedFile as any);
-  };
-
-  const ConvertDocsToHtml = async () => {
-    if (!selectedFile) {
-      toast.error("Please select a file");
-      return;
-    }
-
-    const doc = await mammoth.extractRawText(selectedFile as any);
-    const blob = new Blob([doc.value], { type: "text/html;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${selectedFile?.name}.html`;
-    a.click();
-    setSelectedFile(null);
   };
 
   const ConvertExcelToJson = () => {
@@ -879,6 +867,7 @@ const useUploadData = () => {
       color: rgb(0, 0, 0),
     });
   };
+
   const toRoman = (num: number): string => {
     const map: [number, string][] = [
       [1000, "M"],
@@ -991,30 +980,63 @@ const useUploadData = () => {
     downloadPdf(bytes, fileName);
   };
 
-  const CropPdf = async (
-    file: File,
-    crop: { x: number; y: number; width: number; height: number }
-  ) => {
-    const buffer = await file.arrayBuffer();
-    const pdf = await PDFDocument.load(buffer);
-    const pages = pdf.getPageIndices();
-    const croppedPdf = await PDFDocument.create();
-    const croppedPages = await croppedPdf.copyPages(pdf, pages);
-    croppedPages.forEach((page) => {
-      page.setCropBox(crop.x, crop.y, crop.width, crop.height);
-      croppedPdf.addPage(page);
-    });
-    const bytes = await croppedPdf.save();
-    const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
-    downloadPdf(bytes, `cropped-${file.name}`);
-    return [
+  const ConvertDocsToHtml = async (file: File): Promise<void> => {
+    const arrayBuffer = await file.arrayBuffer();
+
+    const result = await mammoth.convertToHtml(
+      { arrayBuffer },
       {
-        name: `cropped-${file.name}`,
-        blob,
-        url: URL.createObjectURL(blob),
-        pages: pdf.getPageCount().toString(),
-      },
-    ];
+        styleMap: [
+          "p[style-name='Title'] => h1:fresh",
+          "p[style-name='Heading 1'] => h2:fresh",
+        ],
+      }
+    );
+
+    const blob = new Blob([result.value], { type: "text/html;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${file.name}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const ConvertPdfToText = async (file: File): Promise<string> => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    let fullText = "";
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const content = await page.getTextContent();
+
+      const pageText = content.items.map((item: any) => item.str).join(" ");
+
+      fullText += pageText + "\n\n";
+    }
+
+    return fullText;
+  };
+
+  const ConvertHtmlToPdf = async (
+    html: string,
+    fileName = "document.pdf"
+  ): Promise<void> => {
+    const container = document.createElement("div");
+    container.innerHTML = html;
+
+    await html2pdf()
+      .set({
+        margin: 10,
+        filename: fileName,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .from(container)
+      .save();
   };
 
   return {
@@ -1049,7 +1071,8 @@ const useUploadData = () => {
     rotatePdfDownload,
     addPageNumberToPdf,
     ConvertPdfToPng,
-    CropPdf,
+    ConvertPdfToText,
+    ConvertHtmlToPdf,
   };
 };
 

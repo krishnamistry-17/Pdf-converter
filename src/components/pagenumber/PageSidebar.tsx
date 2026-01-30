@@ -91,7 +91,7 @@ const PageSidebar = () => {
       <div className="flex flex-col gap-3 my-4">
         <div>
           <p className="font-semibold mb-2 text-blue">Page Mode:</p>
-          <div className="flex gap-2">
+          <div className="flex sm:flex-row flex-col gap-2">
             <button
               className={`px-4 py-2 rounded-md text-white ${
                 pageMode === "single"
@@ -123,7 +123,7 @@ const PageSidebar = () => {
           <div className="w-full">
             <p className="font-semibold mb-2 text-blue">Margin:</p>
             <div
-              className="relative w-full h-10 border rounded-md p-2 cursor-pointer"
+              className="relative w-full h-10 border border-blue/30 rounded-md p-2 cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
             >
               <div className="flex justify-between items-center">
@@ -265,7 +265,7 @@ const PageSidebar = () => {
         <div>
           <p className="font-semibold mb-2 text-blue">Text:</p>
           <div
-            className="relative border rounded-md p-2 cursor-pointer text-blue bg-sea border-blue/30"
+            className="relative border rounded-md p-2 cursor-pointer sm:w-auto max-w-md text-blue bg-sea border-blue/30"
             onClick={() => setTextMenuOpen(!textMenuOpen)}
           >
             <div className="flex justify-between items-center">
@@ -276,7 +276,7 @@ const PageSidebar = () => {
             </div>
 
             {textMenuOpen && (
-              <div className="absolute left-0 top-10 w-full bg-white shadow-md rounded-md z-50">
+              <div className="absolute left-0 top-10 sm:w-full max-w-md  bg-white shadow-md rounded-md z-50">
                 <button
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
                   onClick={() => {

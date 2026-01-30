@@ -16,13 +16,26 @@ const AllTab = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="text-center mb-12">
-        <h2 className="md:text-3xl text-2xl font-bold text-gray-900">All Conversion</h2>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
+        <h2
+          className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
+        text-blue  text-center"
+        >
+          All Conversion
+        </h2>
+        <p
+          className="md:text-lg text-md  mt-2
+        font-semibold text-center
+        text-teal
+        "
+        >
           Fast, secure, and easy file conversions
         </p>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
-          Convert your files to other formats easily and quickly. Choose the file
-          type you want to convert and click the convert button.
+        <p
+          className="md:text-lg text-md text-teal mt-2
+        font-semibold text-center"
+        >
+          Convert your files to other formats easily and quickly. Choose the
+          file type you want to convert and click the convert button.
         </p>
       </div>
 
@@ -47,15 +60,13 @@ const AllTab = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-bold text-blue mb-2">
                 {operation.label}
               </h3>
 
-              <p className="text-sm text-gray-500 mb-6">
-                {operation.description}
-              </p>
+              <p className="text-sm text-teal mb-6">{operation.description}</p>
 
-              <div className="flex justify-center sm:justify-start text-sm font-medium text-red-500">
+              <div className="flex justify-center sm:justify-start text-sm font-medium text-blue">
                 Convert now → All
               </div>
             </button>

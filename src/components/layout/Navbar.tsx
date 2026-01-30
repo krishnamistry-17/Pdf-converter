@@ -3,7 +3,7 @@ import { FaBars, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "../Dropdown";
 import { IoMdClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import PdfConverterLogo from "../../assets/svgs/pdf-converter-logo.svg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,9 +21,13 @@ const Navbar = () => {
   return (
     <header className=" text-white shadow-md sticky top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue via-teal to-blue">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center relative ">
-        <Link to="/" className="text-xl font-bold cursor-pointer">
-          PDF Converter
-        </Link>
+        <div onClick={() => navigate("/")}>
+          <img
+            src={PdfConverterLogo}
+            alt="PDF Converter Logo"
+            className="w-full h-full object-contain"
+          />
+        </div>
 
         <div className="md:flex hidden items-center gap-6">
           <button className="text-left" onClick={() => navigate("/merge-pdfs")}>

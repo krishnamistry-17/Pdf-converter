@@ -71,7 +71,9 @@ const Organize = () => {
     input.type = "file";
     input.accept = ".pdf";
     if (results.length >= 4) {
-      toast.error("This pdf range is already full, you can not upload more files");
+      toast.error(
+        "This pdf range is already full, you can not upload more files"
+      );
       return;
     }
 
@@ -151,12 +153,12 @@ const Organize = () => {
 
   const mergeDisplayFiles = () => {
     return (
-      <div className="flex flex-col gap-2 my-4">
+      <div className="flex flex-col gap-2 sm:my-4 my-2">
         <div className="flex flex-col gap-2">
           {selectOrganizeFile && (
             <div
               className="flex items-center justify-between  bg-gray-50 hover:bg-gray-100 transition cursor-pointer
-              border border-gray-200 rounded-md p-3 "
+              border border-gray-200 rounded-md p-3  truncate"
             >
               {selectOrganizeFile?.name}
               <button
@@ -171,7 +173,7 @@ const Organize = () => {
             <div
               key={file.name}
               className="flex items-center justify-between  bg-gray-50 hover:bg-gray-100 transition cursor-pointer
-              border border-gray-200 rounded-md p-3 "
+              border border-gray-200 rounded-md p-3  truncate"
             >
               {file.name}
               <button
@@ -214,27 +216,39 @@ const Organize = () => {
             )}
 
             {results.length === 0 && (
-              <p className="text-gray-500 mt-8 text-center">
+              <p className="text-blue mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}
 
-            {results.length > 0 && <OrganizePreviewGrid />}
+            {results.length > 0 && (
+              <>
+                {isMobile && results.length > 0 && (
+                  <div className=" flex flex-col gap-3">
+                    <h2 className="text-xl font-semibold py-4">
+                      SelectedFiles
+                    </h2>
+                    <p
+                      className="text-blue text-sm underline cursor-pointer"
+                      onClick={handleReset}
+                    >
+                      Reset All
+                    </p>
+                    {mergeDisplayFiles()}
+                    <button
+                      className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+                      onClick={handleOrganizePdf}
+                    >
+                      Organize <IoMdArrowForward className="ml-2" />
+                    </button>
+                  </div>
+                )}
+                <OrganizePreviewGrid />
+              </>
+            )}
           </div>
         </div>
       </div>
-      {isMobile && results.length > 0 && (
-        <div className=" flex flex-col gap-3">
-          <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
-          {mergeDisplayFiles()}
-          <button
-            className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
-            onClick={handleOrganizePdf}
-          >
-            Organize <IoMdArrowForward className="ml-2" />
-          </button>
-        </div>
-      )}
 
       {!isMobile && isSidebarVisible && (
         <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">

@@ -71,23 +71,25 @@ const PdfPageNumber = () => {
               )}
 
               {results.length === 0 && (
-                <p className="text-gray-500 mt-8 text-center">
+                <p className="text-blue mt-8 text-center">
                   Upload a PDF to start
                 </p>
               )}
               {results.length > 0 && (
-                <PageNumberPreviewGrid
-                  images={results.map((result) => result.url)}
-                />
+                <>
+                  {isMobile && results.length > 0 && (
+                    <div className=" flex flex-col gap-3 mt-3">
+                      <PageSidebar />
+                    </div>
+                  )}
+                  <PageNumberPreviewGrid
+                    images={results.map((result) => result.url)}
+                  />
+                </>
               )}
             </div>
           </div>
         </div>
-        {isMobile && results.length > 0 && (
-          <div className=" flex flex-col gap-3 mt-3">
-            <PageSidebar />
-          </div>
-        )}
         {!isMobile && isSidebarVisible && (
           <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto">
             <div className="p-6">

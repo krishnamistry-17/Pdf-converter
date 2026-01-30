@@ -36,7 +36,7 @@ const CustomInputModal = ({
                w-full sm:w-full max-w-md mx-auto
               px-10 py-4
               border-2 border-dashed border-blue/30
-              rounded-xl text-gray-600 font-medium
+              rounded-xl text-blue font-medium
               hover:border-blue 
               transition
             "
@@ -44,7 +44,7 @@ const CustomInputModal = ({
             {label}
           </button>
         )}
-        <p className="text-xs text-gray-400">Supported format: {accept}</p>
+        <p className="text-xs text-teal">Supported format: {accept}</p>
       </div>
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">

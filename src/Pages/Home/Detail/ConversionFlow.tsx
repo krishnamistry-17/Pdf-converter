@@ -5,10 +5,18 @@ const ConversionFlow = () => {
     <section className="max-w-[1100px] mx-auto px-4 py-16">
       {/* Header */}
       <div className="text-center mb-14">
-        <h2 className="md:text-3xl text-2xl font-bold text-gray-900">
+        <h2
+          className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
+        text-blue  text-center"
+        >
           How File Conversion Works
         </h2>
-        <p className="text-gray-500 mt-3 max-w-xl mx-auto">
+        <p
+          className="mt-3 max-w-xl mx-auto lg:text-lg text-md
+        font-semibold text-center
+        bg-gradient-to-b bg-clip-text text-transparent from-blue to-gradient
+        "
+        >
           Convert files in seconds with our fast and secure online tools.
         </p>
       </div>
@@ -38,10 +46,8 @@ const ConversionFlow = () => {
             </div>
 
             {/* Text */}
-            <h3 className="mt-6 text-lg font-semibold text-gray-900">
-              {step.title}
-            </h3>
-            <p className="mt-2 text-sm text-gray-600 max-w-[240px]">
+            <h3 className="mt-6 text-lg font-bold text-blue">{step.title}</h3>
+            <p className="mt-2 text-sm  text-blue leading-relaxed max-w-[240px]">
               {step.description}
             </p>
           </div>

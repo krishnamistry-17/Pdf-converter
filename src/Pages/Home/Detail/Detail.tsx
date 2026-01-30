@@ -13,10 +13,18 @@ const Detail = () => {
   return (
     <>
       <div className="mb-5 flex flex-col gap-3">
-        <h2 className="md:text-3xl text-2xl font-bold text-gray-900 text-center">
+        <h2
+          className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
+       text-blue  text-center"
+        >
           Why Choose Us?
         </h2>
-        <p className="text-gray-500 mt-3 max-w-xl mx-auto text-center px-2">
+        <p
+          className=" mt-3 max-w-xl mx-auto  px-2 lg:text-lg text-md
+         font-semibold text-center
+         bg-gradient-to-b bg-clip-text text-transparent from-blue to-gradient
+         "
+        >
           We are a team of experts who are dedicated to providing the best file
           conversion service.
         </p>
@@ -53,10 +61,10 @@ const Detail = () => {
             </div>
 
             <div className="relative z-10 flex flex-col gap-2">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+              <h3 className="text-lg sm:text-xl font-bold text-blue">
                 {item.title}
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed max-w-[380px]">
+              <p className="text-sm text-blue leading-relaxed max-w-[380px]">
                 {item.description}
               </p>
             </div>

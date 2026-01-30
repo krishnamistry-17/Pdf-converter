@@ -61,13 +61,13 @@ const OrganizePreviewGrid = () => {
   }
 
   return (
-    <div className="my-6 w-full">
+    <div className="my-6  w-full">
       <div className=" flex justify-center items-center 
       flex-wrap mx-auto gap-3">
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative"
+            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
           >
             <iframe
               src={file.url}

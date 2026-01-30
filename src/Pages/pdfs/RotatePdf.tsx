@@ -215,48 +215,54 @@ const RotatePdf = () => {
                 />
               )}
               {results.length === 0 && (
-                <p className="text-gray-500 mt-8 text-center">
+                <p className="text-blue mt-8 text-center">
                   Upload a PDF to start
                 </p>
               )}
-              {results.length > 0 && <RotatePreviewGrid />}
+              {results.length > 0 && (
+                <>
+                  {isMobile && results.length > 0 && (
+                    <div className=" flex flex-col mt-4">
+                      <h2 className="text-xl font-semibold py-4">
+                        SelectedFiles
+                      </h2>
+                      <div className="flex flex-col gap-2 my-4">
+                        <div
+                          className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
+                          onClick={() => handleRotateFromRight()}
+                        >
+                          <div className="bg-teal p-1 rounded-md">
+                            <FaRotateRight className=" " />
+                          </div>
+                          <p>Rotate From Right</p>
+                        </div>
+                        <div
+                          className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
+                          onClick={() => handleRotateFromLeft()}
+                        >
+                          <div className="bg-teal p-1 rounded-md">
+                            <FaRotateLeft className=" " />
+                          </div>
+                          <p>Rotate From Left</p>
+                        </div>
+                      </div>
+                      {mergeDisplayFiles()}
+
+                      <button
+                        className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+                        onClick={handleDownloadRotatedPdf}
+                      >
+                        Download Rotated PDF{" "}
+                        <IoMdArrowForward className="ml-2" />
+                      </button>
+                    </div>
+                  )}
+                  <RotatePreviewGrid />
+                </>
+              )}
             </div>
           </div>
         </div>
-
-        {isMobile && results.length > 0 && (
-          <div className=" flex flex-col mt-4">
-            <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
-            <div className="flex flex-col gap-2 my-4">
-              <div
-                className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
-                onClick={() => handleRotateFromRight()}
-              >
-                <div className="bg-teal p-1 rounded-md">
-                  <FaRotateRight className=" " />
-                </div>
-                <p>Rotate From Right</p>
-              </div>
-              <div
-                className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
-                onClick={() => handleRotateFromLeft()}
-              >
-                <div className="bg-teal p-1 rounded-md">
-                  <FaRotateLeft className=" " />
-                </div>
-                <p>Rotate From Left</p>
-              </div>
-            </div>
-            {mergeDisplayFiles()}
-
-            <button
-              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
-              onClick={handleDownloadRotatedPdf}
-            >
-              Download Rotated PDF <IoMdArrowForward className="ml-2" />
-            </button>
-          </div>
-        )}
 
         {!isMobile && isSidebarVisible && (
           <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">
@@ -281,7 +287,7 @@ const RotatePdf = () => {
 
               {mergeDisplayFiles()}
 
-              <div className=" my-4 bg-blue/10 text-blue border border-blue p-4 rounded-md hover:bg-blue transition cursor-pointer">
+              <div className=" my-4 bg-blue/10 text-blue border border-blue p-4 rounded-md  transition cursor-pointer">
                 <p>Mouse over below to see the rotation of the pages</p>
               </div>
 
