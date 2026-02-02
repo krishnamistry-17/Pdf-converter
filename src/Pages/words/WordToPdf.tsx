@@ -2,7 +2,6 @@ import useFilesStore from "../../store/useSheetStore";
 import { useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
-import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 
@@ -43,7 +42,7 @@ const WordToPdf = () => {
     formData.append("file", file);
 
     try {
-      const response = await api.post(API_ROUTES.WORD.WORD_TO_PDF, formData, {
+      const response = await api.post("/api/convert/word-to-pdf", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
