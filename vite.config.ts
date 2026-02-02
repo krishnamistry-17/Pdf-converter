@@ -9,14 +9,14 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       "/api": {
-        target: "https://96a27a668182.ngrok-free.app",
+        target: "https://a89b290e1a9b.ngrok-free.app",
         changeOrigin: true,
         secure: false,
       },
     },
   },
   build: {
-    chunkSizeWarningLimit: 800, // reduces noisy warnings (optional)
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
         manualChunks: {
