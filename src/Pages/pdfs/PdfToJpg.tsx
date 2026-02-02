@@ -31,7 +31,6 @@ const PdfToJpg = () => {
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [fileSelected, setFileSelected] = useState(false);
-  const [confirmDownlaod, setConfirmDownlaod] = useState(false);
 
   const isFileSelected = !!selectedFile;
 
@@ -64,16 +63,11 @@ const PdfToJpg = () => {
   const handleDownloadAll = () => {
     if (!results.length) return toast.error("No images to download");
 
-    if (!confirmDownlaod) {
-      const allow = window.confirm("Do you want to download this JPG images?");
-      if (!allow) return;
-      setConfirmDownlaod(true);
-    }
     try {
       results.forEach((blob, index) =>
         downloadBlob(blob.blob, `page-${index + 1}.png`)
       );
-      setConfirmDownlaod(false);
+
       toast.success("Download successful!");
       clearResults();
       setFileSelected(false);
@@ -88,18 +82,13 @@ const PdfToJpg = () => {
 
   const handleDownloadZip = async () => {
     if (!results.length) return toast.error("No images to zip");
-    if (!confirmDownlaod) {
-      const allow = window.confirm("Do you want to download this zip file?");
-      if (!allow) return; // user denied
-      setConfirmDownlaod(true);
-    }
+
     results.forEach((blob, index) =>
       zip.file(`page-${index + 1}.png`, blob.blob)
     );
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipBlob, `${selectedFile?.name}.zip`);
-    setConfirmDownlaod(false);
     toast.success("Conversion successful!");
     clearResults();
     setFileSelected(false);
