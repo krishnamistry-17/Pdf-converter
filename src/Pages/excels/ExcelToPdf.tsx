@@ -64,7 +64,7 @@ const ExcelToPdf = () => {
       a.download = data.fileName;
       a.click();
       URL.revokeObjectURL(data.downloadUrl);
-      
+      toast.success("Conversion successful!");
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -76,7 +76,6 @@ const ExcelToPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

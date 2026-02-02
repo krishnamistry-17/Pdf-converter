@@ -36,7 +36,7 @@ const CustomInputModal = ({
                w-full sm:w-full max-w-md mx-auto
               px-10 py-4
               border-2 border-dashed border-blue/30
-              rounded-xl text-blue font-medium
+              rounded-xl text-blueprimary font-medium
               hover:border-blue 
               transition
             "
@@ -44,13 +44,13 @@ const CustomInputModal = ({
             {label}
           </button>
         )}
-        <p className="text-xs text-teal">Supported format: {accept}</p>
+        <p className="text-xs text-blue/80 font-medium">Supported format: {accept}</p>
       </div>
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white text-blue rounded-xl p-6 w-full max-w-lg relative">
+          <div className="bg-white text-blueprimary rounded-xl p-6 w-full max-w-lg relative">
             <button
-              className="absolute sm:top-4 sm:right-4 top-1 right-2 text-blue"
+              className="absolute sm:top-4 sm:right-4 top-1 right-2 text-blueprimary"
               onClick={() => setModalOpen(false)}
             >
               <IoMdClose size={24} />

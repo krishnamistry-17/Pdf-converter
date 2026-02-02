@@ -2,16 +2,16 @@ const Herosection = () => {
   return (
     <div className="flex flex-col items-center justify-center pt-10 pb-5">
       <h1
-        className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
-      text-blue  text-center"
+        className=" font-bold lg:text-5xl md:text-4xl sm:text-3xl text-2xl  tracking-tight
+      text-blueprimary text-center"
       >
         {" "}
         Convert your files to and from PDF
       </h1>
       <p
-        className="md:text-lg text-sm px-2  pt-2
+        className="md:text-lg text-sm px-2  pt-2 font-interMedium
       font-semibold text-center
-      text-teal
+      text-teal/80
       "
       >
         This is a simple app that allows you to convert files to and from PDF.

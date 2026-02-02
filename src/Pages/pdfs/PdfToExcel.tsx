@@ -63,7 +63,7 @@ const PdftoExcel = () => {
 
       const excelUrl = response.data.url;
       downloadFile(excelUrl);
-
+      toast.success("Conversion successful!");
       // window.open(excelUrl, "_blank");
     } catch (error) {
       console.error(error);
@@ -76,7 +76,6 @@ const PdftoExcel = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

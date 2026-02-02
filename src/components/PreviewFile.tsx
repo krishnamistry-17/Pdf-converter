@@ -253,7 +253,7 @@ const PreviewFile = ({
           <p className="text-teal w-full text-center">No preview available</p>
         )}
 
-        <p className="text-sm text-teal flex flex-col items-center justify-center">
+        <p className="text-sm text-teal flex flex-col items-center justify-center truncate max-w-full">
           File Name: {selectedFile.name}
           <span className="text-xs text-blue pl-3">
             Selected file type is <span className="font-bold">{type}</span>

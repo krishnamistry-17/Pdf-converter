@@ -60,6 +60,7 @@ const PdfToPpt = () => {
 
       const pptUrl = response.data.url;
       downloadFile(pptUrl);
+      toast.success("Conversion successful!");
       // window.open(pptUrl, "_blank");
     } catch (error) {
       console.error(error);
@@ -72,7 +73,6 @@ const PdfToPpt = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

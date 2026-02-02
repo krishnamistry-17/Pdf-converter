@@ -6,19 +6,19 @@ import ConversionFlow from "./Detail/ConversionFlow";
 const Home = () => {
   return (
     <div className="w-full">
-      <section className="py-8">
+      <section className="py-5">
         <Herosection />
       </section>
 
-      <section className="pb-20">
+      <section className="pb-10">
         <ConvertTabs />
       </section>
 
-      <section className="pt-4 md:pb-20 pb-10">
+      <section className=" pb-10">
         <ConversionFlow />
       </section>
 
-      <section className="pt-4 pb-24">
+      <section className=" pb-10">
         <Detail />
       </section>
     </div>

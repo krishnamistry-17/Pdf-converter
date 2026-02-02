@@ -14,19 +14,27 @@ const OrganizedPdf = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="text-center mb-12">
-        <h2 className="md:text-3xl text-2xl font-bold text-gray-900">
+        <h2 className=" lg:text-4xl md:text-3xl text-2xl font-bold tracking-tight
+         text-blueprimary text-center"
+        >
           Organized PDFs
         </h2>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
+        <p className="md:text-lg text-md mt-2
+        font-medium text-center text-blue
+        "
+        >
           Fast, secure, and easy file organized
         </p>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
+        <p className="md:text-lg text-md mt-2
+        font-medium text-center text-blue
+        "
+        >
           Organize your PDF files easily and quickly. Choose the file type you
           want to organize and click the organize button.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {fileOperations
           .find((operation: any) => operation.title === "Organized PDFs")
           ?.options.map((operation: any, index: number) => (
@@ -47,15 +55,15 @@ const OrganizedPdf = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-bold text-blueprimary mb-2">
                 {operation.label}
               </h3>
 
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm font-medium text-teal/80 mb-6">
                 {operation.description}
               </p>
 
-              <div className="flex justify-center sm:justify-start text-sm font-medium text-red-500">
+              <div className="flex justify-center sm:justify-start text-sm font-medium text-blue">
                 Organize now →
               </div>
             </button>

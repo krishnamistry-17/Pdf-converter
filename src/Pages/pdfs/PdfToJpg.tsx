@@ -31,6 +31,7 @@ const PdfToJpg = () => {
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [fileSelected, setFileSelected] = useState(false);
+  const [confirmDownlaod, setConfirmDownlaod] = useState(false);
 
   const isFileSelected = !!selectedFile;
 
@@ -63,24 +64,42 @@ const PdfToJpg = () => {
   const handleDownloadAll = () => {
     if (!results.length) return toast.error("No images to download");
 
-    results.forEach((blob, index) =>
-      downloadBlob(blob.blob, `page-${index + 1}.png`)
-    );
-    toast.success("Conversion successful!");
-    clearResults();
-    setFileSelected(false);
-    setDownloadCompleted(true);
+    if (!confirmDownlaod) {
+      const allow = window.confirm("Do you want to download this JPG images?");
+      if (!allow) return;
+      setConfirmDownlaod(true);
+    }
+    try {
+      results.forEach((blob, index) =>
+        downloadBlob(blob.blob, `page-${index + 1}.png`)
+      );
+      setConfirmDownlaod(false);
+      toast.success("Download successful!");
+      clearResults();
+      setFileSelected(false);
+      setDownloadCompleted(true);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to download JPG images");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDownloadZip = async () => {
     if (!results.length) return toast.error("No images to zip");
-
+    if (!confirmDownlaod) {
+      const allow = window.confirm("Do you want to download this zip file?");
+      if (!allow) return; // user denied
+      setConfirmDownlaod(true);
+    }
     results.forEach((blob, index) =>
       zip.file(`page-${index + 1}.png`, blob.blob)
     );
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipBlob, `${selectedFile?.name}.zip`);
+    setConfirmDownlaod(false);
     toast.success("Conversion successful!");
     clearResults();
     setFileSelected(false);
@@ -92,7 +111,7 @@ const PdfToJpg = () => {
       <div className="max-w-4xl mx-auto">
         <SelectFile
           heading="Convert PDF to JPG"
-          description="Upload a PDF and download all pages as JPG images"
+          description="Upload a PDF and download all pages as JPG images or zip file"
         />
         <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
           {results.length === 0 && (

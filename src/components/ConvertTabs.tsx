@@ -24,24 +24,26 @@ const ConvertTabs = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 ">
+    <div className="max-w-7xl mx-auto px-4">
       <Tabs selectedIndex={activeTab} onSelect={setActiveTab}>
         <div className="hidden lg:flex justify-center mb-10">
           <TabList
             className="flex md:flex-row flex-row justify-between sm:bg-white/30 bg-transparent sm:w-auto w-full 
-            sm:rounded-full shadow-md sm:p-2 p-4 gap-2"
+            sm:rounded-full shadow-md sm:p-2 p-4 "
           >
             {tabs.map((tab: any, index: number) => {
               return (
                 <Tab
                   key={index}
                   className={`
-              cursor-pointer px-6 sm:py-3 py-2 md:text-md xl:text-lg font-semibold rounded-full text-center 
+              cursor-pointer px-4 sm:py-3 py-2 
+              md:text-md xl:text-lg 
+              rounded-full text-center 
               outline-none
               ${
                 activeTab === index
-                  ? "bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold transition-all duration-300 underline underline-offset-8 decoration-blue  pt-1 "
-                  : "text-blue hover:text-teal"
+                  ? "text-blueprimary font-bold  underline underline-offset-8 decoration-blue  pt-1 "
+                  : "text-blue font-medium"
               }
             `}
                 >
@@ -64,8 +66,8 @@ const ConvertTabs = () => {
               className={`text-sm md:text-md xl:text-lg text-center cursor-pointer
                 ${
                   activeTab === activeTab
-                    ? "  bg-gradient-to-r bg-clip-text text-transparent from-blue via-teal to-blue font-semibold"
-                    : "text-gray-500 hover:text-gray-900"
+                    ? "  text-blueprimary font-bold"
+                    : "text-teal font-medium"
                 }
                 `}
             >
@@ -84,7 +86,7 @@ const ConvertTabs = () => {
                 return (
                   <button
                     key={index}
-                    className="text-sm font-medium text-blue cursor-pointer"
+                    className="text-sm font-medium text-blueprimary cursor-pointer"
                     onClick={() => {
                       setActiveTab(index);
                       handleMenuOpen();

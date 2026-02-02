@@ -17,35 +17,35 @@ const AllTab = () => {
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="text-center mb-12">
         <h2
-          className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
-        text-blue  text-center"
+          className="lg:text-4xl md:text-3xl text-2xl font-bold tracking-tight
+        text-blueprimary  text-center"
         >
           All Conversion
         </h2>
         <p
-          className="md:text-lg text-md  mt-2
-        font-semibold text-center
-        text-teal
+          className="md:text-lg text-sm  mt-2
+        font-medium text-center
+        text-blue
         "
         >
           Fast, secure, and easy file conversions
         </p>
         <p
-          className="md:text-lg text-md text-teal mt-2
-        font-semibold text-center"
+          className="md:text-lg text-sm text-blue mt-2
+        font-medium text-center"
         >
           Convert your files to other formats easily and quickly. Choose the
           file type you want to convert and click the convert button.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {fileOperations
           .find((operation: any) => operation.title === "All")
           ?.options.map((operation: any, index: number) => (
             <button
               key={index}
-              className="group bg-white border border-gray-100 rounded-2xl p-6 
+              className="group bg-white/40  rounded-2xl p-6 
        shadow-sm hover:shadow-xl transition-all duration-300 
        hover:-translate-y-1 text-center sm:text-left"
               onClick={() => navigate(operation.path)}
@@ -60,14 +60,16 @@ const AllTab = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold text-blue mb-2">
+              <h3 className="text-lg font-bold text-blueprimary mb-2">
                 {operation.label}
               </h3>
 
-              <p className="text-sm text-teal mb-6">{operation.description}</p>
+              <p className="text-sm font-medium text-teal/80 mb-6">
+                {operation.description}
+              </p>
 
               <div className="flex justify-center sm:justify-start text-sm font-medium text-blue">
-                Convert now → All
+                Convert now →
               </div>
             </button>
           ))}

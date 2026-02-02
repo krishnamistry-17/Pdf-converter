@@ -16,19 +16,27 @@ const ConvertFromPdf = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       <div className="text-center mb-12">
-        <h2 className="md:text-3xl text-2xl font-bold text-gray-900">
+        <h2 className=" lg:text-4xl md:text-3xl text-2xl font-bold tracking-tight
+         text-blueprimary text-center"
+        >
           Convert from PDF
         </h2>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
+        <p className="md:text-lg text-md mt-2
+        font-medium text-center text-blue
+        "
+        >
           Fast, secure, and easy file conversions
         </p>
-        <p className="md:text-lg text-md text-gray-500 mt-2">
+        <p className="md:text-lg text-md mt-2
+        font-medium text-center text-blue
+        "
+        >
           Convert your PDF files to other formats easily and quickly. Choose the
           format you want to convert and click the convert button.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {fileOperations
           .find((operation: any) => operation.title === "Convert From PDF")
           ?.options.map((operation: any, index: number) => (
@@ -49,15 +57,15 @@ const ConvertFromPdf = () => {
                 </div>
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-bold text-blueprimary mb-2">
                 {operation.label}
               </h3>
 
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm font-medium text-teal/80 mb-6">
                 {operation.description}
               </p>
 
-              <div className="flex justify-center sm:justify-start text-sm font-medium text-red-500">
+              <div className="flex justify-center sm:justify-start text-sm font-medium text-blue">
                 Convert now →
               </div>
             </button>

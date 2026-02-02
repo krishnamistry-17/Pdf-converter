@@ -19,25 +19,35 @@ const Navbar = () => {
   };
 
   return (
-    <header className=" text-white shadow-md sticky top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue via-teal to-blue">
+    <header
+      className=" text-white shadow-md sticky top-0 left-0 right-0 
+      z-50 bg-gradient-to-r from-blue via-gradient to-blueprimary
+"
+    >
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center relative ">
         <div onClick={() => navigate("/")}>
           <img
             src={PdfConverterLogo}
             alt="PDF Converter Logo"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain font-medium"
           />
         </div>
 
         <div className="md:flex hidden items-center gap-6">
-          <button className="text-left" onClick={() => navigate("/merge-pdfs")}>
+          <button
+            className="text-left font-medium"
+            onClick={() => navigate("/merge-pdfs")}
+          >
             Merge PDF
           </button>
-          <button className="text-left" onClick={() => navigate("/split-pdfs")}>
+          <button
+            className="text-left font-medium"
+            onClick={() => navigate("/split-pdfs")}
+          >
             Split PDF
           </button>
           <button
-            className="text-left"
+            className="text-left font-medium"
             onClick={() => navigate("/compress-pdfs")}
           >
             Compress PDF
@@ -45,7 +55,7 @@ const Navbar = () => {
 
           <div className="relative">
             <button
-              className="flex items-center gap-2 text-left"
+              className="flex items-center gap-2 text-left font-medium"
               onClick={toggleDropdown}
               onMouseEnter={() => setOpen(true)}
             >
@@ -69,7 +79,8 @@ const Navbar = () => {
         {mobileMenu && (
           <div
             onMouseLeave={() => setMobileMenu(false)}
-            className="absolute top-14 z-50 right-0 mt-2 p-4 w-[250px] bg-white text-blue shadow-lg rounded-md text-sm"
+            className="absolute top-16 z-50 right-0 mt-2 p-4 w-[250px] bg-sea font-medium
+             text-blue shadow-lg rounded-md text-sm"
           >
             <div className="absolute top-3 right-3 cursor-pointer">
               <IoMdClose
@@ -82,25 +93,25 @@ const Navbar = () => {
               onClick={() => setMobileMenu(false)}
             >
               <button
-                className="text-left"
+                className="text-left font-medium"
                 onClick={() => navigate("/merge-pdfs")}
               >
                 Merge PDF
               </button>
               <button
-                className="text-left"
+                className="text-left font-medium"
                 onClick={() => navigate("/split-pdfs")}
               >
                 Split PDF
               </button>
               <button
-                className="text-left"
+                className="text-left font-medium"
                 onClick={() => navigate("/compress-pdfs")}
               >
                 Compress PDF
               </button>
               <button
-                className="text-left"
+                className="text-left font-medium"
                 onClick={() => navigate("/convert-pdfs")}
               >
                 Convert PDF

@@ -14,22 +14,22 @@ const Detail = () => {
     <>
       <div className="mb-5 flex flex-col gap-3">
         <h2
-          className="lg:text-4xl md:text-3xl text-2xl font-extrabold tracking-tight
-       text-blue  text-center"
+          className="lg:text-4xl md:text-3xl text-2xl font-bold tracking-tight
+       text-blueprimary  text-center"
         >
           Why Choose Us?
         </h2>
         <p
           className=" mt-3 max-w-xl mx-auto  px-2 lg:text-lg text-md
-         font-semibold text-center
-         bg-gradient-to-b bg-clip-text text-transparent from-blue to-gradient
+         font-medium text-center
+         text-blue
          "
         >
           We are a team of experts who are dedicated to providing the best file
           conversion service.
         </p>
       </div>
-      <div className="grid gap-8 md:grid-cols-2 max-w-[1240px] mx-auto w-full px-4">
+      <div className="grid gap-8 md:grid-cols-2 max-w-[1240px] mx-auto w-full md:px-8 px-4">
         {DetailText.map((item, index) => (
           <div
             key={index}
@@ -61,10 +61,10 @@ const Detail = () => {
             </div>
 
             <div className="relative z-10 flex flex-col gap-2">
-              <h3 className="text-lg sm:text-xl font-bold text-blue">
+              <h3 className="text-lg sm:text-xl font-bold text-blueprimary">
                 {item.title}
               </h3>
-              <p className="text-sm text-blue leading-relaxed max-w-[380px]">
+              <p className="text-sm text-teal/80 leading-relaxed font-medium max-w-[380px]">
                 {item.description}
               </p>
             </div>

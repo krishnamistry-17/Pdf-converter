@@ -6,7 +6,7 @@ import GlobalLoader from "../GlobalLoader";
 
 const Layout = () => {
   return (
-    <div className="min-h-screen flex flex-col  bg-main-gradient">
+    <div className="min-h-screen flex flex-col bg-gradient/50">
       <Navbar />
       <ScrollWindow>
         <GlobalLoader />

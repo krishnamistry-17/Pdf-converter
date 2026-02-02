@@ -62,8 +62,6 @@ const WordToPdf = () => {
       URL.revokeObjectURL(data.downloadUrl);
 
       toast.success("Conversion successful!");
-      setDownloadCompleted(true);
-      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -72,10 +70,12 @@ const WordToPdf = () => {
 
   const handleConvert = async () => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 100));
+
     try {
       await handleUpload();
       clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");

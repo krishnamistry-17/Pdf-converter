@@ -60,6 +60,7 @@ const PptToPdf = () => {
       a.download = "converted.pdf";
       a.click();
       URL.revokeObjectURL(pdfUrl);
+      toast.success("Conversion successful!");
     } catch (error) {
       console.error(error);
       alert("Download failed!");
@@ -71,7 +72,6 @@ const PptToPdf = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

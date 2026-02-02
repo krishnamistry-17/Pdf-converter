@@ -1,37 +1,24 @@
-work but remove downlaod btn after conversion
-
 all ---y
-pdf-to-word
 word-to-pdf
-pdf-to-excel
-excel-to-pdf
 ppt-to-pdf
 pdf-to-ppt
-
+pdf-to-excel
+pdf-to-word
+excel-to-pdf
 pdf-to-json----y,
 json-to-pdf----y,
 jpg-to-pdf----y
-csv-pdf----y,pdf-csv----y
-excel-to-json----y,excel-to-csv----y
-
-
-work- but change btn format
-pdf-to-jpg change ---y
-
+pdf-to-jpg---y      
+csv-pdf----y
+pdf-csv----y
+excel-to-json----y
+excel-to-csv----y
 merge pdf---y
-work but change merge ui
-
-split pdf-work but----y
-change split ui
-show selected file
-
-----y
-compress pdf-change btn ui
-on download close sidebar and show input
-
-organized-all work only change btn ui---y
-page-number -all work only change btn ui ---y
-rotate-pdf -all work only change btn ui ---y
-
-
-*****
+split--y
+compress---y
+organized---y
+page-number---y
+rotate---y
+croppdf---y
+docx-to-html---y
+pdf-to-text--y

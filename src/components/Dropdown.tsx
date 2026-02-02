@@ -19,7 +19,7 @@ const Dropdown = ({ close }: { close: () => void }) => {
       <div className="flex gap-8">
         {convertOptions.map((section: any, idx: number) => (
           <div key={idx}>
-            <h3 className="font-semibold mb-2">{section.title}</h3>
+            <h3 className="font-semibold text-blueprimary mb-2">{section.title}</h3>
             <ul className="space-y-1 items-center justify-center">
               {section.options.map((item: any, i: number) => (
                 <li key={i} className="text-center">
@@ -31,8 +31,8 @@ const Dropdown = ({ close }: { close: () => void }) => {
                     className="block w-full text-left px-2 py-1 rounded hover:bg-blue/10"
                   >
                     <div className="flex items-center gap-2 justify-start">
-                      <item.icon className=" text-blue text-lg" />
-                      <span className="text-sm">{item.label}</span>
+                      <item.icon className="  text-lg" />
+                      <span className="text-sm text-blueprimary font-medium">{item.label}</span>
                     </div>
                   </button>
                 </li>

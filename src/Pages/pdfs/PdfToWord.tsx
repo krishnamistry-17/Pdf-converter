@@ -60,11 +60,10 @@ const PdfToWord = () => {
 
       // URL.revokeObjectURL(docxUrl);
       downloadFile(docxUrl);
-      setDownloadCompleted(true);
-      setFileSelected(false);
+      toast.success("Conversion successful!");
     } catch (error) {
       console.error(error);
-      alert("Conversion failed!");
+      toast.error("Conversion failed!");
     }
   };
 
@@ -73,11 +72,12 @@ const PdfToWord = () => {
     await new Promise((r) => setTimeout(r, 100));
     try {
       await handleUpload();
-      toast.success("Conversion successful!");
       clearSelectedFile();
+      setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
-      alert("Conversion failed!");
+      toast.error("Conversion failed!");
     } finally {
       setLoading(false);
     }
