@@ -1,7 +1,6 @@
 import getFileType from "../constance/FileType";
 import useFilesStore from "../store/useSheetStore";
 import { useEffect, useState } from "react";
-import useClearOnTabChange from "../hooks/useClearOnTabChnage";
 import * as XLSX from "xlsx";
 import { useLocation } from "react-router-dom";
 
@@ -161,15 +160,10 @@ const PreviewFile = ({
 }: {
   previewFileDesign: string | null;
 }) => {
-  const selectedFile = useFilesStore((state) => state.selectedFile);
-  const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const location = useLocation();
-
-  useClearOnTabChange(clearSelectedFile);
-
-  useEffect(() => {
-    clearSelectedFile();
-  }, [location.pathname]);
+  const selectedFile = useFilesStore((state) => state.selectedFile);
+  
+  if (!previewFileDesign) return null;
 
   if (!selectedFile) return null;
 
@@ -180,12 +174,12 @@ const PreviewFile = ({
   return (
     <div className="w-full flex flex-col items-center gap-3">
       <div className="w-full max-w-full sm:max-w-md my-4 flex flex-col items-center gap-2 px-2">
-        {type === "pdf" && previewFileDesign && (
+        {type === "pdf" && (
           <div className="w-full max-w-full sm:max-w-md flex flex-col items-center gap-2">
             <iframe
               src={previewFileDesign}
               title="PDF Preview"
-              className="w-full h-[60vh] sm:h-80 rounded border"
+              className="w-full max-h-[50vh] sm:max-h-80 rounded "
               style={{
                 minHeight: "400px",
                 WebkitOverflowScrolling: "touch",

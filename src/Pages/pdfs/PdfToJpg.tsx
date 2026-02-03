@@ -33,7 +33,7 @@ const PdfToJpg = () => {
   const { ConvertPdfToPng, downloadBlob } = useUploadData();
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-  console.log("previewImages", previewImages);
+
   const [_fileSelected, setFileSelected] = useState(false);
   const [_showAllImages, setShowAllImages] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState(false);

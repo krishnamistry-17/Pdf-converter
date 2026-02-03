@@ -9,7 +9,7 @@ const JpgPreviewGrid = ({ images }: { images: string[] }) => {
           <div
             key={index}
             className="bg-white text-blue rounded-xl shadow-md p-2 object-contain 
-            flex flex-col relative w-full max-w-sm"
+            flex flex-col relative "
           >
             <img
               src={image}

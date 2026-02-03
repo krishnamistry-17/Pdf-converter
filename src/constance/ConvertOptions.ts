@@ -268,33 +268,21 @@ export const fileOperations = [
 
 export const compressPdfOptions = [
   {
-    label: "Extreme Compression",
-    description:
-      "Extreme compression will reduce the size of the PDF file to 10% of the original size.",
-    value: "100%",
-  },
-  {
-    label: "High Compression",
-    description:
-      "High compression will reduce the size of the PDF file to 25% of the original size.",
-    value: "75%",
-  },
-  {
-    label: "Medium Compression",
-    description:
-      "Medium compression will reduce the size of the PDF file to 50% of the original size.",
-    value: "50%",
-  },
-  {
-    label: "Low Compression",
+    label: "Low",
     description:
       "Low compression will reduce the size of the PDF file to 75% of the original size.",
-    value: "25%",
+    value: "low",
   },
   {
-    label: "Very Low Compression",
+    label: "Medium",
     description:
-      "Very low compression will reduce the size of the PDF file to 90% of the original size.",
-    value: "10%",
+      "Medium compression will reduce the size of the PDF file to 50% of the original size.",
+    value: "medium",
+  },
+  {
+    label: "High",
+    description:
+      "High compression will reduce the size of the PDF file to 25% of the original size.",
+    value: "high",
   },
 ];

@@ -35,3 +35,5 @@ export interface CropPdfResult {
   pages: number;
   fileName: string;
 }
+
+export type CompressionLevel = "low" | "medium" | "high";
