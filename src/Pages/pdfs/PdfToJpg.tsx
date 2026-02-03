@@ -1,6 +1,6 @@
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import JSZip from "jszip";
 import useImageStore from "../../store/useImageStore";
@@ -8,6 +8,9 @@ import SelectFile from "../../components/SelectFile";
 import ImagePreviewGrid from "../../components/ImagePreviewGrid";
 import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
+import type { ImageResult } from "../../types/pageResult";
+import { IoMdClose } from "react-icons/io";
+import Zipsidebar from "../../components/Zipsidebar";
 
 const PdfToJpg = () => {
   const zip = new JSZip();
@@ -30,48 +33,64 @@ const PdfToJpg = () => {
   const { ConvertPdfToPng, downloadBlob } = useUploadData();
 
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [fileSelected, setFileSelected] = useState(false);
+  console.log("previewImages", previewImages);
+  const [_fileSelected, setFileSelected] = useState(false);
+  const [_showAllImages, setShowAllImages] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const isFileSelected = !!selectedFile;
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isSidebarVisible = results.length > 0;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return toast.error("Please select a file");
 
     setSelectedFile(file);
-    setLoading(true);
     setFileSelected(true);
 
+    setResults([
+      {
+        name: file.name,
+        blob: file,
+        url: URL.createObjectURL(file),
+        fileName: file.name,
+        pages: 1,
+      } as ImageResult,
+    ]);
+
     try {
-      const { previews, blobs } = await ConvertPdfToPng(file);
+      setLoading(true);
+      const { previews } = await ConvertPdfToPng(file);
+
       setPreviewImages(previews);
-      setResults(
-        blobs.map((blob, index) => ({
-          name: `page-${index + 1}.png`,
-          url: previews[index],
-          blob: blob,
-        }))
-      );
-    } catch (e) {
-      toast.error("Failed to convert PDF");
+      setShowAllImages(true);
+    } catch (err) {
+      toast.error("Failed to generate previews");
     } finally {
       setLoading(false);
-      e.target.value = "";
     }
   };
 
-  const handleDownloadAll = () => {
+  const handleDownloadAll = async () => {
     if (!results.length) return toast.error("No images to download");
 
     try {
-      results.forEach((blob, index) =>
-        downloadBlob(blob.blob, `page-${index + 1}.png`)
-      );
-
+      setLoading(true);
+      await new Promise((r) => setTimeout(r, 100));
+      const { previews, blobs } = await ConvertPdfToPng(selectedFile as File);
+      previews.forEach((_preview, index) => {
+        downloadBlob(blobs[index], `page-${index + 1}.png`);
+      });
       toast.success("Download successful!");
       clearResults();
-      setFileSelected(false);
       setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Failed to download JPG images");
@@ -81,67 +100,87 @@ const PdfToJpg = () => {
   };
 
   const handleDownloadZip = async () => {
-    if (!results.length) return toast.error("No images to zip");
+    const { blobs } = await ConvertPdfToPng(selectedFile as File);
 
-    results.forEach((blob, index) =>
-      zip.file(`page-${index + 1}.png`, blob.blob)
-    );
+    blobs.forEach((blob, index) => {
+      zip.file(`page-${index + 1}.png`, blob);
+    });
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
     downloadBlob(zipBlob, `${selectedFile?.name}.zip`);
-    toast.success("Conversion successful!");
+    toast.success("Zip Download successful!");
+    clearResults();
+    setDownloadCompleted(true);
+    setFileSelected(false);
+  };
+
+  const handleReset = () => {
     clearResults();
     setFileSelected(false);
-    setDownloadCompleted(true);
+    setDownloadCompleted(false);
+    setPreviewImages([]);
   };
 
   return (
-    <div className="min-h-screen  px-4 py-12">
-      <div className="max-w-4xl mx-auto">
-        <SelectFile
-          heading="Convert PDF to JPG"
-          description="Upload a PDF and download all pages as JPG images or zip file"
-        />
-        <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
-          {results.length === 0 && (
-            <CustomInputModal
-              fileSelected={fileSelected}
-              label="Select a PDF"
-              accept=".pdf"
-              isDownloadCompleted={downloadCompleted}
-              clearDownloadCompleted={clearDownloadCompleted}
-              onFileUpload={handleFileUpload}
+    <>
+      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen  px-4 py-12">
+        <div
+          className={`flex-1  transition-all duration-300
+        ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
+      `}
+        >
+          <div className="max-w-4xl mx-auto">
+            <SelectFile
+              heading="PDF to JPG"
+              description="Convert a PDF file to JPG images."
             />
-          )}
-
-          {results.length === 0 && (
-            <p className="text-blue mt-8 text-center">Upload a PDF to start</p>
-          )}
-
-          {isFileSelected && previewImages.length > 0 && !downloadCompleted && (
-            <>
-              <ImagePreviewGrid images={previewImages} />
-
-              <div className="flex flex-col md:flex-row justify-center gap-4 mt-6">
-                <button
-                  onClick={handleDownloadAll}
-                  className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-6 py-3 rounded-md"
-                >
-                  Download All JPG
-                </button>
-
-                <button
-                  onClick={handleDownloadZip}
-                  className="bg-teal text-white px-6 py-3 rounded-md"
-                >
-                  Download ZIP
-                </button>
-              </div>
-            </>
-          )}
+            <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+              {results.length === 0 && (
+                <CustomInputModal
+                  fileSelected={results.length > 0}
+                  label="Select a PDF"
+                  accept=".pdf"
+                  isDownloadCompleted={downloadCompleted}
+                  clearDownloadCompleted={clearDownloadCompleted}
+                  onFileUpload={handleFileUpload}
+                />
+              )}
+              {results.length === 0 && (
+                <p className="text-blue mt-8 text-center">
+                  Upload a PDF to start
+                </p>
+              )}
+              {results.length > 0 && (
+                <>
+                  {isMobile && isSidebarVisible && (
+                    <Zipsidebar
+                      handleReset={handleReset}
+                      handleDownloadZip={handleDownloadZip}
+                      handleDownloadAll={handleDownloadAll}
+                    />
+                  )}
+                  <ImagePreviewGrid images={previewImages} />
+                </>
+              )}
+            </div>
+          </div>
         </div>
+        {!isMobile && isSidebarVisible && (
+          <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto">
+            <div className="p-6">
+              <button className="absolute top-5 right-5" onClick={handleReset}>
+                <IoMdClose />
+              </button>
+              <Zipsidebar
+                handleReset={handleReset}
+                handleDownloadZip={handleDownloadZip}
+                handleDownloadAll={handleDownloadAll}
+              />
+            </div>
+          </aside>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 

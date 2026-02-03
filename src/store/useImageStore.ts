@@ -9,6 +9,10 @@ interface ImageStore {
   selectedFile: File | null;
   setSelectedFile: (file: File | null) => void;
   clearSelectedFile: () => void;
+
+  selectedPageType: "all" | "zip";
+  setSelectedPageType: (type: "all" | "zip") => void;
+  clearSelectedPageType: () => void;
 }
 
 const useImageStore = create<ImageStore>((set) => ({
@@ -19,6 +23,10 @@ const useImageStore = create<ImageStore>((set) => ({
   selectedFile: null,
   setSelectedFile: (file: File | null) => set({ selectedFile: file }),
   clearSelectedFile: () => set({ selectedFile: null }),
+
+  selectedPageType: "all",
+  setSelectedPageType: (type: "all" | "zip") => set({ selectedPageType: type }),
+  clearSelectedPageType: () => set({ selectedPageType: "all" }),
 }));
 
 export default useImageStore;

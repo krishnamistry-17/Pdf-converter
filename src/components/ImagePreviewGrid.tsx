@@ -1,24 +1,22 @@
 const ImagePreviewGrid = ({ images }: { images: string[] }) => {
   return (
     <div className="mt-4 mb-10">
-      <div className=" flex justify-center items-center 
-      flex-wrap mx-auto gap-3">
+      <div className="flex flex-wrap gap-3 justify-center">
         {images.map((image, index) => (
           <div
             key={index}
-            className="bg-white text-blue rounded-xl shadow-md p-4 flex flex-col relative w-full max-w-sm"
+            className="bg-white rounded-xl shadow p-3 w-full max-w-sm"
           >
-            <iframe
+            <img
               src={image}
-              title={`image-${index}`}
-              className="w-full h-80 rounded border"
+              alt={`page-${index + 1}`}
+              className="w-full h-80 object-contain rounded border"
             />
-            <p className="font-medium mt-2">{`image-${index}`}</p>
+            <p className="text-center mt-2 font-medium">Page {index + 1}</p>
           </div>
         ))}
       </div>
     </div>
   );
 };
-
 export default ImagePreviewGrid;
