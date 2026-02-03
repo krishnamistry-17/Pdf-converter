@@ -82,8 +82,10 @@ const CompressPdf = () => {
             heading="Compress PDF"
             description="Compress a PDF file to reduce its size."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg 
-          border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div
+            className="bg-white/40 text-blue rounded-2xl shadow-lg 
+          border border-gray-100 p-6 sm:pt-10 sm:pb-14"
+          >
             {results.length === 0 && (
               <CustomInputModal
                 fileSelected={fileSelected}
@@ -94,7 +96,7 @@ const CompressPdf = () => {
                 onFileUpload={handleFileUpload}
               />
             )}
-             {results.length === 0 && (
+            {results.length === 0 && (
               <p className="text-blue mt-8 text-center">
                 Upload a PDF to start
               </p>
@@ -132,7 +134,7 @@ const CompressPdf = () => {
                 onClick={() => setSelectedSize(option.value)}
                 className={`
                   w-full text-left px-4 py-2 rounded-md border
-                  transition
+                  
                   ${
                     selectedSize === option.value
                       ? " bg-teal text-white"

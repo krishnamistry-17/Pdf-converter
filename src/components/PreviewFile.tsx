@@ -29,7 +29,7 @@ export const CsvPreview = ({ file }: { file: File }) => {
         overflow-x-auto overflow-y-auto
         bg-gray-100 rounded
         text-[11px] sm:text-xs
-        text-teal
+        text-blue
         px-2 py-1 sm:px-4 sm:py-2
         whitespace-pre break-all sm:break-normal
       "
@@ -128,7 +128,7 @@ export const WordPreview = () => {
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
         overflow-auto bg-white/40 rounded
-        text-teal
+        text-blue
         text-[11px] sm:text-xs
         px-2 py-1 sm:px-4 sm:py-2
       "
@@ -145,7 +145,7 @@ export const PptPreview = () => {
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
         overflow-auto bg-white/40 rounded
-        text-teal
+        text-blue
         text-[11px] sm:text-xs
         px-2 py-1 sm:px-4 sm:py-2
       "
@@ -244,13 +244,13 @@ const PreviewFile = ({
           "pptx",
           "html",
         ].includes(type || "") && (
-          <p className="text-teal w-full text-center">No preview available</p>
+          <p className="text-blue w-full text-center">No preview available</p>
         )}
 
-        <p className="text-sm text-teal flex flex-col items-center justify-center truncate max-w-full">
+        <p className="text-sm text-blue flex flex-col items-center justify-center truncate max-w-full">
           File Name: {selectedFile.name}
           <span className="text-xs text-blue pl-3">
-            Selected file type is <span className="font-bold">{type}</span>
+            Selected file type is <span className="font-semibold">{type}</span>
           </span>
         </p>
       </div>

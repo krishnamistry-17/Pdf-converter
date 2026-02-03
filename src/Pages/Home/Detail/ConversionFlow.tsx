@@ -6,15 +6,15 @@ const ConversionFlow = () => {
       {/* Header */}
       <div className="text-center mb-14">
         <h2
-          className="lg:text-4xl md:text-3xl text-2xl font-bold tracking-tight
-        text-blueprimary    text-center"
+          className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight
+        text-black   text-center"
         >
           How File Conversion Works
         </h2>
         <p
           className="mt-3 max-w-xl mx-auto lg:text-lg text-md
         font-medium text-center
-        text-blue
+          text-gray-500
         "
         >
           Convert files in seconds with our fast and secure online tools.
@@ -29,7 +29,7 @@ const ConversionFlow = () => {
         {steps.map((step: any, index: number) => (
           <div
             key={index}
-            className="group flex flex-col items-center text-center bg-white/40 rounded-2xl p-6"
+            className="group flex flex-col items-center text-center bg-white rounded-2xl p-6"
           >
             {/* Icon */}
             <div
@@ -46,8 +46,10 @@ const ConversionFlow = () => {
             </div>
 
             {/* Text */}
-            <h3 className="mt-6 text-lg font-bold text-blueprimary">{step.title}</h3>
-            <p className="mt-2 text-sm  text-teal/80 leading-relaxed font-medium max-w-[240px]">
+            <h3 className="mt-6 text-lg font-semibold text-black">
+              {step.title}
+            </h3>
+            <p className="mt-2 text-sm  text-blue leading-relaxed font-medium max-w-[240px]">
               {step.description}
             </p>
           </div>

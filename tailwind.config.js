@@ -20,6 +20,7 @@ module.exports = {
 
         /*Color palette*/
         blue: "#09637E",
+        
         teal: "#088395",
         gradient: "#7AB2B2",
         sea: "#EBF4F6",

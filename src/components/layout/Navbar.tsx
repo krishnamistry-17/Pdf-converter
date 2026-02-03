@@ -21,8 +21,7 @@ const Navbar = () => {
   return (
     <header
       className=" text-white shadow-md sticky top-0 left-0 right-0 
-      z-50 bg-gradient-to-r from-blue via-gradient to-blueprimary
-"
+      z-50 bg-blue"
     >
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center relative ">
         <div onClick={() => navigate("/")}>

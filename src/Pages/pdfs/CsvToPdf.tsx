@@ -7,7 +7,6 @@ import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const CsvToPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
-  const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
   const setDownloadCompleted = useFileSessionStore(
     (state) => state.setDownloadCompleted
   );
@@ -20,7 +19,9 @@ const CsvToPdf = () => {
   const { convertCsvToPdf } = useUploadData();
   const selectedFile = useFilesStore((state) => state.selectedFile);
   const [fileSelected, setFileSelected] = useState(false);
-
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -29,7 +30,7 @@ const CsvToPdf = () => {
       return;
     }
     setSelectedFile(file as any);
-    setPreviewFile(URL.createObjectURL(file as File) as string);
+    setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";
     setFileSelected(true);
   };
@@ -67,6 +68,7 @@ const CsvToPdf = () => {
         label="Select a file"
         btnText="Download PDF"
         isDownloadCompleted={downloadCompleted}
+        previewFileDesign={previewFileDesign}
       />
     </>
   );

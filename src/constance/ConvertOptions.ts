@@ -252,7 +252,7 @@ export const fileOperations = [
     options: editPdfOptions,
   },
   {
-    title: "Organized PDFs",
+    title: "Organized PDF",
     options: organizedOptions,
   },
   {

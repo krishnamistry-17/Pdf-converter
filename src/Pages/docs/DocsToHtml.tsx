@@ -8,7 +8,6 @@ import { useFileSessionStore } from "../../store/useFileSessionStore";
 const DocsToHtml = () => {
   const selectedFile = useFilesStore((state) => state.selectedFile);
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
-  const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const setDownloadCompleted = useFileSessionStore(
@@ -19,7 +18,9 @@ const DocsToHtml = () => {
   );
   const { ConvertDocsToHtml } = useUploadData();
   const [fileSelected, setFileSelected] = useState(false);
-
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
@@ -28,7 +29,7 @@ const DocsToHtml = () => {
       return;
     }
     setSelectedFile(file as any);
-    setPreviewFile(URL.createObjectURL(file as File) as string);
+    setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";
     setFileSelected(true);
   };
@@ -63,6 +64,7 @@ const DocsToHtml = () => {
         label="Select a file"
         btnText="Download Html"
         isDownloadCompleted={downloadCompleted}
+        previewFileDesign={previewFileDesign}
       />
     </>
   );

@@ -61,13 +61,13 @@ const PdfFile = ({
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-10">
           <h1
-            className="text-3xl sm:text-4xl font-bold
-           text-blueprimary leading-tight tracking-tight  mb-3"
+            className="text-3xl sm:text-4xl font-semibold
+           text-black leading-tight tracking-tight  mb-3"
           >
             {heading}
           </h1>
           <p
-            className="text-teal max-w-2xl mx-auto md:text-lg text-sm
+            className="text-gray-500 max-w-2xl mx-auto md:text-lg text-sm
           font-semibold text-center
           "
           >
@@ -89,7 +89,7 @@ const PdfFile = ({
           />
 
           {!fileSelected && !isDownloadCompleted && (
-            <p className="text-blueprimary mt-8 text-center">
+            <p className="text-blue mt-8 text-center">
               Upload a file to start
             </p>
           )}
@@ -105,8 +105,8 @@ const PdfFile = ({
               <button
                 onClick={handleConvert}
                 className="
-                bg-blueprimary hover:bg-gradient-to-r from-blueprimary to-teal text-white font-semibold
-                px-10 py-4 rounded-xl
+                bg-blue hover:bg-gradient-to-r from-blueprimary to-teal text-white font-semibold
+                px-10 py-4 rounded-xl max-w-xs w-full mx-auto
                 transition
                 shadow-card
               "

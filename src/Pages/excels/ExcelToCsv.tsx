@@ -8,7 +8,6 @@ import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const ExcelToCsv = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
-  const setPreviewFile = useFilesStore((state) => state.setPreviewFile);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
   const setDownloadCompleted = useFileSessionStore(
     (state) => state.setDownloadCompleted
@@ -19,6 +18,9 @@ const ExcelToCsv = () => {
   const setLoading = useFilesStore((state) => state.setLoading);
   const { ConvertExcelToCsv } = useUploadData();
   const [fileSelected, setFileSelected] = useState(false);
+  const [previewFileDesign, setPreviewFileDesign] = useState<string | null>(
+    null
+  );
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,7 +30,7 @@ const ExcelToCsv = () => {
       return;
     }
     setSelectedFile(file as any);
-    setPreviewFile(URL.createObjectURL(file as File) as string);
+    setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";
     setFileSelected(true);
   };
@@ -61,6 +63,7 @@ const ExcelToCsv = () => {
         label="Select a file"
         btnText="Download Csv"
         isDownloadCompleted={downloadCompleted}
+        previewFileDesign={previewFileDesign}
       />
     </>
   );

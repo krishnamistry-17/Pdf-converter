@@ -28,7 +28,7 @@ const ConvertTabs = () => {
       <Tabs selectedIndex={activeTab} onSelect={setActiveTab}>
         <div className="hidden lg:flex justify-center mb-10">
           <TabList
-            className="flex md:flex-row flex-row justify-between sm:bg-white/30 bg-transparent sm:w-auto w-full 
+            className="flex md:flex-row flex-row justify-between sm:bg-white/40 bg-transparent sm:w-auto w-full 
             sm:rounded-full shadow-md sm:p-2 p-4 "
           >
             {tabs.map((tab: any, index: number) => {
@@ -59,7 +59,7 @@ const ConvertTabs = () => {
               setActiveTab(activeTab);
               handleMenuOpen();
             }}
-            className=" bg-white/30 rounded-3xl shadow-sm border border-gray-100 cursor-pointer
+            className=" bg-white/40 rounded-3xl shadow-sm border border-gray-100 cursor-pointer
           py-4 px-6 flex items-center justify-between w-full"
           >
             <label
@@ -67,7 +67,7 @@ const ConvertTabs = () => {
                 ${
                   activeTab === activeTab
                     ? "  text-blueprimary font-bold"
-                    : "text-teal font-medium"
+                    : "text-blue font-medium"
                 }
                 `}
             >
