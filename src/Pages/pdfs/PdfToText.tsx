@@ -29,7 +29,7 @@ const PdfToText = () => {
       toast.error("Please select a file");
       return;
     }
-    console.log(file);
+  
     setSelectedFile(file as any);
     setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";

@@ -14,7 +14,7 @@ const CropPreviewGrid = ({
   const { clearCropResults, clearResults } = useCropPdfStore();
   const selectedPageType = useCropPdfStore((state) => state.selectedPageType);
   const cropResults = useCropPdfStore((state) => state.cropResults);
-  console.log(showCropImage);
+ 
 
   const filteredImages =
     selectedPageType === "current" ? images.slice(0, 1) : images;
@@ -24,7 +24,6 @@ const CropPreviewGrid = ({
       ? cropResults.map((r) => URL.createObjectURL(r.blob))
       : filteredImages;
 
-  console.log(showImages);
 
   const downloadCroppedImages = () => {
     cropResults.forEach((result) => {

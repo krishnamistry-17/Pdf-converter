@@ -7,7 +7,11 @@ import useSplitStore from "../store/useSplitStore";
 import mammoth from "mammoth";
 import autoTable from "jspdf-autotable";
 import { degrees } from "pdf-lib";
-import type { PageNumberOptions, PageResult } from "../types/pageResult";
+import type {
+  ImageResult,
+  PageNumberOptions,
+  PageResult,
+} from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
 import { toast } from "react-toastify";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
@@ -296,24 +300,35 @@ const useUploadData = () => {
   };
 
   // Jpg,png,jpeg -> Pdf
-  const ConvertJpgToPdf = async () => {
-    showError();
-    try {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const image = event.target?.result as string;
+  const ConvertJpgToPdf = async (
+    results: ImageResult[],
+    fileName = "converted.pdf"
+  ) => {
+    if (results.length === 0) return;
 
-        const pdf = new jsPDF();
-        pdf.addImage(image, "JPEG,PNG,JPG", 10, 10, 100, 100);
-        pdf.save("converted.pdf");
-        setSelectedFile(null);
-      };
-      reader.readAsDataURL(selectedFile as any);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to convert JPG to PDF");
+    const pdf = new jsPDF();
+
+    for (let i = 0; i < results.length; i++) {
+      const file = results[i].blob as File;
+      const imageData = await fileToBase64(file);
+
+      const imageType = file.type === "image/png" ? "PNG" : "JPEG";
+
+      if (i !== 0) pdf.addPage();
+      // pdf.addImage(imageData, imageType, x, y, width, height);
+      pdf.addImage(imageData, imageType, 10, 10, 100, 100);
     }
+
+    pdf.save(fileName);
   };
+
+  const fileToBase64 = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 
   //pdf -> png,jpg,jpeg
   const ConvertPdfToPng = async (

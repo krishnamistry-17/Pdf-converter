@@ -46,7 +46,6 @@ const ImageCropper = ({ src, onCropComplete, setShowCropImage }: Props) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    console.log(completedCrop, "completedCrop-----------------");
     const image = imgRef.current;
 
     const scaleX = image.naturalWidth / image.width;
@@ -67,7 +66,6 @@ const ImageCropper = ({ src, onCropComplete, setShowCropImage }: Props) => {
       completedCrop.height
     );
 
-    console.log(canvas, "canvas-----------------");
 
     const base64Image = canvas.toDataURL("image/png");
     onCropComplete(base64Image);

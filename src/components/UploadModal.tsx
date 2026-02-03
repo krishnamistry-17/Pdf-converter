@@ -81,7 +81,7 @@ const UploadModal = ({
             Browse
           </button>
           <p className="text-gray-600 pt-4">{label}</p>
-          <p className="text-gray-500 text-sm">Supported formats: {accept}</p>
+          <p className="text-gray-500 text-sm text-center">Supported formats: {accept}</p>
         </div>
       </div>
     </>

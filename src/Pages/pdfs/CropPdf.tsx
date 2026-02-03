@@ -15,7 +15,7 @@ const CropPdf = () => {
   const { ConvertPdfToPng } = useUploadData();
   const { results, setResults, setCropResults, clearSelectCropPdfFile } =
     useCropPdfStore((state) => state);
-  console.log(results);
+ 
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
@@ -63,14 +63,14 @@ const CropPdf = () => {
   };
 
   const handleCropComplete = async (base64: string) => {
-    console.log("base64", base64);
+ 
     // Get the result as a data URL (Base64 string) or Blob
     const blob = await fetch(base64).then((res) => res.blob());
     const file = new File([blob], "cropped.png", { type: "image/png" });
-    console.log("file", file);
+  
 
     const fileUrl = URL.createObjectURL(file);
-    console.log("fileUrl", fileUrl);
+
     setCropResults([
       {
         name: "cropped.png",
