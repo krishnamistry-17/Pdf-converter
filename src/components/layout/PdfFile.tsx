@@ -4,6 +4,7 @@ const PreviewFile = lazy(() => import("../PreviewFile"));
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import CustomInputModal from "../CustomInputModal";
 import GlobalLoader from "../GlobalLoader";
+import ExtractedTextPreview from "../ExtractedTextPreview";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -25,6 +26,7 @@ interface PdfFileProps {
   label: string;
   btnText: string;
   isDownloadCompleted: boolean;
+  extractedText?: string;
 }
 const PdfFile = ({
   previewFileDesign,
@@ -37,6 +39,7 @@ const PdfFile = ({
   label,
   btnText,
   isDownloadCompleted,
+  extractedText,
 }: PdfFileProps) => {
   const [modalOpen, _setModalOpen] = useState(false);
   const clearDownloadCompleted = useFileSessionStore(
@@ -89,12 +92,13 @@ const PdfFile = ({
           />
 
           {!fileSelected && !isDownloadCompleted && (
-            <p className="text-blue mt-8 text-center">
-              Upload a file to start
-            </p>
+            <p className="text-blue mt-8 text-center">Upload a file to start</p>
           )}
 
           <div className="mt-10">
+            {extractedText && (
+              <ExtractedTextPreview text={extractedText as string} />
+            )}
             <Suspense fallback={<GlobalLoader />}>
               <PreviewFile previewFileDesign={previewFileDesign as any} />
             </Suspense>

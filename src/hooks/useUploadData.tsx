@@ -14,6 +14,7 @@ import type {
 } from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
 import { toast } from "react-toastify";
+import { createWorker } from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
 //this is for pdf to text conversion
@@ -1044,6 +1045,73 @@ const useUploadData = () => {
     }
   };
 
+  const extractTextFromPDF = async (file: File) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      let fullText = "";
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+
+        const pageText = content.items.map((item: any) => item.str).join(" ");
+
+        fullText += pageText + "\n\n" + '"\n\n';
+      }
+      console.log("fullText", fullText);
+      return fullText;
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to convert PDF to Text");
+    }
+  };
+
+  const extractTextFromImages = async (image: string | File) => {
+    const worker = await createWorker("eng");
+
+    await worker.reinitialize("eng");
+
+    const {
+      data: { text },
+    } =
+      typeof image === "string"
+        ? await worker.recognize(image)
+        : await worker.recognize(image);
+
+    await worker.terminate();
+    console.log("text", text);
+
+    return text;
+  };
+
+  const pdfPageToImage = async (file: File) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+    const images: string[] = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 2 });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const context = canvas.getContext("2d");
+      if (!context) continue;
+
+      await page.render({ canvasContext: context, viewport }).promise;
+
+      const dataUrl = canvas.toDataURL("image/png");
+      images.push(dataUrl);
+    }
+
+    return images;
+  };
+
   return {
     ConvertExcelToJson,
     ConvertExcelToCsv,
@@ -1077,6 +1145,9 @@ const useUploadData = () => {
     addPageNumberToPdf,
     ConvertPdfToPng,
     ConvertPdfToText,
+    extractTextFromPDF,
+    extractTextFromImages,
+    pdfPageToImage,
   };
 };
 

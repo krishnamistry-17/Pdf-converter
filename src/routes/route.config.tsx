@@ -28,6 +28,7 @@ import RotatePdf from "../Pages/pdfs/RotatePdf";
 import PdfToJpg from "../Pages/pdfs/PdfToJpg";
 import CropPdf from "../Pages/pdfs/CropPdf";
 import PdfToText from "../Pages/pdfs/PdfToText";
+import ExtractText from "../Pages/ExtractText/ExtractText";
 
 const routes = createBrowserRouter([
   {
@@ -145,6 +146,10 @@ const routes = createBrowserRouter([
       {
         path: "/pdf-to-text",
         element: <PdfToText />,
+      },
+      {
+        path: "/extract-text",
+        element: <ExtractText />,
       },
     ],
   },

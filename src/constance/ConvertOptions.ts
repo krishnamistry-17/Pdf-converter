@@ -190,6 +190,12 @@ const allOptions = [
     icon: FaFilePdf,
     description: "Convert a PDF file to a Text file.",
   },
+  {
+    label: "Extract Text from PDF or Images",
+    path: "/extract-text",
+    icon: FaFileImage,
+    description: "Extract text from a PDF file or Images.",
+  },
 ];
 
 const organizedOptions = [

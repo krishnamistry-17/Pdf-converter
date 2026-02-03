@@ -162,7 +162,7 @@ const PreviewFile = ({
 }) => {
   const location = useLocation();
   const selectedFile = useFilesStore((state) => state.selectedFile);
-  
+
   if (!previewFileDesign) return null;
 
   if (!selectedFile) return null;
@@ -230,6 +230,22 @@ const PreviewFile = ({
           />
         )}
 
+        {type === "txt" && (
+          <pre
+            className="
+              w-full max-w-full sm:max-w-md
+              max-h-[50vh] sm:max-h-80
+              overflow-x-auto overflow-y-auto
+              bg-white/40 rounded
+              text-blue
+              text-[11px] sm:text-xs
+              px-2 py-1 sm:px-4 sm:py-2
+            "
+          >
+            {previewFileDesign}
+          </pre>
+        )}
+
         {![
           "pdf",
           "jpg",
@@ -243,6 +259,7 @@ const PreviewFile = ({
           "docx",
           "pptx",
           "html",
+          "txt",
         ].includes(type || "") && (
           <p className="text-blue w-full text-center">No preview available</p>
         )}
@@ -259,3 +276,5 @@ const PreviewFile = ({
 };
 
 export default PreviewFile;
+
+

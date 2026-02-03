@@ -44,7 +44,9 @@ const CustomInputModal = ({
             {label}
           </button>
         )}
+        {!fileSelected && (
         <p className="text-xs text-blue/80 font-medium">Supported format: {accept}</p>
+        )}
       </div>
       {modalOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
