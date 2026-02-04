@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 const PreviewFile = lazy(() => import("../PreviewFile"));
 
 import { useFileSessionStore } from "../../store/useFileSessionStore";
@@ -41,23 +41,9 @@ const PdfFile = ({
   isDownloadCompleted,
   extractedText,
 }: PdfFileProps) => {
-  const [modalOpen, _setModalOpen] = useState(false);
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-
-  useEffect(() => {
-    if (modalOpen) {
-      const stopScrollOutSide = (e: MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-      };
-      document.addEventListener("wheel", stopScrollOutSide, { passive: false });
-      return () => {
-        document.removeEventListener("wheel", stopScrollOutSide);
-      };
-    }
-  }, [modalOpen]);
 
   return (
     <div className="min-h-screen px-4 py-12">

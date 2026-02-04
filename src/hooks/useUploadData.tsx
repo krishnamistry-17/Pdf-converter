@@ -1149,17 +1149,6 @@ const useUploadData = () => {
     return true;
   };
 
-  //summerize long pdf into short points
-  const SummerizePdf = async (file: File) => {
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to summarize PDF");
-    }
-  };
-
   return {
     ConvertExcelToJson,
     ConvertExcelToCsv,

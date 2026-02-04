@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import SelectFile from "../../components/SelectFile";
 import { usePdfPageNumbersStore } from "../../store/usePdfPageNumbers";
 import PageNumberPreviewGrid from "../../components/pagenumber/PageNumberPreviewGrid";
@@ -7,9 +6,10 @@ import useUploadData from "../../hooks/useUploadData";
 import PageSidebar from "../../components/pagenumber/PageSidebar";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const PdfPageNumber = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobileSize();
   const { results, setResults, setSelectPdfPageNumberFile, clearResults } =
     usePdfPageNumbersStore();
   const { extractAllPages } = useUploadData();
@@ -19,12 +19,6 @@ const PdfPageNumber = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

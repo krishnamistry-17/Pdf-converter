@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-
 import useFilesStore from "../../store/useSheetStore";
 import ExtractedTextPreview from "../../components/OCR/ExtractedTextPreview";
 import SelectFile from "../../components/SelectFile";
@@ -9,15 +8,19 @@ import { useOCR } from "../../hooks/useOCR";
 import UploadModal from "../../components/UploadModal";
 import OCRLoader from "../../components/OCR/OCRLoader";
 import OCRPreview from "../../components/OCR/OCRPreview";
+import { FaMagic } from "react-icons/fa";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const ExtractText = () => {
+  const isMobile = useMobileSize();
   const { extractText, ocrLoading, text: extractedText } = useOCR();
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const selectedFile = useFilesStore((state) => state.selectedFile);
 
-  const { setResults } = useExtractPdfStore();
+  const { setResults, results } = useExtractPdfStore();
   const [fileSelected, setFileSelected] = useState(false);
   const [previewFile, setPreviewFile] = useState<string | null>(null);
+  const isSidebarVisible = results.length > 0;
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,16 +39,19 @@ const ExtractText = () => {
 
   const handleStartOCR = async () => {
     await extractText(selectedFile as File);
-    // await extractText(file);
   };
 
   return (
-    <div className="flex flex-col min-h-screen  px-4 py-12">
-      <div className="flex-1">
+    <div className="flex flex-col min-h-screen  px-4 py-12 relative">
+      <div
+        className={`flex-1  transition-all duration-300 
+        ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
+      `}
+      >
         <div className="max-w-4xl mx-auto">
           <SelectFile
-            heading="Extract Text from PDF or Images"
-            description="Extract text from a PDF file."
+            heading="OCR Pdf or Images"
+            description="Extract text from a PDF or Images."
           />
           <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             <UploadModal
@@ -79,6 +85,14 @@ const ExtractText = () => {
           </div>
         </div>
       </div>
+      {fileSelected && (
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
+          <button className="bg-blue text-white px-4 py-2 rounded-md flex items-center gap-2">
+            <FaMagic />
+            Summarize
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectFile from "../../components/SelectFile";
 import { useOrganizeStore } from "../../store/useOrganizeStore";
 import OrganizePreviewGrid from "../../components/organize/OrganizePreviewGrid";
@@ -15,6 +15,7 @@ import useFilesStore from "../../store/useSheetStore";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const Organize = () => {
   const setLoading = useFilesStore((state) => state.setLoading);
@@ -31,7 +32,7 @@ const Organize = () => {
 
   const { extractAllPages, organizePdf } = useUploadData();
 
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobileSize();
   const [isSorted, setIsSorted] = useState(false);
   const [newSelectedFiles, setNewSelectedFiles] = useState<File[]>([]);
 
@@ -41,13 +42,6 @@ const Organize = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

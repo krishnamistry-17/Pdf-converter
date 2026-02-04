@@ -1,21 +1,21 @@
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import JSZip from "jszip";
 import useImageStore from "../../store/useImageStore";
 import SelectFile from "../../components/SelectFile";
 import ImagePreviewGrid from "../../components/ImagePreviewGrid";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import type { ImageResult } from "../../types/pageResult";
 import { IoMdClose } from "react-icons/io";
 import Zipsidebar from "../../components/Zipsidebar";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const PdfToJpg = () => {
   const zip = new JSZip();
-
+  const isMobile = useMobileSize();
   const setSelectedFile = useFilesStore((s) => s.setSelectedFile);
   const selectedFile = useFilesStore((s) => s.selectedFile);
   const setLoading = useFilesStore((s) => s.setLoading);
@@ -37,14 +37,6 @@ const PdfToJpg = () => {
 
   const [_fileSelected, setFileSelected] = useState(false);
   const [_showAllImages, setShowAllImages] = useState<boolean>(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const isSidebarVisible = results.length > 0;
 

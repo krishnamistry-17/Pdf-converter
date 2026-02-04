@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRotatedPdfStore } from "../../store/useRotatePdfStore";
 import SelectFile from "../../components/SelectFile";
 import RotatePreviewGrid from "../../components/rotatepdf/RotatePreviewGrid";
@@ -14,9 +14,10 @@ import { FaRotateLeft, FaRotateRight } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const RotatePdf = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobileSize();
   const setLoading = useFilesStore((state) => state.setLoading);
   const {
     results,
@@ -35,13 +36,6 @@ const RotatePdf = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

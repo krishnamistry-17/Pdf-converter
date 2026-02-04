@@ -9,8 +9,10 @@ import Size from "../../components/split/Size";
 import { PDFDocument } from "pdf-lib";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const SplitPdfComponent = () => {
+  const isMobile = useMobileSize();
   const { selectedFile, setSelectedFile, clearSelectedFile } =
     useFileSessionStore();
 
@@ -31,15 +33,6 @@ const SplitPdfComponent = () => {
 
   const [isTabChanged, setIsTabChanged] = useState(false);
   const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

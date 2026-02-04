@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import SelectFile from "../../components/SelectFile";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
@@ -15,9 +15,10 @@ import useFilesStore from "../../store/useSheetStore";
 import { toast } from "react-toastify";
 import useUploadData from "../../hooks/useUploadData";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const JpgToPdf = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobileSize();
   const [newSelectedFiles, setNewSelectedFiles] = useState<File[]>([]);
   const setLoading = useFilesStore((state) => state.setLoading);
   const { ConvertJpgToPdf } = useUploadData();
@@ -36,13 +37,6 @@ const JpgToPdf = () => {
   const clearSelectedFile = useImageStore((state) => state.clearSelectedFile);
   const clearResults = useImageStore((state) => state.clearResults);
   const isSidebarVisible = results.length > 0;
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

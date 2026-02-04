@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
 import SelectFile from "../../components/SelectFile";
@@ -12,8 +12,11 @@ import {
 } from "react-icons/io";
 import { useOrganizeStore } from "../../store/useOrganizeStore";
 import UploadModal from "../../components/UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 
 const MergePdfComponent = () => {
+  const isMobile = useMobileSize();
+
   const [pdfPreview1, setPdfPreview1] = useState<string | null>(null);
   const [pdfPreview2, setPdfPreview2] = useState<string | null>(null);
 
@@ -55,15 +58,6 @@ const MergePdfComponent = () => {
 
   const setLoading = useFilesStore((state) => state.setLoading);
   const { MergePdfs } = useUploadData();
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleFileUpload1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
