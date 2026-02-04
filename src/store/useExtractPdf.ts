@@ -24,6 +24,22 @@ interface ExtractStore {
   selectedLanguage: string;
   setSelectedLanguage: (language: string) => void;
   clearSelectedLanguage: () => void;
+
+  summerizeText: string;
+  setSummerizeText: (text: string) => void;
+  clearSummerizeText: () => void;
+
+  summaryStatus: "idle" | "loading" | "options" | "done";
+  setSummaryStatus: (status: "idle" | "loading" | "options" | "done") => void;
+  clearSummaryStatus: () => void;
+
+  summaryType: "executive" | "keypoints";
+  setSummaryType: (type: "executive" | "keypoints") => void;
+  clearSummaryType: () => void;
+
+  summaryResult: string | string[];
+  setSummaryResult: (result: string) => void;
+  clearSummaryResult: () => void;
 }
 
 const useExtractPdfStore = create<ExtractStore>((set) => ({
@@ -48,8 +64,28 @@ const useExtractPdfStore = create<ExtractStore>((set) => ({
   clearExtractType: () => set({ extractType: "pdf" }),
 
   selectedLanguage: "eng",
-  setSelectedLanguage: (language: string) => set({ selectedLanguage: language }),
+  setSelectedLanguage: (language: string) =>
+    set({ selectedLanguage: language }),
   clearSelectedLanguage: () => set({ selectedLanguage: "eng" }),
+
+  summaryStatus: "idle",
+  setSummaryStatus: (status: "idle" | "loading" | "options" | "done") =>
+    set({ summaryStatus: status }),
+  clearSummaryStatus: () => set({ summaryStatus: "idle" }),
+
+  summaryType: "executive",
+  setSummaryType: (type: "executive" | "keypoints") =>
+    set({ summaryType: type }),
+  clearSummaryType: () => set({ summaryType: "executive" }),
+
+  summaryResult: "",
+  setSummaryResult: (result: string) =>
+    set({ summaryResult: result }),
+  clearSummaryResult: () => set({ summaryResult: "" }),
+
+  summerizeText: "",
+  setSummerizeText: (text: string) => set({ summerizeText: text }),
+  clearSummerizeText: () => set({ summerizeText: "" }),
 }));
 
 export default useExtractPdfStore;

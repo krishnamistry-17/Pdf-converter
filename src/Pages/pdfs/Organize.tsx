@@ -192,7 +192,11 @@ const Organize = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
       >
-        <div className="max-w-4xl mx-auto">
+        <div
+          className={`mx-auto
+          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          `}
+        >
           <SelectFile
             heading="Organize PDF"
             description="Sort, add, delete, reorder, rotate pages and more."

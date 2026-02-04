@@ -3,7 +3,8 @@ import useFilesStore from "../../store/useSheetStore";
 
 const OCRPreview = ({ previewFileDesign }: { previewFileDesign: string }) => {
   const selectedFile = useFilesStore((state) => state.selectedFile);
-  const type = getFileType(selectedFile as File);
+  if (!selectedFile) return null;
+  const type = getFileType(selectedFile);
   return (
     <div className="w-full flex flex-col items-center gap-3">
       {type === "pdf" && (
@@ -28,14 +29,23 @@ const OCRPreview = ({ previewFileDesign }: { previewFileDesign: string }) => {
           </a>
         </div>
       )}
-      {(type === "jpg" || type === "jpeg" || type === "png") &&
-        previewFileDesign && (
+      {(type === "jpg" || type === "jpeg" || type === "png") && (
+        <div className=" flex flex-col items-center gap-2">
           <img
             src={previewFileDesign}
             alt="Image Preview"
             className="w-full max-h-[50vh] sm:max-h-80 object-contain rounded"
           />
-        )}
+          <a
+            href={previewFileDesign}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue text-sm underline"
+          >
+            Open Image in new tab
+          </a>
+        </div>
+      )}
       {!["pdf", "jpg", "jpeg", "png"].includes(type || "") && (
         <p className="text-blue w-full text-center">No preview available</p>
       )}

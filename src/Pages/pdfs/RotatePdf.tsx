@@ -192,7 +192,9 @@ const RotatePdf = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
         >
-          <div className="max-w-4xl mx-auto">
+          <div className={`mx-auto
+            ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          `}>
             <SelectFile
               heading="Rotate PDF"
               description="Rotate a PDF file by 90 degrees."

@@ -23,6 +23,7 @@ export const useOCR = () => {
       }
       if (file.type === "application/pdf") {
         const images = await pdfPageToImage(file);
+
         let fullText = "";
         for (const img of images) {
           const t = await extractTextFromImages(img, selectedLanguage);

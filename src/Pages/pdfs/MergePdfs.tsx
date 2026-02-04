@@ -201,7 +201,11 @@ const MergePdfComponent = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
       >
-        <div className="max-w-4xl mx-auto  ">
+        <div
+          className={`mx-auto
+          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          `}
+        >
           <SelectFile
             heading="Merge PDFs"
             description="Merge two PDF files into one."

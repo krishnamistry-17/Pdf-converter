@@ -47,7 +47,11 @@ const PdfFile = ({
 
   return (
     <div className="min-h-screen px-4 py-12">
-      <div className="max-w-4xl mx-auto">
+      <div
+        className={`mx-auto
+        ${fileSelected ? "max-w-4xl" : "max-w-xl"}
+        `}
+      >
         <div className="text-center mb-10">
           <h1
             className="text-3xl sm:text-4xl font-semibold

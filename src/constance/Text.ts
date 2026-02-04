@@ -48,3 +48,14 @@ export const steps = [
     color: "from-green-500 to-green-400",
   },
 ];
+
+
+export const executivePoints = [
+  "This document provides an executive overview of the main objectives, outcomes, and recommendations.",
+  "The document outlines the key findings and recommendations for the project.",
+  "The document provides a summary of the project and the key findings.",
+];
+export const keyPoints = [
+  "The document provides a summary of the project and the key findings.",
+  "The document provides a summary of the project and the key findings.",
+];

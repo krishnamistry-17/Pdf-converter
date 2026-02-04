@@ -78,7 +78,9 @@ const SplitPdfComponent = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
-        <div className="max-w-4xl mx-auto">
+        <div className={`mx-auto
+          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          `}>
           <SelectFile
             heading="Split PDF"
             description="Split a PDF file into multiple pages."

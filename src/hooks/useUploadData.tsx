@@ -1073,6 +1073,8 @@ const useUploadData = () => {
     }
   };
 
+  //tessreact not direct extract from pdf, it extract from image
+  //Tessreact--> It does not natively support PDF files; users must first render PDFs to images using third-party libraries. 
   const extractTextFromImages = async (
     image: string | File,
     language: string = "eng"
@@ -1122,15 +1124,18 @@ const useUploadData = () => {
 
   //check file size and page count befor ocr
   const checkFileValidation = async (file: File) => {
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 500) {
       toast.info("File size is too large, please upload a smaller file");
       return false;
     }
+
     if (file.type === "application/pdf") {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      if (pdf.numPages > 100) {
-        toast.info("Page count is too large, please upload a smaller file");
+      if (pdf.numPages > 50) {
+        toast.info(
+          "Page count range is too large, please upload a smaller file"
+        );
         return false;
       }
       if (
@@ -1139,8 +1144,10 @@ const useUploadData = () => {
         file.type.startsWith("image/jpg")
       ) {
         const images = await pdfPageToImage(file);
-        if (images.length > 100) {
-          toast.info("Page count is too large, please upload a smaller file");
+        if (images.length > 50) {
+          toast.info(
+            "Page count range is too large, please upload a smaller file"
+          );
           return false;
         }
         return true;
