@@ -5,8 +5,8 @@ import PageNumberPreviewGrid from "../../components/pagenumber/PageNumberPreview
 import { IoMdClose } from "react-icons/io";
 import useUploadData from "../../hooks/useUploadData";
 import PageSidebar from "../../components/pagenumber/PageSidebar";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
+import UploadModal from "../../components/UploadModal";
 
 const PdfPageNumber = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -60,13 +60,13 @@ const PdfPageNumber = () => {
             />
             <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
-                <CustomInputModal
-                  fileSelected={results.length > 0}
-                  label="Select a PDF"
+                <UploadModal
+                  handleFileUpload={handleFileUpload}
                   accept=".pdf"
+                  label="Select a PDF"
+                  fileSelected={results.length > 0}
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
-                  onFileUpload={handleFileUpload}
                 />
               )}
 

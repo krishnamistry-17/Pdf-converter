@@ -11,6 +11,7 @@ import { useFileSessionStore } from "../../store/useFileSessionStore";
 import type { ImageResult } from "../../types/pageResult";
 import { IoMdClose } from "react-icons/io";
 import Zipsidebar from "../../components/Zipsidebar";
+import UploadModal from "../../components/UploadModal";
 
 const PdfToJpg = () => {
   const zip = new JSZip();
@@ -136,13 +137,13 @@ const PdfToJpg = () => {
             />
             <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
-                <CustomInputModal
+                <UploadModal
                   fileSelected={results.length > 0}
-                  label="Select a PDF"
-                  accept=".pdf"
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
-                  onFileUpload={handleFileUpload}
+                  handleFileUpload={handleFileUpload}
+                  accept=".pdf"
+                  label="Select a PDF"
                 />
               )}
               {results.length === 0 && (

@@ -3,7 +3,6 @@ import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
 import SelectFile from "../../components/SelectFile";
 import { toast } from "react-toastify";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import {
   IoMdAdd,
@@ -12,6 +11,7 @@ import {
   IoMdTrash,
 } from "react-icons/io";
 import { useOrganizeStore } from "../../store/useOrganizeStore";
+import UploadModal from "../../components/UploadModal";
 
 const MergePdfComponent = () => {
   const [pdfPreview1, setPdfPreview1] = useState<string | null>(null);
@@ -217,13 +217,13 @@ const MergePdfComponent = () => {
            border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
-              <CustomInputModal
-                fileSelected={results.length > 0}
-                label="Select a PDF"
+              <UploadModal
+                handleFileUpload={handleFileUpload1}
                 accept=".pdf"
+                label="Select a PDF"
+                fileSelected={results.length > 0}
                 isDownloadCompleted={downloadCompleted}
                 clearDownloadCompleted={clearDownloadCompleted}
-                onFileUpload={handleFileUpload1}
               />
             )}
             {results.length === 0 && (

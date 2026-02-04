@@ -60,7 +60,6 @@ const PdfToWord = () => {
 
       // URL.revokeObjectURL(docxUrl);
       downloadFile(docxUrl);
-      toast.success("Conversion successful!");
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");

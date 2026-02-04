@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCropPdfStore } from "../../store/useCropPdf";
 import SelectFile from "../../components/SelectFile";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import useUploadData from "../../hooks/useUploadData";
 import type { CropPdfResult } from "../../types/pageResult";
@@ -9,13 +8,14 @@ import CropPreviewGrid from "../../components/CropPdf/CropPreviewGrid";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import CropSideBar from "../../components/CropPdf/CropSideBar";
+import UploadModal from "../../components/UploadModal";
 
 const CropPdf = () => {
   const [isMobile, setIsMobile] = useState(false);
   const { ConvertPdfToPng } = useUploadData();
   const { results, setResults, setCropResults, clearSelectCropPdfFile } =
     useCropPdfStore((state) => state);
- 
+
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
@@ -63,11 +63,9 @@ const CropPdf = () => {
   };
 
   const handleCropComplete = async (base64: string) => {
- 
     // Get the result as a data URL (Base64 string) or Blob
     const blob = await fetch(base64).then((res) => res.blob());
     const file = new File([blob], "cropped.png", { type: "image/png" });
-  
 
     const fileUrl = URL.createObjectURL(file);
 
@@ -99,13 +97,13 @@ const CropPdf = () => {
             />
             <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
-                <CustomInputModal
-                  fileSelected={results.length > 0}
-                  label="Select a PDF"
+                <UploadModal
+                  handleFileUpload={handleFileUpload}
                   accept=".pdf"
+                  label="Select a PDF"
+                  fileSelected={results.length > 0}
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
-                  onFileUpload={handleFileUpload}
                 />
               )}
               {results.length === 0 && (

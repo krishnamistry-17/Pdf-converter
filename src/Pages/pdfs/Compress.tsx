@@ -6,8 +6,8 @@ import { useState } from "react";
 import { compressPdfOptions } from "../../constance/ConvertOptions";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
+import UploadModal from "../../components/UploadModal";
 
 const CompressPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
@@ -87,13 +87,13 @@ const CompressPdf = () => {
           border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
-              <CustomInputModal
-                fileSelected={fileSelected}
-                label="Select a PDF"
+              <UploadModal
+                handleFileUpload={handleFileUpload}
                 accept=".pdf"
+                label="Select a PDF"
+                fileSelected={fileSelected}
                 isDownloadCompleted={downloadCompleted}
                 clearDownloadCompleted={clearDownloadCompleted}
-                onFileUpload={handleFileUpload}
               />
             )}
             {results.length === 0 && (

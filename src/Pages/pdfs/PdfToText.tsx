@@ -29,7 +29,7 @@ const PdfToText = () => {
       toast.error("Please select a file");
       return;
     }
-  
+
     setSelectedFile(file as any);
     setPreviewFileDesign(URL.createObjectURL(file as File) as string);
     e.target.value = "";
@@ -41,7 +41,6 @@ const PdfToText = () => {
     // await new Promise((r) => setTimeout(r, 100));
     try {
       await ConvertPdfToText(selectedFile as any);
-      toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
       setFileSelected(false);

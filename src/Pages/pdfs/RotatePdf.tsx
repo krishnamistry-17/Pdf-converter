@@ -12,8 +12,8 @@ import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
 import { FaRotateLeft, FaRotateRight } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
+import UploadModal from "../../components/UploadModal";
 
 const RotatePdf = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -205,13 +205,13 @@ const RotatePdf = () => {
             />
             <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
-                <CustomInputModal
-                  fileSelected={results.length > 0}
-                  label="Select a PDF"
+                <UploadModal
+                  handleFileUpload={handleFileUpload}
                   accept=".pdf"
+                  label="Select a PDF"
+                  fileSelected={results.length > 0}
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
-                  onFileUpload={handleFileUpload}
                 />
               )}
               {results.length === 0 && (

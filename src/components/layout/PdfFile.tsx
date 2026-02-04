@@ -2,9 +2,9 @@ import { lazy, Suspense, useEffect, useState } from "react";
 const PreviewFile = lazy(() => import("../PreviewFile"));
 
 import { useFileSessionStore } from "../../store/useFileSessionStore";
-import CustomInputModal from "../CustomInputModal";
 import GlobalLoader from "../GlobalLoader";
-import ExtractedTextPreview from "../ExtractedTextPreview";
+import ExtractedTextPreview from "../OCR/ExtractedTextPreview";
+import UploadModal from "../UploadModal";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -82,13 +82,13 @@ const PdfFile = ({
           className="bg-white/40 text-blue rounded-2xl shadow-lg
          border border-gray-100 p-6 sm:pt-10"
         >
-          <CustomInputModal
+          <UploadModal
             fileSelected={fileSelected}
-            label={label}
-            accept={accept}
             isDownloadCompleted={isDownloadCompleted}
             clearDownloadCompleted={clearDownloadCompleted}
-            onFileUpload={onFileUpload}
+            handleFileUpload={onFileUpload}
+            accept={accept}
+            label={label}
           />
 
           {!fileSelected && !isDownloadCompleted && (

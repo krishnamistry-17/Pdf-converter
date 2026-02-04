@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import SelectFile from "../../components/SelectFile";
-import CustomInputModal from "../../components/CustomInputModal";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import useImageStore from "../../store/useImageStore";
 import {
@@ -15,6 +14,7 @@ import JpgPreviewGrid from "../../components/JpgPreviewGrid";
 import useFilesStore from "../../store/useSheetStore";
 import { toast } from "react-toastify";
 import useUploadData from "../../hooks/useUploadData";
+import UploadModal from "../../components/UploadModal";
 
 const JpgToPdf = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -169,13 +169,13 @@ const JpgToPdf = () => {
             />
             <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
-                <CustomInputModal
+                <UploadModal
                   fileSelected={results.length > 0}
-                  label="Select a Jpg"
-                  accept=".jpg,.jpeg,.png"
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
-                  onFileUpload={handleFileUpload}
+                  handleFileUpload={handleFileUpload}
+                  accept=".jpg,.jpeg,.png"
+                  label="Select a Jpg"
                 />
               )}
               {results.length === 0 && (

@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
+
 //this is for pdf to text conversion
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://unpkg.com/pdfjs-dist@4.2.67/build/pdf.worker.min.js";
@@ -212,6 +213,7 @@ const useUploadData = () => {
         a.download = "converted.xlsx";
         a.click();
         setSelectedFile(null);
+        toast.success("Conversion successful!");
       };
       reader.readAsText(selectedFile as any);
     } catch (err) {
@@ -236,6 +238,7 @@ const useUploadData = () => {
         a.download = "converted.docx";
         a.click();
         setSelectedFile(null);
+        toast.success("Conversion successful!");
       };
       reader.readAsText(selectedFile as any);
     } catch (err) {
@@ -388,6 +391,7 @@ const useUploadData = () => {
         a.download = "converted.ppt";
         a.click();
         setSelectedFile(null);
+        toast.success("Conversion successful!");
       };
       reader.readAsText(selectedFile as any);
     } catch (error) {
@@ -1039,6 +1043,7 @@ const useUploadData = () => {
       a.download = `${file.name}.txt`;
       a.click();
       URL.revokeObjectURL(url);
+      toast.success("Conversion successful!");
     } catch (error) {
       console.error(error);
       toast.error("Failed to convert PDF to Text");
@@ -1068,17 +1073,20 @@ const useUploadData = () => {
     }
   };
 
-  const extractTextFromImages = async (image: string | File) => {
-    const worker = await createWorker("eng");
-
-    await worker.reinitialize("eng");
+  const extractTextFromImages = async (
+    image: string | File,
+    language: string = "eng"
+  ) => {
+    const worker = await createWorker(language);
 
     const {
       data: { text },
     } =
       typeof image === "string"
         ? await worker.recognize(image)
-        : await worker.recognize(image);
+        : await worker.recognize(image, {
+            pdfTextOnly: true,
+          });
 
     await worker.terminate();
     console.log("text", text);
@@ -1110,6 +1118,46 @@ const useUploadData = () => {
     }
 
     return images;
+  };
+
+  //check file size and page count befor ocr
+  const checkFileValidation = async (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      toast.info("File size is too large, please upload a smaller file");
+      return false;
+    }
+    if (file.type === "application/pdf") {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      if (pdf.numPages > 100) {
+        toast.info("Page count is too large, please upload a smaller file");
+        return false;
+      }
+      if (
+        file.type.startsWith("image/jpeg") ||
+        file.type.startsWith("image/png") ||
+        file.type.startsWith("image/jpg")
+      ) {
+        const images = await pdfPageToImage(file);
+        if (images.length > 100) {
+          toast.info("Page count is too large, please upload a smaller file");
+          return false;
+        }
+        return true;
+      }
+    }
+    return true;
+  };
+
+  //summerize long pdf into short points
+  const SummerizePdf = async (file: File) => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to summarize PDF");
+    }
   };
 
   return {
@@ -1148,6 +1196,7 @@ const useUploadData = () => {
     extractTextFromPDF,
     extractTextFromImages,
     pdfPageToImage,
+    checkFileValidation,
   };
 };
 

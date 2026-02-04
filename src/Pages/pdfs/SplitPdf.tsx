@@ -1,4 +1,3 @@
-
 import SelectFile from "../../components/SelectFile";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
@@ -9,7 +8,7 @@ import Pages from "../../components/split/Pages";
 import Size from "../../components/split/Size";
 import { PDFDocument } from "pdf-lib";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
-import CustomInputModal from "../../components/CustomInputModal";
+import UploadModal from "../../components/UploadModal";
 
 const SplitPdfComponent = () => {
   const { selectedFile, setSelectedFile, clearSelectedFile } =
@@ -91,16 +90,18 @@ const SplitPdfComponent = () => {
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg
-           border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div
+            className="bg-white/40 text-blue rounded-2xl shadow-lg
+           border border-gray-100 p-6 sm:pt-10 sm:pb-14"
+          >
             {results.length === 0 && (
-              <CustomInputModal
-                fileSelected={results.length > 0}
-                label="Select a PDF"
+              <UploadModal
+                handleFileUpload={handleFileUpload}
                 accept=".pdf"
+                label="Select a PDF"
+                fileSelected={results.length > 0}
                 isDownloadCompleted={downloadCompleted}
                 clearDownloadCompleted={clearDownloadCompleted}
-                onFileUpload={handleFileUpload}
               />
             )}
 
@@ -193,7 +194,7 @@ const SplitPdfComponent = () => {
                       className={`
                       ${
                         splitRangeType === tab
-                            ? "bg-gradient-to-r from-blue to-teal text-white"
+                          ? "bg-gradient-to-r from-blue to-teal text-white"
                           : "bg-teal text-white"
                       }
                       px-6 py-2 rounded-md

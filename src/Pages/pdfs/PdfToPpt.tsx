@@ -60,7 +60,6 @@ const PdfToPpt = () => {
 
       const pptUrl = response.data.url;
       downloadFile(pptUrl);
-      toast.success("Conversion successful!");
       // window.open(pptUrl, "_blank");
     } catch (error) {
       console.error(error);

@@ -1,21 +1,31 @@
 import { useState } from "react";
 import useUploadData from "./useUploadData";
-import useFilesStore from "../store/useSheetStore";
+import useExtractPdfStore from "../store/useExtractPdf";
 
 export const useOCR = () => {
-  const setLoading = useFilesStore((state) => state.setLoading);
-  const loading = useFilesStore((state) => state.loading);
+  const setOcrLoading = useExtractPdfStore((state) => state.setOcrLoading);
+  const ocrLoading = useExtractPdfStore((state) => state.ocrLoading);
+  const selectedLanguage = useExtractPdfStore(
+    (state) => state.selectedLanguage
+  );
   const [text, setText] = useState("");
-  const { extractTextFromImages, pdfPageToImage } = useUploadData();
+  const { extractTextFromImages, pdfPageToImage, checkFileValidation } =
+    useUploadData();
 
   const extractText = async (file: File) => {
-    setLoading(true);
+    setOcrLoading(true);
     try {
+      //check File Validation before OCR
+      const isValid = await checkFileValidation(file);
+      if (!isValid) {
+        setOcrLoading(false);
+        return;
+      }
       if (file.type === "application/pdf") {
         const images = await pdfPageToImage(file);
         let fullText = "";
         for (const img of images) {
-          const t = await extractTextFromImages(img);
+          const t = await extractTextFromImages(img, selectedLanguage);
           fullText += t + "\n\n";
         }
         setText(fullText);
@@ -24,8 +34,8 @@ export const useOCR = () => {
         file.type.startsWith("image/png") ||
         file.type.startsWith("image/jpg")
       ) {
-        const t = await extractTextFromImages(file);
-        console.log("t????????", t);
+        const images = [file];
+        const t = await extractTextFromImages(images[0], selectedLanguage);
         setText(t);
       } else {
         throw new Error("Unsupported file type");
@@ -33,9 +43,9 @@ export const useOCR = () => {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      setOcrLoading(false);
     }
   };
 
-  return { text, loading, extractText };
+  return { text, ocrLoading, extractText };
 };
