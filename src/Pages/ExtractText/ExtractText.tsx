@@ -91,14 +91,14 @@ const ExtractText = () => {
       >
         <div
           className={`mx-auto
-          ${fileSelected ? "max-w-4xl" : "max-w-xl"}
+          ${fileSelected ? "max-w-xl w-auto" : "max-w-xl"}
           `}
         >
           <SelectFile
             heading="OCR Pdf or Images"
             description="Extract text from a PDF or Images."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             <UploadModal
               handleFileUpload={handleFileUpload}
               accept=".pdf,.jpg,.png,.jpeg"
@@ -108,7 +108,7 @@ const ExtractText = () => {
               clearDownloadCompleted={() => {}}
             />
             {!fileSelected && (
-              <p className="text-blue mt-8 text-center">
+              <p className="text-text-body mt-8 text-center">
                 Upload a PDF or Images to start
               </p>
             )}
@@ -136,7 +136,7 @@ const ExtractText = () => {
       </div>
       {!isMobile && isSidebarVisible && (
         <aside
-          className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto"
+          className="fixed top-0 right-0 h-full w-[380px] bg-bg-card border-l border-border shadow-lg z-50 overflow-y-auto"
           style={{
             scrollbarWidth: "none",
           }}

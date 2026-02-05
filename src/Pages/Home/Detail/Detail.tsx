@@ -15,14 +15,14 @@ const Detail = () => {
       <div className="mb-5 flex flex-col gap-3">
         <h2
           className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight
-       text-black text-center"
+       text-text-heading text-center"
         >
           Why Choose Us?
         </h2>
         <p
           className=" max-w-xl mx-auto  px-2 lg:text-lg text-md
          font-medium text-center
-         text-gray-500
+         text-text-body
          "
         >
           We are a team of experts who are dedicated to providing the best file
@@ -61,10 +61,10 @@ const Detail = () => {
             </div>
 
             <div className="relative z-10 flex flex-col gap-2">
-              <h3 className="text-lg sm:text-xl font-semibold text-black">
+              <h3 className="text-lg sm:text-xl font-semibold text-text-heading">
                 {item.title}
               </h3>
-              <p className="text-sm text-blue leading-relaxed font-medium max-w-[380px]">
+              <p className="text-sm text-text-body leading-relaxed font-medium max-w-[380px]">
                 {item.description}
               </p>
             </div>

@@ -156,7 +156,7 @@ const Organize = () => {
             >
               {selectOrganizeFile?.name}
               <button
-                className="text-blue cursor-pointer underline text-md"
+                className="text-text-body cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedFile}
               >
                 <IoMdTrash />
@@ -171,7 +171,7 @@ const Organize = () => {
             >
               {file.name}
               <button
-                className="text-blue cursor-pointer underline text-md"
+                className="text-text-body cursor-pointer underline text-md"
                 onClick={() => {
                   handleDeleteExtraFile(file.name);
                 }}
@@ -194,14 +194,14 @@ const Organize = () => {
       >
         <div
           className={`mx-auto
-          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
         >
           <SelectFile
             heading="Organize PDF"
             description="Sort, add, delete, reorder, rotate pages and more."
           />
-          <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
             {results.length === 0 && (
               <UploadModal
                 handleFileUpload={handleFileUpload}
@@ -214,7 +214,7 @@ const Organize = () => {
             )}
 
             {results.length === 0 && (
-              <p className="text-blue mt-8 text-center">
+              <p className="text-text-body mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}
@@ -227,14 +227,14 @@ const Organize = () => {
                       SelectedFiles
                     </h2>
                     <p
-                      className="text-blue text-sm underline cursor-pointer"
+                      className="text-text-body text-sm underline cursor-pointer"
                       onClick={handleReset}
                     >
                       Reset All
                     </p>
                     {mergeDisplayFiles()}
                     <button
-                      className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+                      className="bg-primary hover:bg-primary-hover text-white w-full py-2 rounded-md flex justify-center items-center"
                       onClick={handleOrganizePdf}
                     >
                       Organize <IoMdArrowForward className="ml-2" />
@@ -249,21 +249,21 @@ const Organize = () => {
       </div>
 
       {!isMobile && isSidebarVisible && (
-        <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50">
+        <aside className="fixed top-0 right-0 h-full w-[380px] bg-bg-card border-l border-border shadow-lg z-50">
           <div className="p-6">
             <button className="absolute top-5 right-5" onClick={handleReset}>
               <IoMdClose />
             </button>
 
-            <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">
+            <h2 className="text-xl font-semibold text-text-body border-b border-border pb-4">
               Organize PDF
             </h2>
 
             <div className="flex justify-between mt-6">
-              <p className="font-semibold text-blue">Files</p>
+              <p className="font-semibold text-text-body">Files</p>
               <button
                 onClick={handleReset}
-                className="text-blue text-sm underline"
+                className="text-text-body text-sm underline"
               >
                 Reset All
               </button>
@@ -273,7 +273,7 @@ const Organize = () => {
             {mergeDisplayFiles()}
 
             <button
-              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+              className="bg-primary hover:bg-primary-hover text-white w-full py-2 rounded-md flex justify-center items-center"
               onClick={handleOrganizePdf}
             >
               Organize <IoMdArrowForward className="ml-2" />
@@ -283,14 +283,14 @@ const Organize = () => {
           <div className=" fixed  top-[20%]  z-50 flex flex-col gap-3 -ml-8">
             <button
               onClick={handleAddMoreFiles}
-              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+              className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
             >
               <IoMdAdd />
             </button>
 
             <button
               onClick={handleSortFiles}
-              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+              className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
             >
               {isSorted ? <FaSortNumericUp /> : <FaSortNumericDownAlt />}
             </button>
@@ -303,14 +303,14 @@ const Organize = () => {
           <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
             <button
               onClick={handleAddMoreFiles}
-              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+              className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
             >
               <IoMdAdd />
             </button>
 
             <button
               onClick={handleSortFiles}
-              className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+              className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
             >
               {isSorted ? <FaSortNumericUp /> : <FaSortNumericDownAlt />}
             </button>

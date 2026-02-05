@@ -27,8 +27,8 @@ const NumberPosition = () => {
             className={`border rounded-md p-2 cursor-pointer
             ${
               position === p.value
-                ? "bg-blue text-white"
-                : "bg-white hover:bg-gray-100 border border-gray-400"
+                ? "bg-primary text-white"
+                : "bg-primary/10 text-primary border"
             }`}
           ></button>
         ))}

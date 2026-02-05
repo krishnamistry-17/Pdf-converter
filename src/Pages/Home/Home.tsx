@@ -6,7 +6,7 @@ import ConversionFlow from "./Detail/ConversionFlow";
 const Home = () => {
   return (
     <div className="w-full">
-      <section className="py-5">
+      <section>
         <Herosection />
       </section>
 
@@ -26,4 +26,3 @@ const Home = () => {
 };
 
 export default Home;
-

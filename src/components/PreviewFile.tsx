@@ -27,9 +27,9 @@ export const CsvPreview = ({ file }: { file: File }) => {
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
         overflow-x-auto overflow-y-auto
-        bg-gray-100 rounded
+        bg-bg-soft rounded
         text-[11px] sm:text-xs
-        text-blue
+        text-text-body
         px-2 py-1 sm:px-4 sm:py-2
         whitespace-pre break-all sm:break-normal
       "
@@ -67,7 +67,7 @@ export const JsonPreview = ({ file }: { file: File }) => {
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
         overflow-x-auto overflow-y-auto
-        bg-white/40 rounded
+        bg-bg-soft rounded
         text-[11px] sm:text-xs
         px-2 py-1 sm:px-4 sm:py-2
         whitespace-pre break-all sm:break-normal
@@ -101,7 +101,7 @@ export const ExcelPreview = ({ file }: { file: File }) => {
       className="
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
-        overflow-auto bg-white/40 rounded
+        overflow-auto bg-bg-soft rounded
       "
     >
       <table className="border-collapse border border-gray-300 w-full text-[11px] sm:text-xs">
@@ -109,7 +109,7 @@ export const ExcelPreview = ({ file }: { file: File }) => {
           {data.map((row, i) => (
             <tr key={i}>
               {row.map((cell: any, j: number) => (
-                <td key={j} className="border border-teal px-1 py-0.5">
+                <td key={j} className="border border-border px-1 py-0.5">
                   {cell}
                 </td>
               ))}
@@ -127,8 +127,8 @@ export const WordPreview = () => {
       className="
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
-        overflow-auto bg-white/40 rounded
-        text-blue
+        overflow-auto bg-bg-soft rounded
+        text-text-body
         text-[11px] sm:text-xs
         px-2 py-1 sm:px-4 sm:py-2
       "
@@ -144,8 +144,8 @@ export const PptPreview = () => {
       className="
         w-full max-w-full sm:max-w-md
         max-h-[50vh] sm:max-h-80
-        overflow-auto bg-white/40 rounded
-        text-blue
+        overflow-auto bg-bg-soft rounded
+          text-text-body
         text-[11px] sm:text-xs
         px-2 py-1 sm:px-4 sm:py-2
       "
@@ -189,7 +189,7 @@ const PreviewFile = ({
               href={previewFileDesign}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue text-sm underline"
+              className="text-text-body text-sm underline"
             >
               Open PDF in new tab
             </a>
@@ -236,8 +236,8 @@ const PreviewFile = ({
               w-full max-w-full sm:max-w-md
               max-h-[50vh] sm:max-h-80
               overflow-x-auto overflow-y-auto
-              bg-white/40 rounded
-              text-blue
+              bg-bg-soft rounded
+              text-text-body
               text-[11px] sm:text-xs
               px-2 py-1 sm:px-4 sm:py-2
             "
@@ -261,12 +261,14 @@ const PreviewFile = ({
           "html",
           "txt",
         ].includes(type || "") && (
-          <p className="text-blue w-full text-center">No preview available</p>
+          <p className="text-text-body w-full text-center">
+            No preview available
+          </p>
         )}
 
-        <p className="text-sm text-blue flex flex-col items-center justify-center truncate max-w-full">
+        <p className="text-sm text-text-body flex flex-col items-center justify-center truncate max-w-full">
           File Name: {selectedFile.name}
-          <span className="text-xs text-blue pl-3">
+          <span className="text-xs text-text-body pl-3">
             Selected file type is <span className="font-semibold">{type}</span>
           </span>
         </p>
@@ -276,5 +278,3 @@ const PreviewFile = ({
 };
 
 export default PreviewFile;
-
-

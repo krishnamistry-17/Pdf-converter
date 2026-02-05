@@ -56,7 +56,7 @@ const OrganizePreviewGrid = () => {
 
   if (!results.length) {
     return (
-      <p className="text-gray-500 mt-6 text-center">No pages to display</p>
+      <p className="text-text-body mt-6 text-center">No pages to display</p>
     );
   }
 
@@ -67,7 +67,7 @@ const OrganizePreviewGrid = () => {
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
+            className="bg-white/40 text-text-body rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
           >
             <iframe
               src={file.url}
@@ -78,20 +78,20 @@ const OrganizePreviewGrid = () => {
 
             <div className="mt-3">
               <p className="font-medium truncate">{file.fileName}</p>
-              <p className="text-sm text-gray-500">Page {file.pages}</p>
+              <p className="text-sm text-text-body">Page {file.pages}</p>
             </div>
 
             <div className="absolute top-2 right-2 flex gap-2">
               <button
                 onClick={() => handleRotate(index)}
-                className="bg-white p-2 rounded shadow hover:bg-gray-100"
+                className="bg-white p-2 rounded shadow hover:bg-bg-soft"
                 title="Rotate"
               >
                 <FaRotate />
               </button>
               <button
                 onClick={() => handleRemove(index)}
-                className="bg-white p-2 rounded shadow hover:bg-gray-100"
+                className="bg-white p-2 rounded shadow hover:bg-bg-soft"
                 title="Remove"
               >
                 <MdClose />
@@ -101,7 +101,7 @@ const OrganizePreviewGrid = () => {
             <div className="absolute top-1/2 -left-2">
               <button
                 onClick={() => handleAddBlankPage(index)}
-                className="bg-white p-2 rounded shadow hover:bg-gray-100 "
+                className="bg-white p-2 rounded shadow hover:bg-bg-soft "
                 title="Add Blank Page"
               >
                 <IoMdAdd />

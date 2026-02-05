@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 const PreviewFile = lazy(() => import("../PreviewFile"));
-
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import GlobalLoader from "../GlobalLoader";
 import ExtractedTextPreview from "../OCR/ExtractedTextPreview";
@@ -49,19 +48,19 @@ const PdfFile = ({
     <div className="min-h-screen px-4 py-12">
       <div
         className={`mx-auto
-        ${fileSelected ? "max-w-4xl" : "max-w-xl"}
+        ${fileSelected ? "w-auto max-w-xl" : "max-w-xl"}
         `}
       >
         <div className="text-center mb-10">
           <h1
             className="text-3xl sm:text-4xl font-semibold
-           text-black leading-tight tracking-tight  mb-3"
+           text-text-heading leading-tight tracking-tight  mb-3"
           >
             {heading}
           </h1>
           <p
-            className="text-gray-500 max-w-2xl mx-auto md:text-lg text-sm
-          font-semibold text-center
+            className="text-text-body max-w-2xl mx-auto text-sm
+          font-medium text-center
           "
           >
             {para}
@@ -69,7 +68,7 @@ const PdfFile = ({
         </div>
 
         <div
-          className="bg-white/40 text-blue rounded-2xl shadow-lg
+          className="bg-white/40 text-text-body rounded-2xl shadow-lg
          border border-gray-100 p-6 sm:pt-10"
         >
           <UploadModal
@@ -82,7 +81,9 @@ const PdfFile = ({
           />
 
           {!fileSelected && !isDownloadCompleted && (
-            <p className="text-blue mt-8 text-center">Upload a file to start</p>
+            <p className="text-text-body mt-8 text-center">
+              Upload a file to start
+            </p>
           )}
 
           <div className="mt-10">
@@ -99,7 +100,7 @@ const PdfFile = ({
               <button
                 onClick={handleConvert}
                 className="
-                bg-blue hover:bg-gradient-to-r from-blueprimary to-teal text-white font-semibold
+                bg-primary hover:bg-primary-hover text-white font-semibold
                 px-10 py-4 rounded-xl max-w-xs w-full mx-auto
                 transition
                 shadow-card

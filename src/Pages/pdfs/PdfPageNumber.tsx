@@ -47,14 +47,16 @@ const PdfPageNumber = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
         >
-          <div className={`mx-auto
-            ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
-          `}>
+          <div
+            className={`mx-auto
+            ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
+          `}
+          >
             <SelectFile
               heading="Add Page Number"
               description="Add page numbers to a PDF file. This tool will add page numbers to a PDF file."
             />
-            <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
               {results.length === 0 && (
                 <UploadModal
                   handleFileUpload={handleFileUpload}
@@ -67,7 +69,7 @@ const PdfPageNumber = () => {
               )}
 
               {results.length === 0 && (
-                <p className="text-blue mt-8 text-center">
+                <p className="text-text-body mt-8 text-center">
                   Upload a PDF to start
                 </p>
               )}
@@ -87,7 +89,7 @@ const PdfPageNumber = () => {
           </div>
         </div>
         {!isMobile && isSidebarVisible && (
-          <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto">
+          <aside className="fixed top-0 right-0 h-full w-[380px] bg-bg-card border-l border-border shadow-lg z-50 overflow-y-auto">
             <div className="p-6">
               <button
                 className="absolute top-5 right-5"

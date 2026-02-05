@@ -13,12 +13,12 @@ const SwitchButton = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 bg-blue/10 rounded-r-full rounded-l-full p-1">
+    <div className="flex items-center gap-2 bg-primary/10 rounded-r-full rounded-l-full p-1">
       <button
         className={`${
           activeUnit === "MB"
-            ? "bg-blue/10 text-blue border border-blue"
-            : "bg-blue/10 text-blue "
+            ? "bg-primary/10 text-primary border border-primary"
+            : "bg-primary/10 text-primary "
         } px-4 py-2 rounded-full transition`}
         onClick={() => handleUnitChange("MB")}
       >
@@ -27,8 +27,8 @@ const SwitchButton = () => {
       <button
         className={`${
           activeUnit === "KB"
-            ? "bg-blue/10 text-blue border border-blue"
-            : "bg-blue/10 text-blue "
+            ? "bg-primary/10 text-primary border border-primary"
+            : "bg-primary/10 text-primary "
         } px-4 py-2 rounded-full transition`}
         onClick={() => handleUnitChange("KB")}
       >

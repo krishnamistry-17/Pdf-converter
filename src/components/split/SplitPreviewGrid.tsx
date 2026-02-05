@@ -36,7 +36,7 @@ const SplitPreviewGrid = () => {
           return (
             <div
               key={index}
-              className="bg-white/40 text-blue rounded-xl shadow-md p-4 flex flex-col relative mb-6"
+              className="bg-white/40 text-text-body rounded-xl shadow-md p-4 flex flex-col relative mb-6"
             >
               <div className="flex-1">
                 <iframe
@@ -44,14 +44,14 @@ const SplitPreviewGrid = () => {
                   title={file.name}
                   className="w-full h-80 rounded border"
                 />
-                <p className="font-medium">{file.name}</p>
-                <p className="text-sm text-gray-500">Pages {file.pages}</p>
+                <p className="font-medium text-text-body">{file.name}</p>
+                <p className="text-sm text-text-body">Pages {file.pages}</p>
               </div>
 
               <a
                 href={file.url}
                 download={file.name}
-                className="mt-4 text-center bg-blue hover:bg-gradient-to-r from-blue to-teal text-white py-2 rounded-md hover:bg-blue"
+                className="mt-4 text-center bg-primary hover:bg-primary-hover text-white py-2 rounded-md "
               >
                 Download
               </a>

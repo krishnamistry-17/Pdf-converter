@@ -49,7 +49,6 @@ export const steps = [
   },
 ];
 
-
 export const executivePoints = [
   "This document provides an executive overview of the main objectives, outcomes, and recommendations.",
   "The document outlines the key findings and recommendations for the project.",
@@ -59,3 +58,10 @@ export const keyPoints = [
   "The document provides a summary of the project and the key findings.",
   "The document provides a summary of the project and the key findings.",
 ];
+
+export const HeroSectionText = {
+  heading: "Your All-in-One Online PDF Tools",
+  description:
+    "Convert, merge, compress, and edit PDF files easily. Fast, secure, and works directly in your browser.",
+  points: ["⚡ Fast", "🔒 Secure", "💻 No install"],
+};

@@ -11,9 +11,9 @@ import EditPdfLayout from "./tabs/EditPdf/EditPdfLayout";
 const ConvertTabs = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const handleMenuOpen = () => {
-    setMenuOpen(!menuOpen);
-  };
+
+  const handleMenuOpen = () => setMenuOpen(!menuOpen);
+
   const tabs = [
     "All",
     "Convert to PDF",
@@ -28,79 +28,68 @@ const ConvertTabs = () => {
       <Tabs selectedIndex={activeTab} onSelect={setActiveTab}>
         <div className="hidden lg:flex justify-center mb-10">
           <TabList
-            className="flex md:flex-row flex-row justify-between sm:bg-white/40 bg-transparent sm:w-auto w-full 
-            sm:rounded-full shadow-md sm:p-2 p-4 "
+            className="flex md:flex-row flex-row justify-between 
+          sm:bg-white/40 bg-transparent md:w-auto w-full  sm:rounded-full shadow-md sm:p-2 p-4"
           >
-            {tabs.map((tab: any, index: number) => {
-              return (
-                <Tab
-                  key={index}
-                  className={`
-              cursor-pointer px-4 sm:py-3 py-2 
-              md:text-md xl:text-lg 
-              rounded-full text-center 
-              outline-none
-              ${
-                activeTab === index
-                  ? "text-blueprimary font-bold  underline underline-offset-8 decoration-blue  pt-1 "
-                  : "text-blue font-medium"
-              }
-            `}
-                >
-                  {tab}
-                </Tab>
-              );
-            })}
+            {tabs.map((tab, index) => (
+              <Tab
+                key={index}
+                className={`
+                  cursor-pointer px-4 sm:py-3 py-2 rounded-full text-center
+                  outline-none transition-all duration-200
+                  ${
+                    activeTab === index
+                      ? "text-text-heading font-bold underline underline-offset-8 decoration-text-muted"
+                      : "text-text-body font-medium"
+                  }
+                `}
+              >
+                {tab}
+              </Tab>
+            ))}
           </TabList>
         </div>
-        <div className="sm:block lg:hidden  lg:mb-0 mb-4 relative z-40">
+
+        <div className="sm:block lg:hidden mb-4 relative z-40">
           <div
-            onClick={() => {
-              setActiveTab(activeTab);
-              handleMenuOpen();
-            }}
-            className=" bg-white/40 rounded-3xl shadow-sm border border-gray-100 cursor-pointer
-          py-4 px-6 flex items-center justify-between w-full"
+            onClick={handleMenuOpen}
+            className={`bg-white/40 rounded-3xl shadow-sm border border-border cursor-pointer
+              py-4 px-6 flex items-center justify-between w-full`}
           >
-            <label
-              className={`text-sm md:text-md xl:text-lg text-center cursor-pointer
-                ${
-                  activeTab === activeTab
-                    ? "  text-blueprimary font-bold"
-                    : "text-blue font-medium"
-                }
-                `}
+            <span
+              className={`text-sm md:text-md xl:text-lg cursor-pointer font-medium ${
+                activeTab
+                  ? "text-text-heading font-bold"
+                  : "text-text-body font-medium"
+              }`}
             >
               {tabs[activeTab]}
-            </label>
-            <div>
-              <FaChevronDown className={`${menuOpen ? "rotate-180" : ""}`} />
-            </div>
+            </span>
+            <FaChevronDown className={`${menuOpen ? "rotate-180" : ""}`} />
           </div>
+
           {menuOpen && (
             <div
-              className="flex flex-col gap-4 w-full mt-4 bg-white/30 rounded-3xl text-blue
-            shadow-sm border border-gray-100 p-4 md:p-6 xl:p-10 transition-all duration-150"
+              className="flex flex-col gap-4 w-full mt-4 bg-white/30 rounded-3xl text-text-body
+              shadow-sm border border-border p-4 md:p-6 xl:p-10 transition-all duration-150"
             >
-              {tabs.map((tab: any, index: number) => {
-                return (
-                  <button
-                    key={index}
-                    className="text-sm font-medium text-blueprimary cursor-pointer"
-                    onClick={() => {
-                      setActiveTab(index);
-                      handleMenuOpen();
-                    }}
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
+              {tabs.map((tab, index) => (
+                <button
+                  key={index}
+                  className="text-sm font-medium text-text-body cursor-pointer"
+                  onClick={() => {
+                    setActiveTab(index);
+                    handleMenuOpen();
+                  }}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
           )}
         </div>
 
-        <div className="bg-white/40 rounded-3xl shadow-sm border border-gray-100 p-6 sm:p-10">
+        <div className="bg-bg-card rounded-3xl shadow-card border border-border p-6 sm:p-10">
           <TabPanel>
             <AllTab />
           </TabPanel>

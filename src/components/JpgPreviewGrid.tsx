@@ -8,7 +8,7 @@ const JpgPreviewGrid = ({ images }: { images: string[] }) => {
         {images.map((image, index) => (
           <div
             key={index}
-            className="bg-white text-blue rounded-xl shadow-md p-2 object-contain 
+            className="bg-white text-text-body rounded-xl shadow-md p-2 object-contain 
             flex flex-col relative "
           >
             <img
@@ -16,7 +16,7 @@ const JpgPreviewGrid = ({ images }: { images: string[] }) => {
               alt={`image-${index}`}
               className="w-full max-h-[50vh] sm:max-h-80 object-contain rounded"
             />
-            <p className="font-medium mt-2 text-blue text-center">{`image-${index}`}</p>
+            <p className="font-medium mt-2 text-text-body text-center">{`image-${index}`}</p>
           </div>
         ))}
       </div>

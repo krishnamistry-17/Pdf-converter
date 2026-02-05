@@ -86,7 +86,7 @@ const ImageCropper = ({ src, onCropComplete, setShowCropImage }: Props) => {
 
       <button
         onClick={generateCroppedImage}
-        className="bg-blue text-white py-2 rounded"
+        className="bg-primary text-white py-2 rounded"
       >
         Apply Crop
       </button>

@@ -1,0 +1,65 @@
+<svg
+  width="520"
+  height="420"
+  viewBox="0 0 520 420"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Background dots -->
+  <circle cx="100" cy="80" r="5" fill="#4F46E5" />
+  <circle cx="400" cy="80" r="5" fill="#60A5FA" />
+  <circle cx="90" cy="360" r="5" fill="#F59E0B" />
+
+  <!-- Left Folder -->
+  <rect x="70" y="250" width="120" height="90" rx="16" fill="#4F46E5"/>
+  <path d="M70 270H190V250C190 241 182 235 172 235H110L90 250H70Z" fill="#6366F1"/>
+
+  <!-- Upload Icon -->
+  <path
+    d="M130 300V265M130 265L115 280M130 265L145 280"
+    stroke="white"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Right Folder -->
+  <rect x="330" y="250" width="120" height="90" rx="16" fill="#F59E0B"/>
+  <path d="M330 270H450V250C450 241 442 235 432 235H370L350 250H330Z" fill="#FBBF24"/>
+
+  <!-- Download Icon -->
+  <path
+    d="M390 265V300M390 300L375 285M390 300L405 285"
+    stroke="white"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Floating PDF Files -->
+  <g transform="translate(160 100) rotate(-8)">
+    <rect width="70" height="90" rx="8" fill="white" stroke="#E5E7EB"/>
+    <rect x="20" y="25" width="30" height="40" rx="4" fill="#EF4444"/>
+    <text x="35" y="75" font-size="10" text-anchor="middle" fill="#EF4444">PDF</text>
+  </g>
+
+  <g transform="translate(240 100) rotate(10)">
+    <rect width="70" height="90" rx="8" fill="white" stroke="#E5E7EB"/>
+    <rect x="20" y="25" width="30" height="40" rx="4" fill="#22C55E"/>
+    <text x="35" y="75" font-size="10" text-anchor="middle" fill="#22C55E">DOC</text>
+  </g>
+
+  
+
+  <g transform="translate(200 190) rotate(-8)">
+    <rect width="70" height="90" rx="8" fill="white" stroke="#E5E7EB"/>
+    <rect x="20" y="25" width="30" height="40" rx="4" fill="#3B82F6"/>
+    <text x="35" y="75" font-size="10" text-anchor="middle" fill="#3B82F6">XLS</text>
+  </g>
+
+    <g transform="translate(230 260) rotate(10)">
+    <rect width="70" height="90" rx="8" fill="white" stroke="#E5E7EB"/>
+    <rect x="20" y="25" width="30" height="40" rx="4" fill="#F59E0B"/>
+    <text x="35" y="75" font-size="10" text-anchor="middle" fill="#F59E0B">CSV</text>
+  </g>
+</svg>

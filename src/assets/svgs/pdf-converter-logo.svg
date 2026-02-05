@@ -21,10 +21,10 @@
   <text
     x="56"
     y="32"
-    font-size="20"
+    font-size="24"
     font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
     font-weight="600"
-    fill="#ffff"
+    fill="#text-heading"
   >
     PDF Converter
   </text>

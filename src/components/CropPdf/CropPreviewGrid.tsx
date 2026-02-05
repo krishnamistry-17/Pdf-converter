@@ -40,7 +40,7 @@ const CropPreviewGrid = ({
           <div
             key={index}
             onClick={() => setActiveCropIndex(index)}
-            className={`cursor-pointer border rounded-lg p-2 hover:ring-2 hover:ring-blue ${
+            className={`cursor-pointer border rounded-lg p-2 hover:ring-2 hover:ring-primary ${
               selectedPageType === "current" ? "bg-blue/10" : "bg-white"
             }`}
           >
@@ -49,7 +49,7 @@ const CropPreviewGrid = ({
               alt={`page-${index + 1}`}
               className="h-80 object-contain"
             />
-            <p className="text-sm   text-blue text-center">Page {index + 1}</p>
+            <p className="text-sm   text-text-body text-center">Page {index + 1}</p>
           </div>
         ))}
       </div>
@@ -57,7 +57,7 @@ const CropPreviewGrid = ({
       {cropResults.length > 0 && (
         <div className="flex justify-center items-center my-6">
           <button
-            className="bg-blue text-white px-4 py-2 rounded-md"
+            className="bg-primary text-white px-4 py-2 rounded-md"
             onClick={downloadCroppedImages}
           >
             Download Cropped Images

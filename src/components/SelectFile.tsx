@@ -6,11 +6,18 @@ interface SelectFileProps {
 const SelectFile = ({ heading, description }: SelectFileProps) => {
   return (
     <div>
-      <div className="flex flex-col items-center gap-2 py-8">
-        <h3 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black text-center ">
+      <div className="text-center mb-10">
+        <h1
+          className="text-3xl sm:text-4xl font-semibold
+           text-text-heading leading-tight tracking-tight  mb-3"
+        > 
           {heading}
-        </h3>
-        <p className="md:text-lg text-sm text-gray-500 text-center font-semibold">
+        </h1>
+        <p
+          className="text-text-body max-w-2xl mx-auto text-sm
+          font-medium text-center
+          "
+        >
           {description}
         </p>
       </div>

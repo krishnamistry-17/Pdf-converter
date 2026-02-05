@@ -42,23 +42,23 @@ const Size = ({
 
   return (
     <div className="flex flex-col gap-2 py-2">
-      <p className="text-sm text-blue">
+      <p className="text-sm text-text-body">
         Original File Size:
         <b className="pl-2">
           {(selectedFile?.size ? selectedFile.size / 1024 : 0).toFixed(2)} KB
         </b>
       </p>
-      <p className="text-sm text-blue">
+      <p className="text-sm text-text-body">
         Total Pages: <b>{totalPages}</b>
       </p>
 
       <div className="flex flex-col gap-2 my-3">
-        <p className="text-md text-black">Maximum Size per File</p>
+        <p className="text-md text-text-body">Maximum Size per File</p>
         <div className="flex items-center gap-4">
           <input
             type="number"
             placeholder={value.toString()}
-            className="w-full border border-blue rounded-md p-3 focus:outline-none focus:ring-0 text-blue bg-sea "
+            className="w-full border border-border rounded-md p-3 focus:outline-none focus:ring-0 text-text-body "
             value={value}
             onChange={(e) => setValue(parseInt(e.target.value))}
           />
@@ -69,7 +69,7 @@ const Size = ({
       </div>
 
       <div>
-        <p className="text-sm text-blue py-3 bg-blue/10 border border-blue rounded-md p-2">
+        <p className="text-sm text-text-body py-3 bg-primary/10 border border-primary rounded-md p-2">
           This pdf will be no longer split than this size 5 kB each
         </p>
       </div>
@@ -81,13 +81,13 @@ const Size = ({
           onChange={(e) => setAllowCompression(e.target.checked)}
         />
         <label htmlFor="checkbox">
-          <p className="text-sm text-black">Allow Compression</p>
+          <p className="text-sm text-text-body">Allow Compression</p>
         </label>
       </div>
       <div className="mt-3 w-full">
         <button
           onClick={handleSplitPdfBySize}
-          className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md w-full"
+          className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md w-full"
         >
           Split pdf by size
         </button>

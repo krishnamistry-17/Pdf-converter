@@ -111,28 +111,30 @@ const Range = ({
 
   return (
     <>
-      <p className=" text-lg font-medium py-2">Range Mode:</p>
-      <div className="flex justify-between items-center gap-2">
-        <button
-          onClick={() => setActiveMode("custome")}
-          className={`${
-            activeMode === "custome"
-              ? " bg-blue/10 text-blue border border-blue"
-              : "bg-blue/10 text-blue border "
-          } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
-        >
-          Custome Range
-        </button>
-        <button
-          onClick={() => setActiveMode("fixed")}
-          className={`${
-            activeMode === "fixed"
-              ? "bg-blue/10 text-blue border border-blue"
-              : "bg-blue/10 text-blue border "
-          } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
-        >
-          Fixed Range
-        </button>
+      <p className=" text-lg font-medium text-text-body py-2">Range Mode:</p>
+      <div className="flex items-center justify-between sm:gap-0 gap-2">
+        <div className=" flex sm:flex-row flex-col gap-2 w-full">
+          <button
+            onClick={() => setActiveMode("custome")}
+            className={`${
+              activeMode === "custome"
+                ? " bg-primary/10 text-primary border border-primary"
+                : "bg-primary/10 text-primary border "
+            } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
+          >
+            Custome Range
+          </button>
+          <button
+            onClick={() => setActiveMode("fixed")}
+            className={`${
+              activeMode === "fixed"
+                ? "bg-primary/10 text-primary border border-primary"
+                : "bg-primary/10 text-primary border "
+            } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
+          >
+            Fixed Range
+          </button>
+        </div>
       </div>
 
       <div className="py-3 flex flex-col gap-2">
@@ -140,22 +142,22 @@ const Range = ({
           <>
             {activeRange.map((range, idx) => (
               <div key={idx} className="flex items-center gap-2 mt-2">
-                <div className="flex items-center gap-2 w-full border border-gray-300 rounded-md p-2">
+                <div className="flex items-center gap-2 w-full border border-border rounded-md p-2">
                   <p>From:</p>
                   <input
                     type="number"
                     value={range.from}
                     onChange={(e) => handleRangeChange(e, idx, "from")}
-                    className="w-full focus:outline-none focus:ring-0 text-blue bg-sea"
+                    className="w-full focus:outline-none focus:ring-0 text-text-body "
                   />
                 </div>
-                <div className="flex items-center gap-2 w-full border border-gray-300 rounded-md p-2">
+                <div className="flex items-center gap-2 w-full border border-border rounded-md p-2">
                   <p>To:</p>
                   <input
                     type="number"
                     value={range.to}
                     onChange={(e) => handleRangeChange(e, idx, "to")}
-                    className="w-full focus:outline-none focus:ring-0 text-blue bg-sea"
+                    className="w-full focus:outline-none focus:ring-0 text-text-body "
                   />
                 </div>
               </div>
@@ -163,7 +165,7 @@ const Range = ({
             <div className="flex justify-center my-4">
               <button
                 onClick={handleAddRange}
-                className="flex items-center justify-center gap-2 bg-blue/10 text-blue border border-blue px-6 py-2 rounded-md"
+                className="flex items-center justify-center gap-2 bg-primary/10 text-primary border border-primary px-6 py-2 rounded-md"
               >
                 <span className="text-2xl">+</span> Add Range
               </button>
@@ -182,7 +184,7 @@ const Range = ({
               placeholder="Pages per split (e.g. 3)"
               value={pageRange}
               onChange={(e) => setPageRange(e.target.value)}
-              className="focus:outline-none focus:ring-0 border border-gray-300 rounded-md p-2"
+              className="focus:outline-none focus:ring-0 border border-border rounded-md p-2"
             />
           </div>
         )}
@@ -191,7 +193,7 @@ const Range = ({
       <div className="my-3">
         <button
           onClick={handleSplit}
-          className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full px-4 py-2 rounded-md transition"
+          className="bg-primary hover:bg-primary-hover text-white w-full px-4 py-2 rounded-md transition"
         >
           Split
         </button>

@@ -18,9 +18,29 @@ module.exports = {
         greenprimary: "#27AE60",
         blueprimary: "#095586",
 
+        primary: {
+          DEFAULT: "#2563EB",
+          hover: "#1D4ED8",
+          soft: "#EFF6FF",
+        },
+
+        bg: {
+          page: "#F8FAFC",
+          card: "#FFFFFF",
+          soft: "#F1F5F9",
+          upload: "#F8FAFF",
+        },
+
+        text: {
+          heading: "#0F172A",
+          body: "#475569",
+          muted: "#64748B",
+          light: "#94A3B8",
+        },
+
         /*Color palette*/
         blue: "#09637E",
-        
+
         teal: "#088395",
         gradient: "#7AB2B2",
         sea: "#EBF4F6",

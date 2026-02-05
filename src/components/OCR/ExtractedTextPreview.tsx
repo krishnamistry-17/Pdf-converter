@@ -21,12 +21,12 @@ const ExtractedTextPreview = ({ text }: ExtractedTextPreviewProps) => {
     <div className="bg-white/40 border rounded-lg p-4 max-h-[400px] overflow-y-auto">
       <div className="flex justify-between items-center mb-2">
         <h3 className="font-semibold">Extracted Text</h3>
-        <button onClick={handleCopy} className="text-blue text-sm underline">
+        <button onClick={handleCopy} className="text-text-body text-sm underline">
           Copy
         </button>
       </div>
 
-      <pre className="whitespace-pre-wrap text-sm text-gray-800">
+      <pre className="whitespace-pre-wrap text-sm text-text-body">
         {lines.map((line, index) => {
           const isBullet = bulletRegex.test(line);
           const isContinuation = prevWasBullet && isContinuationLine(line);
@@ -37,7 +37,7 @@ const ExtractedTextPreview = ({ text }: ExtractedTextPreviewProps) => {
             <div key={index}>
               <span
                 className={`${
-                  isBullet || isContinuation ? "text-red-500" : "text-blue"
+                  isBullet || isContinuation ? "text-red-500" : "text-text-body"
                 }`}
               >
                 {line}

@@ -170,34 +170,36 @@ const Pages = ({
 
   return (
     <>
-      <p className=" text-lg font-medium py-2">Extract Mode:</p>
-      <div className="flex justify-between  items-center gap-2">
-        <button
-          onClick={() => setPageExtractMode("extractAll")}
-          className={`
+      <p className=" text-lg font-medium text-text-body py-2">Extract Mode:</p>
+      <div className="flex items-center justify-between sm:gap-0 gap-2">
+        <div className=" flex sm:flex-row flex-col gap-2 w-full">
+          <button
+            onClick={() => setPageExtractMode("extractAll")}
+            className={`
                 ${
                   pageExtractMode === "extractAll"
-                    ? " bg-blue/10 text-blue border border-blue"
-                    : "bg-blue/10 text-blue border "
+                    ? " bg-primary/10 text-primary border border-primary"
+                    : "bg-primary/10 text-primary border "
                 }
                 px-6 py-2 rounded-md
             `}
-        >
-          Extract All Pages
-        </button>
-        <button
-          onClick={() => setPageExtractMode("selectPages")}
-          className={`
+          >
+            Extract All Pages
+          </button>
+          <button
+            onClick={() => setPageExtractMode("selectPages")}
+            className={`
                 ${
                   pageExtractMode === "selectPages"
-                    ? "bg-blue/10 text-blue border border-blue"
-                    : "bg-blue/10 text-blue border "
+                    ? "bg-primary/10 text-primary border border-primary"
+                    : "bg-primary/10 text-primary border "
                 }
                 px-6 py-2 rounded-md
             `}
-        >
-          Select Pages
-        </button>
+          >
+            Select Pages
+          </button>
+        </div>
       </div>
       <div className="py-3 flex flex-col gap-2">
         {pageExtractMode === "extractAll" && (
@@ -205,7 +207,7 @@ const Pages = ({
             <div className=" w-full flex justify-center my-2">
               <button
                 onClick={handleSplit}
-                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
+                className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md transition w-full"
               >
                 Split
               </button>
@@ -216,7 +218,7 @@ const Pages = ({
             </p>
             <button
               onClick={handleDownloadAllPages}
-              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md transition w-full"
             >
               Download All Pages
             </button>
@@ -229,7 +231,7 @@ const Pages = ({
               <input
                 type="text"
                 placeholder="1,2,5-10"
-                className="w-full border border-blue rounded-md p-3 focus:outline-none focus:ring-0 text-blue bg-sea "
+                className="w-full border border-border rounded-md p-3 focus:outline-none focus:ring-0 text-text-body "
                 value={pageInput}
                 onChange={handleInputChange}
               />
@@ -237,17 +239,17 @@ const Pages = ({
             <div className="mt-2 flex flex-col gap-2">
               <button
                 onClick={handleSplit}
-                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition"
+                className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md transition"
               >
                 Split
               </button>
-              <p className="text-sm text-black">
+              <p className="text-sm text-text-body">
                 Selected pages will be converted into sepraate pdf files.{" "}
                 <b>{results.length} pdf</b> will be created.
               </p>
               <button
                 onClick={handleDownloadSelectedPages}
-                className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white px-4 py-2 rounded-md hover:bg-blue transition w-full"
+                className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md transition w-full"
               >
                 Download Selected Pages
               </button>

@@ -64,7 +64,7 @@ const PageSidebar = () => {
     });
 
     clearResults();
-    toast.success("Page numbers applied successfully!");
+    toast.success("");
     setLoading(false);
   };
 
@@ -86,27 +86,29 @@ const PageSidebar = () => {
 
   return (
     <div className="flex flex-col">
-      <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">Add Page Number</h2>
+      <h2 className="text-xl font-semibold text-text-body border-b border-border pb-4">
+        Add Page Number
+      </h2>
 
       <div className="flex flex-col gap-3 my-4">
         <div>
-          <p className="font-semibold mb-2 text-blue">Page Mode:</p>
+          <p className="font-semibold mb-2 text-text-body">Page Mode:</p>
           <div className="flex sm:flex-row flex-col gap-2">
             <button
-              className={`px-4 py-2 rounded-md text-white ${
+              className={`px-4 py-2 rounded-md ${
                 pageMode === "single"
-                  ? "bg-gradient-to-r from-blue to-teal"
-                  : "bg-teal"
+                  ? "bg-primary/70 text-white"
+                  : "bg-primary/10 text-primary border"
               }`}
               onClick={() => setPageMode("single")}
             >
               Single Page
             </button>
             <button
-              className={`px-4 py-2 rounded-md text-white ${
+              className={`px-4 py-2 rounded-md ${
                 pageMode === "multiple"
-                  ? "bg-gradient-to-r from-blue to-teal"
-                  : "bg-teal"
+                  ? "bg-primary/70 text-white"
+                  : "bg-primary/10 text-primary border"
               }`}
               onClick={() => setPageMode("multiple")}
             >
@@ -117,13 +119,13 @@ const PageSidebar = () => {
 
         <div className="sm:flex gap-3 mt-3 sm:flex-row w-full flex-col">
           <div className="w-full">
-            <p className="font-semibold mb-2 text-blue">Position:</p>
+            <p className="font-semibold mb-2 text-text-body">Position:</p>
             <NumberPosition />
           </div>
           <div className="w-full">
-            <p className="font-semibold mb-2 text-blue">Margin:</p>
+            <p className="font-semibold mb-2 text-text-body">Margin:</p>
             <div
-              className="relative w-full h-10 border border-blue/30 rounded-md p-2 cursor-pointer"
+              className="relative w-full h-10 border border-border rounded-md p-2 cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
             >
               <div className="flex justify-between items-center">
@@ -136,11 +138,11 @@ const PageSidebar = () => {
               </div>
 
               {menuOpen && (
-                <div className="absolute left-0 top-10 w-full bg-white shadow-md rounded-md z-50">
+                <div className="absolute left-0 top-10 w-full bg-bg-card shadow-md rounded-md z-50">
                   {["Recommended", "small", "big"].map((size) => (
                     <button
                       key={size}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-bg-soft"
                       onClick={() => {
                         setSelectedName(size);
                         setMenuOpen(false);
@@ -157,16 +159,18 @@ const PageSidebar = () => {
 
         <div className="sm:flex gap-3 sm:flex-row flex-col">
           <div className="w-full">
-            <p className="font-semibold mb-2 text-blue">First Page Number:</p>
+            <p className="font-semibold mb-2 text-text-body">
+              First Page Number:
+            </p>
             <input
               type="number"
               value={firstNumber}
               onChange={(e) => setFirstNumber(Number(e.target.value))}
-              className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
+              className="w-full border rounded-md p-2 text-text-body bg-bg-soft border-border"
             />
           </div>
           <div className="w-full sm:mt-0 mt-3">
-            <p className="font-semibold mb-2 text-blue">Number Type:</p>
+            <p className="font-semibold mb-2 text-text-body">Number Type:</p>
             <div className="flex gap-2 items-center">
               <input
                 type="radio"
@@ -177,7 +181,7 @@ const PageSidebar = () => {
                 onChange={(e) =>
                   setSelectedNumberType(e.target.value as "arabic" | "roman")
                 }
-                className="w-4 h-4 accent-blue "
+                className="w-4 h-4 accent-primary "
               />
               <label htmlFor="arabic">1,2,...</label>
               <input
@@ -189,7 +193,7 @@ const PageSidebar = () => {
                 onChange={(e) =>
                   setSelectedNumberType(e.target.value as "arabic" | "roman")
                 }
-                className="w-4 h-4 accent-blue"
+                className="w-4 h-4 accent-primary"
               />
               <label htmlFor="roman">i,ii,...</label>
             </div>
@@ -197,7 +201,7 @@ const PageSidebar = () => {
         </div>
 
         <div>
-          <p className="font-semibold mb-2 text-blue">
+          <p className="font-semibold mb-2 text-text-body">
             Which pages do you want to number?
           </p>
           {activeRange.map((range, index) => (
@@ -206,14 +210,14 @@ const PageSidebar = () => {
                 type="number"
                 value={range.from}
                 onChange={(e) => handleRangeChange(e, index, "from")}
-                className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
+                className="w-full border rounded-md p-2 text-text-body bg-bg-soft border-border"
                 placeholder="From"
               />
               <input
                 type="number"
                 value={range.to}
                 onChange={(e) => handleRangeChange(e, index, "to")}
-                className="w-full border rounded-md p-2 text-blue bg-sea border-blue/30"
+                className="w-full border rounded-md p-2 text-text-body bg-bg-soft border-border"
                 placeholder="To"
               />
             </div>
@@ -221,7 +225,7 @@ const PageSidebar = () => {
         </div>
 
         <div>
-          <p className="font-semibold mb-2 text-blue">Select Range Type:</p>
+          <p className="font-semibold mb-2 text-text-body">Select Range Type:</p>
           <div className="flex gap-2 items-center">
             <input
               type="radio"
@@ -232,7 +236,7 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4 accent-blue"
+              className="w-4 h-4 accent-primary"
             />
             <label htmlFor="all">All</label>
             <input
@@ -244,7 +248,7 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4 accent-blue"
+              className="w-4 h-4 accent-primary"
             />
             <label htmlFor="odd">Odd</label>
             <input
@@ -256,16 +260,16 @@ const PageSidebar = () => {
               onChange={(e) =>
                 setSelectedRangeType(e.target.value as "all" | "odd" | "even")
               }
-              className="w-4 h-4 accent-blue"
+              className="w-4 h-4 accent-primary"
             />
             <label htmlFor="even">Even</label>
           </div>
         </div>
 
         <div>
-          <p className="font-semibold mb-2 text-blue">Text:</p>
+          <p className="font-semibold mb-2 text-text-body">Text:</p>
           <div
-            className="relative border rounded-md p-2 cursor-pointer sm:w-auto max-w-md text-blue bg-sea border-blue/30"
+            className="relative border rounded-md p-2 cursor-pointer sm:w-auto max-w-md text-text-body bg-bg-soft border-border"
             onClick={() => setTextMenuOpen(!textMenuOpen)}
           >
             <div className="flex justify-between items-center">
@@ -278,7 +282,7 @@ const PageSidebar = () => {
             {textMenuOpen && (
               <div className="absolute left-0 top-10 sm:w-full max-w-md  bg-white shadow-md rounded-md z-50">
                 <button
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-bg-soft"
                   onClick={() => {
                     setSelectedTextName("Page {current} of {total}");
                     setTextMenuOpen(false);
@@ -287,7 +291,7 @@ const PageSidebar = () => {
                   Page {"{current}"} of {"{total}"}
                 </button>
                 <button
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-bg-soft"
                   onClick={() => {
                     setSelectedTextName("{current}");
                     setTextMenuOpen(false);
@@ -303,7 +307,7 @@ const PageSidebar = () => {
         <button
           onClick={handleApply}
           disabled={!results.length}
-          className="bg-gradient-to-r from-blue to-teal text-white py-2 rounded-md disabled:opacity-50 max-w-md sm:w-auto"
+          className="bg-primary hover:bg-primary-hover text-white py-2 rounded-md disabled:opacity-50 max-w-md sm:w-auto"
         >
           Apply Page Numbers
         </button>

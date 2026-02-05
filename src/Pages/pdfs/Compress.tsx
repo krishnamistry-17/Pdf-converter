@@ -71,7 +71,7 @@ const CompressPdf = () => {
     }
   };
   return (
-    <div className="relative flex min-h-screen  px-4 py-12">
+    <div className="relative flex lg:flex-row flex-col min-h-screen  px-4 py-12">
       <div
         className={`flex-1 transition-all duration-300 
           
@@ -79,7 +79,7 @@ const CompressPdf = () => {
       >
         <div
           className={`mx-auto
-          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
         >
           <SelectFile
@@ -87,7 +87,7 @@ const CompressPdf = () => {
             description="Compress a PDF file to reduce its size."
           />
           <div
-            className="bg-white/40 text-blue rounded-2xl shadow-lg 
+            className="bg-white/40 text-text-body rounded-2xl shadow-lg 
           border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
@@ -101,7 +101,7 @@ const CompressPdf = () => {
               />
             )}
             {results.length === 0 && (
-              <p className="text-blue mt-8 text-center">
+              <p className="text-text-body mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}
@@ -114,7 +114,7 @@ const CompressPdf = () => {
       <aside
         className={`
           fixed  top-0 right-0 h-full w-full md:w-[320px] z-50
-          bg-sea  shadow-lg border-l border-blue
+          bg-bg-card  shadow-lg border-l border-border
           transform transition-transform duration-300
           ${fileSelected ? "translate-x-0" : "translate-x-full"}
         `}
@@ -129,7 +129,7 @@ const CompressPdf = () => {
               }}
             />
           </button>
-          <h2 className="text-lg font-semibold mb-4">Compression Level</h2>
+          <h2 className="text-lg font-semibold text-text-body mb-4">Compression Level</h2>
 
           <div className="space-y-2">
             {compressPdfOptions.map((option) => (
@@ -141,8 +141,8 @@ const CompressPdf = () => {
                   
                   ${
                     selectedSize === option.value
-                      ? " bg-teal text-white"
-                      : " border border-blue/30"
+                      ? " bg-primary/70 text-white"
+                      : " border border-border"
                   }
                 `}
               >
@@ -166,7 +166,7 @@ const CompressPdf = () => {
 
           <button
             onClick={handleCompress}
-            className="mt-6 w-full bg-blue hover:bg-gradient-to-r from-blue to-teal
+            className="mt-6 w-full bg-primary hover:bg-primary-hover
              text-white py-3 rounded-md font-semibold  transition"
           >
             Download Compressed PDF

@@ -23,29 +23,33 @@ const RotatePreviewGrid = () => {
 
   return (
     <div className="my-6 w-full">
-      <div className=" flex justify-center items-center 
-      flex-wrap mx-auto gap-3">
+      <div
+        className=" flex justify-center items-center 
+      flex-wrap mx-auto gap-3"
+      >
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white/40 text-blue rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
+            className="bg-white/40 text-text-body rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
           >
             <iframe
               src={file.url}
               title={file.fileName}
-              className="w-full  h-80 border rounded"
+              className="w-full  h-80 border rounded text-text-body"
               style={{ transform: `rotate(${file.rotation}deg)` }}
             />
 
             <div className="mt-3">
-              <p className="font-medium truncate">{file.fileName}</p>
-              <p className="text-sm text-gray-500">Page {file.pages}</p>
+              <p className="font-medium truncate text-text-body">
+                {file.fileName}
+              </p>
+              <p className="text-sm text-text-body">Page {file.pages}</p>
             </div>
 
             <div className="absolute top-1/2 -left-2">
               <button
                 onClick={() => handleRotate(index)}
-                className="bg-white p-2 rounded shadow hover:bg-gray-100"
+                className="bg-white p-2 rounded shadow hover:bg-bg-soft"
                 title="Rotate"
               >
                 <FaRotate />
@@ -54,7 +58,7 @@ const RotatePreviewGrid = () => {
             <div className="absolute top-2 right-2">
               <button
                 onClick={() => handleRemove(index)}
-                className="bg-white p-2 rounded shadow hover:bg-gray-100"
+                className="bg-white p-2 rounded shadow hover:bg-bg-soft"
                 title="Remove"
               >
                 <MdClose />

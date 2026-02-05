@@ -1,15 +1,13 @@
 import SelectFile from "../../components/SelectFile";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
-import Range from "../../components/split/Range";
 import useSplitStore from "../../store/useSplitStore";
 import SplitPreviewGrid from "../../components/split/SplitPreviewGrid";
-import Pages from "../../components/split/Pages";
-import Size from "../../components/split/Size";
 import { PDFDocument } from "pdf-lib";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
 import useMobileSize from "../../hooks/useMobileSize";
+import SplitSidebar from "../../components/split/SplitSidebar";
 
 const SplitPdfComponent = () => {
   const isMobile = useMobileSize();
@@ -21,7 +19,6 @@ const SplitPdfComponent = () => {
   const clearResults = useSplitStore((state) => state.clearResults);
   const results = useSplitStore((state) => state.results);
   const setResults = useSplitStore((state) => state.setResults);
-  const setSplitRangeType = useSplitStore((state) => state.setSplitRangeType);
   const setTotalPages = useSplitStore((state) => state.setTotalPages);
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
@@ -29,7 +26,6 @@ const SplitPdfComponent = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  const splitRangeType = useSplitStore((state) => state.splitRangeType);
 
   const [isTabChanged, setIsTabChanged] = useState(false);
   const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -78,15 +74,17 @@ const SplitPdfComponent = () => {
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
-        <div className={`mx-auto
-          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
-          `}>
+        <div
+          className={`mx-auto
+          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
+          `}
+        >
           <SelectFile
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
           />
           <div
-            className="bg-white/40 text-blue rounded-2xl shadow-lg
+            className="bg-white/40 text-text-body rounded-2xl shadow-lg
            border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
@@ -101,61 +99,35 @@ const SplitPdfComponent = () => {
             )}
 
             {results.length === 0 && (
-              <p className="text-blue mt-8 text-center">
+              <p className="text-text-body mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}
 
-            {results.length > 0 && <SplitPreviewGrid />}
+            {results.length > 0 && (
+              <>
+                {isMobile && results.length > 0 && (
+                  <div className=" flex flex-col gap-3 mt-3">
+                    <h2 className="text-xl font-semibold py-4">
+                      SelectedFiles
+                    </h2>
+                    <SplitSidebar
+                      setIsSidebarOpen={setIsSidebarOpen}
+                      setIsTabChanged={setIsTabChanged}
+                    />
+                  </div>
+                )}
+                <SplitPreviewGrid />
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {isMobile && results.length > 0 && (
-        <div className=" flex flex-col gap-3 mt-3">
-          <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
-          <div className=" space-y-2">
-            <div className="flex items-center justify-start sm:gap-0 gap-2">
-              <>
-                {["Range", "Pages", "Size"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => {
-                      setSplitRangeType(tab as "Range" | "Pages" | "Size");
-                      setIsTabChanged(true);
-                    }}
-                    className={`
-                      ${
-                        splitRangeType === tab
-                          ? "bg-gradient-to-r from-blue to-teal text-white"
-                          : "bg-teal text-white"
-                      }
-                      px-6 py-2 rounded-md
-                    `}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </>
-            </div>
-
-            {splitRangeType === "Range" && (
-              <Range setIsSidebarOpen={setIsSidebarOpen} />
-            )}
-            {splitRangeType === "Pages" && (
-              <Pages setIsSidebarOpen={setIsSidebarOpen} />
-            )}
-            {splitRangeType === "Size" && (
-              <Size setIsSidebarOpen={setIsSidebarOpen} />
-            )}
-          </div>
-        </div>
-      )}
-
       {!isMobile && isSidebarVisible && (
         <aside
           className={` fixed top-0 right-0 h-full w-[380px] z-50
-          bg-sea  shadow-lg border-l border-blue
+          bg-bg-card  shadow-lg border-l border-border
           transform transition-transform duration-300
           ${isSidebarVisible ? "translate-x-0" : "translate-x-full"}
         `}
@@ -175,42 +147,13 @@ const SplitPdfComponent = () => {
                 }}
               />
             </button>
-            <h2 className="text-lg font-semibold mb-4">Split PDF</h2>
-            <div className=" space-y-2">
-              <div className="flex items-center justify-between sm:gap-0 gap-2">
-                <>
-                  {["Range", "Pages", "Size"].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => {
-                        setSplitRangeType(tab as "Range" | "Pages" | "Size");
-                        setIsTabChanged(true);
-                      }}
-                      className={`
-                      ${
-                        splitRangeType === tab
-                          ? "bg-gradient-to-r from-blue to-teal text-white"
-                          : "bg-teal text-white"
-                      }
-                      px-6 py-2 rounded-md
-                    `}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </>
-              </div>
-
-              {splitRangeType === "Range" && (
-                <Range setIsSidebarOpen={setIsSidebarOpen} />
-              )}
-              {splitRangeType === "Pages" && (
-                <Pages setIsSidebarOpen={setIsSidebarOpen} />
-              )}
-              {splitRangeType === "Size" && (
-                <Size setIsSidebarOpen={setIsSidebarOpen} />
-              )}
-            </div>
+            <h2 className="text-lg font-semibold text-text-heading mb-4">
+              Split PDF
+            </h2>
+            <SplitSidebar
+              setIsSidebarOpen={setIsSidebarOpen}
+              setIsTabChanged={setIsTabChanged}
+            />
           </div>
         </aside>
       )}

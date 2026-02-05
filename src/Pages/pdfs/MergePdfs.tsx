@@ -164,11 +164,11 @@ const MergePdfComponent = () => {
           {selectedMergeFile1 && (
             <div
               className="flex items-center justify-between  bg-gray-50 hover:bg-gray-100 transition cursor-pointer
-              border border-gray-200 rounded-md p-3 "
+              border border-gray-200 rounded-md p-3"
             >
               <p className="truncate">{selectedMergeFile1.name}</p>
               <button
-                className="text-blue cursor-pointer underline text-md"
+                className="text-text-body cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedMergeFile1}
               >
                 <IoMdTrash />
@@ -182,7 +182,7 @@ const MergePdfComponent = () => {
             >
               <p className="truncate">{selectedMergeFile2.name}</p>
               <button
-                className="text-blue cursor-pointer underline text-md"
+                className="text-text-body cursor-pointer underline text-md"
                 onClick={handleDeleteSelectedMergeFile2}
               >
                 <IoMdTrash />
@@ -203,7 +203,7 @@ const MergePdfComponent = () => {
       >
         <div
           className={`mx-auto
-          ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
         >
           <SelectFile
@@ -211,7 +211,7 @@ const MergePdfComponent = () => {
             description="Merge two PDF files into one."
           />
           <div
-            className="bg-white/40 text-blue rounded-2xl shadow-lg
+            className="bg-white/40 text-text-body rounded-2xl shadow-lg
            border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
@@ -225,7 +225,7 @@ const MergePdfComponent = () => {
               />
             )}
             {results.length === 0 && (
-              <p className="text-blue mt-8 text-center">
+              <p className="text-text-body mt-8 text-center">
                 Upload a PDF to start
               </p>
             )}
@@ -276,18 +276,18 @@ const MergePdfComponent = () => {
       {!isMobile && isSidebarVisible && (
         <aside
           className="fixed top-0 right-0 h-full w-[380px] 
-         bg-sea border-l border-blue shadow-lg z-50"
+         bg-bg-card border-l border-border shadow-lg z-50"
         >
           <div className="p-6">
             <button className="absolute top-5 right-5" onClick={handleReset}>
               <IoMdClose />
             </button>
 
-            <h2 className="text-xl font-semibold border-b pb-4">Merge PDFs</h2>
+            <h2 className="text-xl font-semibold text-text-heading border-b pb-4">Merge PDFs</h2>
 
             <div className="flex justify-between mt-6">
-              <p className="font-semibold">Files</p>
-              <button onClick={handleReset} className="text-blue underline">
+              <p className="font-medium text-text-body">Files</p>
+              <button onClick={handleReset} className="text-text-body underline">
                 Reset All
               </button>
             </div>
@@ -296,7 +296,7 @@ const MergePdfComponent = () => {
             {mergeDisplayFiles()}
 
             <button
-              className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+              className="bg-primary hover:bg-primary-hover text-white w-full py-2 rounded-md flex justify-center items-center"
               onClick={handleMerge}
             >
               Merge PDFs
@@ -306,7 +306,7 @@ const MergePdfComponent = () => {
           <div className=" fixed  top-[20%]  z-50 flex flex-col gap-3 -ml-8">
             <button
               onClick={handleFileUpload2}
-              className="bg-teal  text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+              className="bg-primary  text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
             >
               <IoMdAdd />
             </button>
@@ -319,7 +319,7 @@ const MergePdfComponent = () => {
           <h2 className="text-xl font-semibold py-4">SelectedFiles</h2>
           {mergeDisplayFiles()}
           <button
-            className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
+            className="bg-primary hover:bg-primary-hover text-white w-full py-2 rounded-md flex justify-center items-center"
             onClick={handleMerge}
           >
             Merge PDFs <IoMdArrowForward className="ml-2" />
@@ -331,7 +331,7 @@ const MergePdfComponent = () => {
         <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
           <button
             onClick={handleFileUpload2}
-            className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
+            className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
           >
             <IoMdAdd />
           </button>
