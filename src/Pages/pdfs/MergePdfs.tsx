@@ -195,7 +195,7 @@ const MergePdfComponent = () => {
   };
 
   return (
-    <div className=" relative lg:flex flex-col min-h-screen  px-4 py-12">
+    <div className=" relative lg:flex flex-col   px-4 py-12">
       <div
         className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -223,11 +223,6 @@ const MergePdfComponent = () => {
                 isDownloadCompleted={downloadCompleted}
                 clearDownloadCompleted={clearDownloadCompleted}
               />
-            )}
-            {results.length === 0 && (
-              <p className="text-text-body mt-8 text-center">
-                Upload a PDF to start
-              </p>
             )}
 
             <div
@@ -283,11 +278,16 @@ const MergePdfComponent = () => {
               <IoMdClose />
             </button>
 
-            <h2 className="text-xl font-semibold text-text-heading border-b pb-4">Merge PDFs</h2>
+            <h2 className="text-xl font-semibold text-text-heading border-b pb-4">
+              Merge PDFs
+            </h2>
 
             <div className="flex justify-between mt-6">
               <p className="font-medium text-text-body">Files</p>
-              <button onClick={handleReset} className="text-text-body underline">
+              <button
+                onClick={handleReset}
+                className="text-text-body underline"
+              >
                 Reset All
               </button>
             </div>

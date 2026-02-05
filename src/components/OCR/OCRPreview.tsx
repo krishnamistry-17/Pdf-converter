@@ -23,7 +23,7 @@ const OCRPreview = ({ previewFileDesign }: { previewFileDesign: string }) => {
             href={previewFileDesign}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue text-sm underline"
+            className="text-text-body text-sm underline"
           >
             Open PDF in new tab
           </a>
@@ -40,14 +40,14 @@ const OCRPreview = ({ previewFileDesign }: { previewFileDesign: string }) => {
             href={previewFileDesign}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue text-sm underline"
+            className="text-text-body text-sm underline"
           >
             Open Image in new tab
           </a>
         </div>
       )}
       {!["pdf", "jpg", "jpeg", "png"].includes(type || "") && (
-        <p className="text-blue w-full text-center">No preview available</p>
+        <p className="text-text-body w-full text-center">No preview available</p>
       )}
     </div>
   );

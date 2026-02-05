@@ -2,7 +2,7 @@ import { DetailText } from "../../../constance/Text";
 
 const colors = [
   "from-red-500 to-red-400",
-  "from-blue to-teal",
+  "from-primary to-primary-hover",
   "from-green-500 to-green-400",
   "from-purple-500 to-purple-400",
   "from-orange-500 to-orange-400",

@@ -68,7 +68,7 @@ const SplitPdfComponent = () => {
   const isSidebarVisible = results.length > 0;
 
   return (
-    <div className=" relative lg:flex flex-col min-h-screen  px-4 py-12">
+    <div className=" relative lg:flex flex-col   px-4 py-12">
       <div
         className={` flex-1 transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -96,12 +96,6 @@ const SplitPdfComponent = () => {
                 isDownloadCompleted={downloadCompleted}
                 clearDownloadCompleted={clearDownloadCompleted}
               />
-            )}
-
-            {results.length === 0 && (
-              <p className="text-text-body mt-8 text-center">
-                Upload a PDF to start
-              </p>
             )}
 
             {results.length > 0 && (

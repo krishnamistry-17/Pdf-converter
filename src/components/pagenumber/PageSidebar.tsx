@@ -95,20 +95,20 @@ const PageSidebar = () => {
           <p className="font-semibold mb-2 text-text-body">Page Mode:</p>
           <div className="flex sm:flex-row flex-col gap-2">
             <button
-              className={`px-4 py-2 rounded-md ${
+              className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
                 pageMode === "single"
-                  ? "bg-primary/70 text-white"
-                  : "bg-primary/10 text-primary border"
+                  ? "bg-primary/80 text-white border border-primary shadow-sm"
+                  : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
               }`}
               onClick={() => setPageMode("single")}
             >
               Single Page
             </button>
             <button
-              className={`px-4 py-2 rounded-md ${
+              className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
                 pageMode === "multiple"
-                  ? "bg-primary/70 text-white"
-                  : "bg-primary/10 text-primary border"
+                  ? "bg-primary/80 text-white border border-primary shadow-sm"
+                  : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
               }`}
               onClick={() => setPageMode("multiple")}
             >

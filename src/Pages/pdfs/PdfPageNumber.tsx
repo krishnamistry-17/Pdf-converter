@@ -41,7 +41,7 @@ const PdfPageNumber = () => {
 
   return (
     <>
-      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen  px-4 py-12">
+      <div className="relative lg:flex lg:flex-col flex-col-reverse   px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -68,11 +68,6 @@ const PdfPageNumber = () => {
                 />
               )}
 
-              {results.length === 0 && (
-                <p className="text-text-body mt-8 text-center">
-                  Upload a PDF to start
-                </p>
-              )}
               {results.length > 0 && (
                 <>
                   {isMobile && results.length > 0 && (

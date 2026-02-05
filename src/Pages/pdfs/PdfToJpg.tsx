@@ -92,6 +92,12 @@ const PdfToJpg = () => {
     }
   };
 
+  const handleDownloadImage = async (index: number) => {
+    const { blobs } = await ConvertPdfToPng(selectedFile as File);
+    downloadBlob(blobs[index], `page-${index + 1}.png`);
+    toast.success("Image Download successful!");
+  };
+
   const handleDownloadZip = async () => {
     const { blobs } = await ConvertPdfToPng(selectedFile as File);
 
@@ -116,20 +122,22 @@ const PdfToJpg = () => {
 
   return (
     <>
-      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen  px-4 py-12">
+      <div className="relative lg:flex lg:flex-col flex-col-reverse   px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
         >
-          <div className={`mx-auto
+          <div
+            className={`mx-auto
             ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
-          `}>
+          `}
+          >
             <SelectFile
               heading="PDF to JPG"
               description="Convert a PDF file to JPG images."
             />
-            <div className="bg-white/40 text-blue rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            <div className="bg-white/40 text-text-heading rounded-2xl shadow-lg border border-gray-100 p-10">
               {results.length === 0 && (
                 <UploadModal
                   fileSelected={results.length > 0}
@@ -140,11 +148,7 @@ const PdfToJpg = () => {
                   label="Select a PDF"
                 />
               )}
-              {results.length === 0 && (
-                <p className="text-blue mt-8 text-center">
-                  Upload a PDF to start
-                </p>
-              )}
+
               {results.length > 0 && (
                 <>
                   {isMobile && isSidebarVisible && (
@@ -154,14 +158,17 @@ const PdfToJpg = () => {
                       handleDownloadAll={handleDownloadAll}
                     />
                   )}
-                  <ImagePreviewGrid images={previewImages} />
+                  <ImagePreviewGrid
+                    images={previewImages}
+                    handleDownloadImage={handleDownloadImage}
+                  />
                 </>
               )}
             </div>
           </div>
         </div>
         {!isMobile && isSidebarVisible && (
-          <aside className="fixed top-0 right-0 h-full w-[380px] bg-sea border-l border-blue shadow-lg z-50 overflow-y-auto">
+          <aside className="fixed top-0 right-0 h-full w-[380px] bg-bg-card border-l border-border shadow-lg z-50 overflow-y-auto">
             <div className="p-6">
               <button className="absolute top-5 right-5" onClick={handleReset}>
                 <IoMdClose />

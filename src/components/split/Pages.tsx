@@ -175,27 +175,21 @@ const Pages = ({
         <div className=" flex sm:flex-row flex-col gap-2 w-full">
           <button
             onClick={() => setPageExtractMode("extractAll")}
-            className={`
-                ${
-                  pageExtractMode === "extractAll"
-                    ? " bg-primary/10 text-primary border border-primary"
-                    : "bg-primary/10 text-primary border "
-                }
-                px-6 py-2 rounded-md
-            `}
+            className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
+              pageExtractMode === "extractAll"
+                ? "bg-primary/80 text-white border border-primary shadow-sm"
+                : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
+            }`}
           >
             Extract All Pages
           </button>
           <button
             onClick={() => setPageExtractMode("selectPages")}
-            className={`
-                ${
-                  pageExtractMode === "selectPages"
-                    ? "bg-primary/10 text-primary border border-primary"
-                    : "bg-primary/10 text-primary border "
-                }
-                px-6 py-2 rounded-md
-            `}
+            className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
+              pageExtractMode === "selectPages"
+                ? "bg-primary/80 text-white border border-primary shadow-sm"
+                : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
+            }`}
           >
             Select Pages
           </button>

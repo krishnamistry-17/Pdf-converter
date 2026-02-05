@@ -21,9 +21,9 @@ const Navbar = () => {
   return (
     <header
       className=" sticky top-0 left-0 right-0 
-      z-50 bg-white/80 backdrop-blur border-b border-border"
+      z-50 bg-bg-page backdrop-blur border-b border-border"
     >
-      <div className="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center relative ">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative ">
         <div onClick={() => navigate("/")} className="cursor-pointer">
           <img
             src={PdfConverterLogo}
@@ -32,7 +32,7 @@ const Navbar = () => {
           />
         </div>
 
-        <div className="md:flex hidden items-center gap-6 text-sm text-text-body font-medium">
+        <div className="md:flex hidden items-center gap-6 text-sm text-text-heading font-medium">
           <button
             className=" hover:text-primary transition"
             onClick={() => navigate("/merge-pdfs")}
@@ -79,7 +79,7 @@ const Navbar = () => {
           <div
             onMouseLeave={() => setMobileMenu(false)}
             className="absolute top-14 z-50 right-0 mt-2 p-4 w-[250px] bg-bg-card font-medium
-             text-text-body shadow-lg rounded-md text-sm"
+             text-text-heading shadow-lg rounded-md text-sm"
           >
             <div className="absolute top-3 right-3 cursor-pointer">
               <IoMdClose
@@ -88,7 +88,7 @@ const Navbar = () => {
               />
             </div>
             <div
-              className="flex flex-col items-start gap-4 text-sm text-text-body font-medium"
+              className="flex flex-col items-start gap-4 text-sm text-text-heading font-medium"
               onClick={() => setMobileMenu(false)}
             >
               <button

@@ -186,15 +186,17 @@ const RotatePdf = () => {
 
   return (
     <>
-      <div className="relative lg:flex flex-col min-h-screen  px-4 py-12">
+      <div className="relative lg:flex flex-col   px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
         >
-          <div className={`mx-auto
+          <div
+            className={`mx-auto
             ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
-          `}>
+          `}
+          >
             <SelectFile
               heading="Rotate PDF"
               description="Rotate a PDF file by 90 degrees."
@@ -209,11 +211,6 @@ const RotatePdf = () => {
                   isDownloadCompleted={downloadCompleted}
                   clearDownloadCompleted={clearDownloadCompleted}
                 />
-              )}
-              {results.length === 0 && (
-                <p className="text-text-body mt-8 text-center">
-                  Upload a PDF to start
-                </p>
               )}
               {results.length > 0 && (
                 <>
@@ -298,7 +295,7 @@ const RotatePdf = () => {
                   <p>Rotate From Right</p>
                 </div>
                 <div
-                    className="flex items-center gap-2 bg-primary/10 text-primary  p-2 rounded-md"
+                  className="flex items-center gap-2 bg-primary/10 text-primary  p-2 rounded-md"
                   onClick={() => handleRotateFromLeft()}
                 >
                   <div className="bg-primary/10 text-primary border border-primary p-1 rounded-md">

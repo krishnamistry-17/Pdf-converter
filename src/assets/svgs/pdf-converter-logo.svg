@@ -8,14 +8,14 @@
   <rect x="2" y="4" width="32" height="40" rx="6" fill="#EBF4F6" />
 
   <!-- Main document -->
-  <rect x="6" y="8" width="24" height="32" rx="4" fill="#09637E" />
+  <rect x="6" y="8" width="24" height="32" rx="4" fill="#2563EB" />
 
   <!-- Crop corners -->
   <path d="M10 14h6v2h-4v4h-2v-6z" fill="#ffffff" />
   <path d="M26 26h-6v-2h4v-4h2v6z" fill="#ffffff" />
 
   <!-- Divider -->
-  <rect x="44" y="8" width="1" height="32" fill="#7AB2B2" />
+  <rect x="44" y="8" width="1" height="32" fill="#2563EB" />
 
   <!-- Logo text -->
   <text

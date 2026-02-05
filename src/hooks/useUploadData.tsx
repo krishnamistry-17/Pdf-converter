@@ -375,6 +375,17 @@ const useUploadData = () => {
     URL.revokeObjectURL(url);
   };
 
+  //downlod single image
+  const downloadImage = (image: string, fileName: string) => {
+    const blob = new Blob([image], { type: "image/png" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // pdf -> ppt
   const ConvertedPdfToPpt = async () => {
     showError();
@@ -1074,7 +1085,7 @@ const useUploadData = () => {
   };
 
   //tessreact not direct extract from pdf, it extract from image
-  //Tessreact--> It does not natively support PDF files; users must first render PDFs to images using third-party libraries. 
+  //Tessreact--> It does not natively support PDF files; users must first render PDFs to images using third-party libraries.
   const extractTextFromImages = async (
     image: string | File,
     language: string = "eng"
@@ -1193,6 +1204,7 @@ const useUploadData = () => {
     extractTextFromImages,
     pdfPageToImage,
     checkFileValidation,
+    downloadImage,
   };
 };
 

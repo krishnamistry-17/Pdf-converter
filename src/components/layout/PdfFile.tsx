@@ -1,9 +1,10 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 const PreviewFile = lazy(() => import("../PreviewFile"));
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import GlobalLoader from "../GlobalLoader";
 import ExtractedTextPreview from "../OCR/ExtractedTextPreview";
 import UploadModal from "../UploadModal";
+import useMobileSize from "../../hooks/useMobileSize";
 interface PdfFileProps {
   previewFileDesign?: React.ReactNode;
   heading: string;
@@ -43,9 +44,34 @@ const PdfFile = ({
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
+  const isPdfPreview = accept === ".pdf";
+  const isMobile = useMobileSize();
+
+  const [previewOpen, setIsPreviewOpen] = useState(false);
+
+  //use this bcz this works also in other browser instead of using stopscroll hook
+  useEffect(() => {
+    if (previewOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [previewOpen]);
+
+  const handlePreviewPdf = () => {
+    if (isMobile) {
+      window.open(previewFileDesign as string, "_blank");
+    } else {
+      setIsPreviewOpen(true);
+    }
+  };
 
   return (
-    <div className="min-h-screen px-4 py-12">
+    <div className=" px-4 py-12">
       <div
         className={`mx-auto
         ${fileSelected ? "w-auto max-w-xl" : "max-w-xl"}
@@ -69,7 +95,7 @@ const PdfFile = ({
 
         <div
           className="bg-white/40 text-text-body rounded-2xl shadow-lg
-         border border-gray-100 p-6 sm:pt-10"
+         border border-gray-100 p-10"
         >
           <UploadModal
             fileSelected={fileSelected}
@@ -80,13 +106,7 @@ const PdfFile = ({
             label={label}
           />
 
-          {!fileSelected && !isDownloadCompleted && (
-            <p className="text-text-body mt-8 text-center">
-              Upload a file to start
-            </p>
-          )}
-
-          <div className="mt-10">
+          <div>
             {extractedText && (
               <ExtractedTextPreview text={extractedText as string} />
             )}
@@ -96,12 +116,26 @@ const PdfFile = ({
           </div>
 
           {fileSelected && !isDownloadCompleted && (
-            <div className="mt-10 flex justify-center">
+            <div className="mt-10 flex justify-center items-center gap-4">
+              {isPdfPreview && (
+                <button
+                  className="bg-primary hover:bg-primary-hover text-white font-semibold lg:block hidden
+                px-10 py-3 rounded-xl max-w-xs w-full mx-auto
+                transition
+                shadow-card"
+                  onClick={() => {
+                    setIsPreviewOpen(true);
+                    handlePreviewPdf();
+                  }}
+                >
+                  Preview PDF
+                </button>
+              )}
               <button
                 onClick={handleConvert}
                 className="
                 bg-primary hover:bg-primary-hover text-white font-semibold
-                px-10 py-4 rounded-xl max-w-xs w-full mx-auto
+                px-10 py-3 rounded-xl max-w-xs w-full mx-auto
                 transition
                 shadow-card
               "
@@ -112,6 +146,24 @@ const PdfFile = ({
           )}
         </div>
       </div>
+      {previewOpen && (
+        <div className="fixed inset-0 z-50 bg-black/40 lg:flex hidden items-center justify-center">
+          <div className="bg-white rounded-xl w-[90%] max-w-3xl h-[80vh] relative shadow-xl">
+            <button
+              onClick={() => setIsPreviewOpen(false)}
+              className="absolute top-0 right-2 text-white "
+            >
+              ✕
+            </button>
+
+            <iframe
+              src={previewFileDesign as string}
+              className="w-full h-full rounded-b-xl"
+              title="PDF Preview"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

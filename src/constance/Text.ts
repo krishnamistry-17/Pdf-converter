@@ -33,7 +33,7 @@ export const steps = [
     title: "Upload File",
     description: "Select or drag & drop your file securely.",
     icon: FaUpload,
-    color: "from-blue to-teal ",
+    color: "from-primary to-primary-hover ",
   },
   {
     title: "Convert",
@@ -63,5 +63,4 @@ export const HeroSectionText = {
   heading: "Your All-in-One Online PDF Tools",
   description:
     "Convert, merge, compress, and edit PDF files easily. Fast, secure, and works directly in your browser.",
-  points: ["⚡ Fast", "🔒 Secure", "💻 No install"],
 };

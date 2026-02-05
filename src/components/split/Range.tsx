@@ -113,24 +113,25 @@ const Range = ({
     <>
       <p className=" text-lg font-medium text-text-body py-2">Range Mode:</p>
       <div className="flex items-center justify-between sm:gap-0 gap-2">
-        <div className=" flex sm:flex-row flex-col gap-2 w-full">
+        <div className="flex sm:flex-row flex-col gap-2 w-full">
           <button
             onClick={() => setActiveMode("custome")}
-            className={`${
+            className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
               activeMode === "custome"
-                ? " bg-primary/10 text-primary border border-primary"
-                : "bg-primary/10 text-primary border "
-            } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
+                ? "bg-primary/80 text-white border border-primary shadow-sm"
+                : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
+            }`}
           >
             Custome Range
           </button>
+
           <button
             onClick={() => setActiveMode("fixed")}
-            className={`${
+            className={`transition-all duration-200 font-medium rounded-md sm:px-6 sm:py-2 px-2 py-2 ${
               activeMode === "fixed"
-                ? "bg-primary/10 text-primary border border-primary"
-                : "bg-primary/10 text-primary border "
-            } sm:px-6 sm:py-2 px-2 py-2 rounded-md`}
+                ? "bg-primary/80 text-white border border-primary shadow-sm"
+                : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
+            }`}
           >
             Fixed Range
           </button>

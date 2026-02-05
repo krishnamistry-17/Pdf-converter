@@ -78,15 +78,17 @@ const CropPdf = () => {
 
   return (
     <>
-      <div className="relative lg:flex lg:flex-col flex-col-reverse min-h-screen  px-4 py-12">
+      <div className="relative lg:flex lg:flex-col flex-col-reverse   px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
       `}
         >
-          <div className={`mx-auto
+          <div
+            className={`mx-auto
             ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
-          `}>
+          `}
+          >
             <SelectFile
               heading="Crop PDF"
               description="Crop a PDF file by selecting the crop box."
@@ -102,11 +104,7 @@ const CropPdf = () => {
                   clearDownloadCompleted={clearDownloadCompleted}
                 />
               )}
-              {results.length === 0 && (
-                <p className="text-text-body mt-8 text-center">
-                  Upload a PDF to start
-                </p>
-              )}
+
               {results.length > 0 && (
                 <>
                   {isMobile && isSidebarVisible && (

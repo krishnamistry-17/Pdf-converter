@@ -24,13 +24,13 @@ const SplitSidebar = ({
                 setIsTabChanged(true);
               }}
               className={`
-                      ${
-                        splitRangeType === tab
-                          ? "bg-primary/10 text-primary border border-primary"
-                          : "bg-primary/10 text-primary border "
-                      }
-                      px-6 py-2 rounded-md
-                    `}
+                transition-all duration-200 font-medium px-6 py-2 rounded-md
+                ${
+                  splitRangeType === tab
+                    ? "bg-primary/80 text-white border border-primary shadow-sm"
+                    : "bg-primary-soft text-primary border border-border hover:bg-primary/20"
+                }
+              `}
             >
               {tab}
             </button>

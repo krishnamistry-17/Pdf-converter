@@ -13,16 +13,16 @@ const Zipsidebar = ({
   return (
     <>
       <div className="flex flex-col gap-3 my-4">
-        <h2 className="text-xl font-semibold text-blue border-b border-blue/30 pb-4">
+        <h2 className="text-xl font-semibold text-text-heading border-b border-text-heading/30 pb-4">
           PDF to JPG
         </h2>
         <div className="md:flex justify-between mt-6">
-          <h2 className="text-lg font-semibold text-blue">
+          <h2 className="text-lg font-semibold text-text-heading">
             Select Download Type:
           </h2>
           <button
             onClick={handleReset}
-            className="text-blue underline md:mt-0 mt-2"
+            className="text-text-body underline md:mt-0 mt-2"
           >
             Reset All
           </button>
@@ -38,7 +38,7 @@ const Zipsidebar = ({
               onChange={(e) =>
                 setSelectedPageType(e.target.value as "all" | "zip")
               }
-              className="w-4 h-4 accent-blue "
+              className="w-4 h-4 accent-text-heading "
             />
             <label htmlFor="all">All Pages</label>
             <input
@@ -50,7 +50,7 @@ const Zipsidebar = ({
               onChange={(e) =>
                 setSelectedPageType(e.target.value as "all" | "zip")
               }
-              className="w-4 h-4 accent-blue"
+              className="w-4 h-4 accent-text-heading"
             />
             <label htmlFor="zip">Zip</label>
           </div>
@@ -58,7 +58,7 @@ const Zipsidebar = ({
             <div className="mt-6">
               <button
                 onClick={handleDownloadAll}
-                className="bg-teal max-w-sm w-full text-white px-4 py-2 rounded-md"
+                className="bg-primary hover:bg-primary-hover max-w-sm w-full text-white px-4 py-2 rounded-md"
               >
                 Download All
               </button>
@@ -68,7 +68,7 @@ const Zipsidebar = ({
             <div className="mt-6">
               <button
                 onClick={handleDownloadZip}
-                className="bg-teal max-w-sm w-full text-white px-4 py-2 rounded-md"
+                className="bg-primary hover:bg-primary-hover max-w-sm w-full text-white px-4 py-2 rounded-md"
               >
                 Download Zip
               </button>

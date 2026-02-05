@@ -82,7 +82,7 @@ const ExtractText = () => {
   }, [summaryStatus]);
 
   return (
-    <div className="flex flex-col min-h-screen  px-4 py-12 relative">
+    <div className="flex flex-col   px-4 py-12 relative">
       {ocrLoading && <OCRLoader />}
       <div
         className={`flex-1  transition-all duration-300 
@@ -107,11 +107,6 @@ const ExtractText = () => {
               isDownloadCompleted={false}
               clearDownloadCompleted={() => {}}
             />
-            {!fileSelected && (
-              <p className="text-text-body mt-8 text-center">
-                Upload a PDF or Images to start
-              </p>
-            )}
 
             {previewFile && (
               <div className="flex flex-col gap-3 my-3">

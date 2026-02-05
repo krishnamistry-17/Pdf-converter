@@ -13,12 +13,6 @@ const Herosection = () => {
           <p className="mt-4 max-w-xl text-lg text-text-body leading-relaxed">
             {HeroSectionText.description}
           </p>
-
-          <div className="mt-6 flex gap-6 text-sm text-text-body flex-wrap">
-            {HeroSectionText.points.map((point, index) => (
-              <span key={index}>{point}</span>
-            ))}
-          </div>
         </div>
 
         <div className="lg:flex-1 lg:block hidden w-full max-w-md">

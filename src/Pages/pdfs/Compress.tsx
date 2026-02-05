@@ -71,7 +71,7 @@ const CompressPdf = () => {
     }
   };
   return (
-    <div className="relative flex lg:flex-row flex-col min-h-screen  px-4 py-12">
+    <div className="relative flex lg:flex-row flex-col   px-4 py-12">
       <div
         className={`flex-1 transition-all duration-300 
           
@@ -100,11 +100,6 @@ const CompressPdf = () => {
                 clearDownloadCompleted={clearDownloadCompleted}
               />
             )}
-            {results.length === 0 && (
-              <p className="text-text-body mt-8 text-center">
-                Upload a PDF to start
-              </p>
-            )}
 
             <PreviewFile previewFileDesign={previewFileDesign} />
           </div>
@@ -129,7 +124,9 @@ const CompressPdf = () => {
               }}
             />
           </button>
-          <h2 className="text-lg font-semibold text-text-body mb-4">Compression Level</h2>
+          <h2 className="text-lg font-semibold text-text-body mb-4">
+            Compression Level
+          </h2>
 
           <div className="space-y-2">
             {compressPdfOptions.map((option) => (

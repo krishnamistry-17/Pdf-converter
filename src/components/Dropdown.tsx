@@ -4,7 +4,7 @@ import { convertOptions } from "../constance/ConvertOptions";
 const Dropdown = ({ close }: { close: () => void }) => {
   const navigate = useNavigate();
 
-  return (
+  return (  
     <div
       className="
     absolute
@@ -12,14 +12,16 @@ const Dropdown = ({ close }: { close: () => void }) => {
     xl:right-0 md:right-[15px]
     mt-2 p-5
     w-[90vw] max-w-[500px]
-    bg-white text-blue shadow-lg rounded-md text-sm z-50
+    bg-white  shadow-lg rounded-md text-sm z-50
     transition-all duration-300
      "
     >
       <div className="flex gap-8">
         {convertOptions.map((section: any, idx: number) => (
           <div key={idx}>
-            <h3 className="font-semibold text-blueprimary mb-2">{section.title}</h3>
+            <h3 className="font-semibold text-text-heading mb-2">
+              {section.title}
+            </h3>
             <ul className="space-y-1 items-center justify-center">
               {section.options.map((item: any, i: number) => (
                 <li key={i} className="text-center">
@@ -28,11 +30,13 @@ const Dropdown = ({ close }: { close: () => void }) => {
                       navigate(item.path);
                       close();
                     }}
-                    className="block w-full text-left px-2 py-1 rounded hover:bg-blue/10"
+                    className="block w-full text-left px-2 py-1 rounded hover:bg-primary/10"
                   >
                     <div className="flex items-center gap-2 justify-start">
-                      <item.icon className="  text-lg" />
-                      <span className="text-sm text-blueprimary font-medium">{item.label}</span>
+                      <item.icon className="text-lg text-text-heading" />
+                      <span className="text-sm text-text-body font-medium">
+                        {item.label}
+                      </span>
                     </div>
                   </button>
                 </li>

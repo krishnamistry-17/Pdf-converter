@@ -236,7 +236,7 @@ const PreviewFile = ({
               w-full max-w-full sm:max-w-md
               max-h-[50vh] sm:max-h-80
               overflow-x-auto overflow-y-auto
-              bg-bg-soft rounded
+              bg-white/40 rounded
               text-text-body
               text-[11px] sm:text-xs
               px-2 py-1 sm:px-4 sm:py-2

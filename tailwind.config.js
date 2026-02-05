@@ -13,11 +13,6 @@ module.exports = {
       },
 
       colors: {
-        /*new color platte */
-        redprimary: "#E74C3C",
-        greenprimary: "#27AE60",
-        blueprimary: "#095586",
-
         primary: {
           DEFAULT: "#2563EB",
           hover: "#1D4ED8",
@@ -38,13 +33,6 @@ module.exports = {
           light: "#94A3B8",
         },
 
-        /*Color palette*/
-        blue: "#09637E",
-
-        teal: "#088395",
-        gradient: "#7AB2B2",
-        sea: "#EBF4F6",
-
         /* Borders & UI */
         border: "#E2E8F0", // slate-200
         input: "#CBD5E1", // slate-300
@@ -54,10 +42,6 @@ module.exports = {
         warning: "#F59E0B", // amber-500
         error: "#DC2626", // red-600
         info: "#2563EB", // blue-600
-      },
-
-      backgroundImage: {
-        "site-bg": "linear-gradient(to bottom, #EBF4F6, #7AB2B2, #088395/20)",
       },
 
       borderRadius: {

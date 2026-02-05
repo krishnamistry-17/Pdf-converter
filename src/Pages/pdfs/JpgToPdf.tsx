@@ -150,7 +150,7 @@ const JpgToPdf = () => {
 
   return (
     <>
-      <div className="relative lg:flex flex-col min-h-screen  px-4 py-12">
+      <div className="relative lg:flex flex-col  px-4 py-12">
         <div
           className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
@@ -165,7 +165,7 @@ const JpgToPdf = () => {
               heading="Convert Jpg to Pdf"
               description="This tool will convert Jpg files to Pdf files."
             />
-            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-10">
               {results.length === 0 && (
                 <UploadModal
                   fileSelected={results.length > 0}
@@ -176,11 +176,7 @@ const JpgToPdf = () => {
                   label="Select a Jpg"
                 />
               )}
-              {results.length === 0 && (
-                <p className="text-text-body mt-8 text-center">
-                  Upload a Jpg to start
-                </p>
-              )}
+
               {results.length > 0 && (
                 <>
                   {isMobile && selectedFile && (

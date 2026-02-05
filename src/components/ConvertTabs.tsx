@@ -29,7 +29,7 @@ const ConvertTabs = () => {
         <div className="hidden lg:flex justify-center mb-10">
           <TabList
             className="flex md:flex-row flex-row justify-between 
-          sm:bg-white/40 bg-transparent md:w-auto w-full  sm:rounded-full shadow-md sm:p-2 p-4"
+          sm:bg-white bg-transparent md:w-auto w-full  sm:rounded-full shadow-lg sm:p-2 p-4"
           >
             {tabs.map((tab, index) => (
               <Tab
@@ -40,7 +40,7 @@ const ConvertTabs = () => {
                   ${
                     activeTab === index
                       ? "text-text-heading font-bold underline underline-offset-8 decoration-text-muted"
-                      : "text-text-body font-medium"
+                      : "text-text-body font-semibold"
                   }
                 `}
               >

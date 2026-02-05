@@ -47,7 +47,10 @@ const OCRSidebar = ({
       </h2>
       <div className="flex justify-between mt-6">
         <p className="font-semibold text-text-heading">Extracted Text</p>
-        <button className="text-text-body text-sm underline" onClick={handleReset}>
+        <button
+          className="text-text-body text-sm underline"
+          onClick={handleReset}
+        >
           Reset All
         </button>
       </div>
@@ -95,14 +98,6 @@ const OCRSidebar = ({
         {summaryStatus === "loading" && <OCRLoader />}
         {summaryStatus === "done" && (
           <div className="mt-6">
-            {/* <h3 className="font-semibold text-blue">
-                    {summaryType === "executive"
-                      ? "Executive Summary"
-                      : "Key Points"}
-                  </h3> */}
-            {/* <p className="mt-2 text-blue whitespace-pre-line">
-                    {summaryResult}
-                  </p> */}
             {summaryType === "keypoints" && (
               <div className="mt-6">
                 <h3 className="text-sm font-semibold text-text-heading mb-3">
