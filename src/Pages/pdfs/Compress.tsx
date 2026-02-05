@@ -3,8 +3,6 @@ import SelectFile from "../../components/SelectFile";
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
 import { useState } from "react";
-import { compressPdfOptions } from "../../constance/ConvertOptions";
-import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
@@ -13,9 +11,7 @@ const CompressPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
-  const setDownloadCompleted = useFileSessionStore(
-    (state) => state.setDownloadCompleted
-  );
+
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
@@ -26,12 +22,11 @@ const CompressPdf = () => {
     null
   );
   const results = useFilesStore((state) => state.results);
-  const clearResults = useFilesStore((state) => state.clearResults);
+
   const setResults = useFilesStore((state) => state.setResults);
-  const { compressPdf } = useUploadData();
+  const { compressPdfs } = useUploadData();
 
   const [fileSelected, setFileSelected] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string>("50%");
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,7 +44,8 @@ const CompressPdf = () => {
       },
     ]);
     setPreviewFileDesign(URL.createObjectURL(file as File));
-    e.target.value = "";
+    console.log("original file size--------", file.size / 1024, "KB");
+
     setFileSelected(true);
   };
 
@@ -57,10 +53,21 @@ const CompressPdf = () => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 100));
     try {
-      await compressPdf();
+      await compressPdfs(results[0].blob as File);
+      const compressedFile = await compressPdfs(results[0].blob as File);
+      console.log(
+        "compressed file size--------",
+        compressedFile.size / 1024,
+        "KB"
+      );
+      const url = URL.createObjectURL(compressedFile);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `compressed-${results[0].name}`;
+      a.click();
+      URL.revokeObjectURL(url);
       toast.success("Compression successful!");
       clearSelectedFile();
-      setDownloadCompleted(true);
       setFileSelected(false);
       setResults([]);
     } catch (error) {
@@ -70,106 +77,48 @@ const CompressPdf = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="relative flex lg:flex-row flex-col   px-4 py-12">
       <div
-        className={`flex-1 transition-all duration-300 
-          
-          ${fileSelected ? "md:mr-[320px]" : ""}`}
-      >
-        <div
-          className={`mx-auto
+        className={`mx-auto flex-1
           ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
+      >
+        <SelectFile
+          heading="Compress PDF"
+          description="Compress a PDF file to reduce its size."
+        />
+        <div
+          className="bg-white/40 text-text-body rounded-2xl shadow-lg 
+          border border-gray-100 p-10"
         >
-          <SelectFile
-            heading="Compress PDF"
-            description="Compress a PDF file to reduce its size."
-          />
-          <div
-            className="bg-white/40 text-text-body rounded-2xl shadow-lg 
-          border border-gray-100 p-6 sm:pt-10 sm:pb-14"
-          >
-            {results.length === 0 && (
-              <UploadModal
-                handleFileUpload={handleFileUpload}
-                accept=".pdf"
-                label="Select a PDF"
-                fileSelected={fileSelected}
-                isDownloadCompleted={downloadCompleted}
-                clearDownloadCompleted={clearDownloadCompleted}
-              />
-            )}
+          {results.length === 0 && (
+            <UploadModal
+              handleFileUpload={handleFileUpload}
+              accept=".pdf"
+              label="Select a PDF"
+              fileSelected={fileSelected}
+              isDownloadCompleted={downloadCompleted}
+              clearDownloadCompleted={clearDownloadCompleted}
+            />
+          )}
 
-            <PreviewFile previewFileDesign={previewFileDesign} />
+          <PreviewFile previewFileDesign={previewFileDesign} />
+
+          <div className="flex justify-center items-center">
+            {results.length > 0 && (
+              <button
+                onClick={handleCompress}
+                className="mt-6 w-full max-w-xs mx-auto  bg-primary hover:bg-primary-hover
+             text-white py-3 rounded-md font-semibold  transition"
+              >
+                Download Compressed PDF
+              </button>
+            )}
           </div>
         </div>
       </div>
-
-      <aside
-        className={`
-          fixed  top-0 right-0 h-full w-full md:w-[320px] z-50
-          bg-bg-card  shadow-lg border-l border-border
-          transform transition-transform duration-300
-          ${fileSelected ? "translate-x-0" : "translate-x-full"}
-        `}
-      >
-        <div className="p-6">
-          <button className="absolute top-5 right-5">
-            <IoMdClose
-              onClick={() => {
-                setFileSelected(false);
-                clearResults();
-                clearSelectedFile();
-              }}
-            />
-          </button>
-          <h2 className="text-lg font-semibold text-text-body mb-4">
-            Compression Level
-          </h2>
-
-          <div className="space-y-2">
-            {compressPdfOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setSelectedSize(option.value)}
-                className={`
-                  w-full text-left px-4 py-2 rounded-md border
-                  
-                  ${
-                    selectedSize === option.value
-                      ? " bg-primary/70 text-white"
-                      : " border border-border"
-                  }
-                `}
-              >
-                <div>
-                  <h3
-                    className={`text-sm  font-semibold ${
-                      selectedSize === option.value
-                        ? "text-white"
-                        : "text-black"
-                    }`}
-                  >
-                    {option.label}
-                  </h3>
-                  {selectedSize === option.value && (
-                    <p className="text-xs text-white">{option.description}</p>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <button
-            onClick={handleCompress}
-            className="mt-6 w-full bg-primary hover:bg-primary-hover
-             text-white py-3 rounded-md font-semibold  transition"
-          >
-            Download Compressed PDF
-          </button>
-        </div>
-      </aside>
     </div>
   );
 };

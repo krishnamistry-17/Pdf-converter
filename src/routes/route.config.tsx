@@ -29,6 +29,7 @@ import PdfToJpg from "../Pages/pdfs/PdfToJpg";
 import CropPdf from "../Pages/pdfs/CropPdf";
 import PdfToText from "../Pages/pdfs/PdfToText";
 import ExtractText from "../Pages/ExtractText/ExtractText";
+import CompressImage from "../Pages/Image/CompressImage";
 
 const routes = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const routes = createBrowserRouter([
       {
         path: "/compress-pdfs",
         element: <CompressPdf />,
+      },
+      {
+        path: "/compress-images",
+        element: <CompressImage />,
       },
       {
         path: "/split-pdfs",

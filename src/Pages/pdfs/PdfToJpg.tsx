@@ -130,7 +130,7 @@ const PdfToJpg = () => {
         >
           <div
             className={`mx-auto
-            ${results.length > 0 ? "max-w-4xl" : "max-w-xl"}
+            ${results.length > 0 ? "max-w-2xl w-auto" : "max-w-xl"}
           `}
           >
             <SelectFile

@@ -8,6 +8,8 @@ import {
   FaFileImage,
   FaCrop,
 } from "react-icons/fa";
+import type { CompressionLevel } from "../types/pageResult";
+
 export const navOptions = [
   { label: "Merge PDF", path: "/merge-pdfs" },
   { label: "Split PDF", path: "/split-pdfs" },
@@ -190,6 +192,12 @@ const allOptions = [
     icon: FaFileImage,
     description: "Extract text from a PDF file or Images using OCR.",
   },
+  {
+    label: "Compress Image",
+    path: "/compress-images",
+    icon: FaFileImage,
+    description: "Compress an image file to reduce its size.",
+  },
 ];
 
 const organizedOptions = [
@@ -266,23 +274,27 @@ export const fileOperations = [
   },
 ];
 
-export const compressPdfOptions = [
+export const compressPdfOptions: {
+  label: string;
+  description: string;
+  value: CompressionLevel;
+}[] = [
   {
     label: "Low",
     description:
-      "Low compression will reduce the size of the PDF file to 75% of the original size.",
+      "Less quality,high compression",
     value: "low",
   },
   {
     label: "Medium",
     description:
-      "Medium compression will reduce the size of the PDF file to 50% of the original size.",
+      "Medium quality,medium compression",
     value: "medium",
   },
   {
     label: "High",
     description:
-      "High compression will reduce the size of the PDF file to 25% of the original size.",
+      "High quality,low compression",
     value: "high",
   },
 ];

@@ -37,3 +37,9 @@ export interface CropPdfResult {
 }
 
 export type CompressionLevel = "low" | "medium" | "high";
+
+export interface CompressPercentage {
+  originalSize: string;
+  compressedSize: string;
+  compressPercentage: string;
+}

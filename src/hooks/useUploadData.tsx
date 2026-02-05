@@ -13,6 +13,7 @@ import type {
   PageResult,
 } from "../types/pageResult";
 import type { PageNumberPosition } from "../types/pagenumberPosition";
+import imageCompression from "browser-image-compression";
 import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
@@ -40,6 +41,26 @@ export type SplitResult = {
   blob: Blob;
   url: string;
   pages: string;
+};
+
+type CompressionLevel = "low" | "medium" | "high";
+
+const compressionPresets = {
+  low: {
+    maxSizeMB: 2,
+    maxWidthOrHeight: 2400,
+    initialQuality: 0.85,
+  },
+  medium: {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1920,
+    initialQuality: 0.6,
+  },
+  high: {
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: 1280,
+    initialQuality: 0.4,
+  },
 };
 
 const useUploadData = () => {
@@ -412,35 +433,39 @@ const useUploadData = () => {
   };
 
   // Compress PDF
-  const compressPdf = async () => {
-    if (!selectedFile) {
-      toast.error("Please select a PDF file first!");
-      return;
-    }
+  const compressPdfs = async (file: File) => {
+    const arrayBuffer = await file.arrayBuffer();
 
-    try {
-      const arrayBuffer = await selectedFile.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const pdfDoc = await PDFDocument.load(arrayBuffer, {
+      ignoreEncryption: true,
+    });
 
-      const compressedBytes = await pdfDoc.save({
-        useObjectStreams: true,
-        addDefaultPage: false,
-        objectsPerTick: 20,
-      });
+    const optimizedBytes = await pdfDoc.save({
+      useObjectStreams: true, // enables stream compression
+      addDefaultPage: false,
+      objectsPerTick: 50, // prevents UI freeze
+      updateFieldAppearances: false,
+    });
 
-      const blob = new Blob([new Uint8Array(compressedBytes)], {
-        type: "application/pdf",
-      });
+    return new File([new Uint8Array(optimizedBytes)], file.name, {
+      type: "application/pdf",
+    });
+  };
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `compressed-${selectedFile.name}`;
-      a.click();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to compress PDF");
-    }
+  //compress image
+  const compressImage = async (file: File, level: CompressionLevel) => {
+    const preset = compressionPresets[level];
+
+    const options = {
+      maxSizeMB: preset.maxSizeMB,
+      maxWidthOrHeight: preset.maxWidthOrHeight,
+      initialQuality: preset.initialQuality,
+      useWebWorker: true,
+    };
+
+    const compressedFile = await imageCompression(file, options);
+
+    return compressedFile;
   };
 
   // Merge PDFs
@@ -1178,7 +1203,6 @@ const useUploadData = () => {
     convertPdfToCsv,
     ConvertJpgToPdf,
     ConvertedPdfToPpt,
-    compressPdf,
     MergePdfs,
     splitPdfByRange,
     splitEveryPage,
@@ -1205,6 +1229,8 @@ const useUploadData = () => {
     pdfPageToImage,
     checkFileValidation,
     downloadImage,
+    compressImage,
+    compressPdfs,
   };
 };
 
