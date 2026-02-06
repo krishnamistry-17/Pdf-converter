@@ -121,18 +121,6 @@ const allOptions = [
     description: "Convert a PDF file to a PPT file.",
   },
   {
-    label: "Merge PDFs",
-    path: "/merge-pdfs",
-    icon: FaFilePdf,
-    description: "Merge two or more PDF files into a single PDF file.",
-  },
-  {
-    label: "Split PDF",
-    path: "/split-pdfs",
-    icon: FaFilePdf,
-    description: "Split a PDF file into multiple PDF files.",
-  },
-  {
     label: "Convert Excel to Json",
     path: "/excel-to-json",
     icon: FaFileExcel,
@@ -149,6 +137,24 @@ const allOptions = [
     path: "/excel-to-pdf",
     icon: FaFileExcel,
     description: "Convert a Excel file to a PDF file.",
+  },
+  {
+    label: "Edit PDF",
+    path: "/edit-pdf",
+    icon: FaFilePdf,
+    description: "Edit a PDF file.",
+  },
+  {
+    label: "Merge PDFs",
+    path: "/merge-pdfs",
+    icon: FaFilePdf,
+    description: "Merge two or more PDF files into a single PDF file.",
+  },
+  {
+    label: "Split PDF",
+    path: "/split-pdfs",
+    icon: FaFilePdf,
+    description: "Split a PDF file into multiple PDF files.",
   },
   {
     label: "Compress PDF",
@@ -223,6 +229,12 @@ const organizedOptions = [
 
 const editPdfOptions = [
   {
+    label: "Edit PDF",
+    path: "/edit-pdf",
+    icon: FaFilePdf,
+    description: "Edit a PDF file.",
+  },
+  {
     label: "Page Numbers",
     path: "/page-numbers",
     icon: FaFilePdf,
@@ -281,20 +293,17 @@ export const compressPdfOptions: {
 }[] = [
   {
     label: "Low",
-    description:
-      "Less quality,high compression",
+    description: "Less quality,high compression",
     value: "low",
   },
   {
     label: "Medium",
-    description:
-      "Medium quality,medium compression",
+    description: "Medium quality,medium compression",
     value: "medium",
   },
   {
     label: "High",
-    description:
-      "High quality,low compression",
+    description: "High quality,low compression",
     value: "high",
   },
 ];

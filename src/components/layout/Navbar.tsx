@@ -35,6 +35,12 @@ const Navbar = () => {
         <div className="md:flex hidden items-center gap-6 text-sm text-text-heading font-medium">
           <button
             className=" hover:text-primary transition"
+            onClick={() => navigate("/edit-pdf")}
+          >
+            Edit PDF
+          </button>
+          <button
+            className=" hover:text-primary transition"
             onClick={() => navigate("/merge-pdfs")}
           >
             Merge PDF
@@ -91,6 +97,12 @@ const Navbar = () => {
               className="flex flex-col items-start gap-4 text-sm text-text-heading font-medium"
               onClick={() => setMobileMenu(false)}
             >
+              <button
+                className=" hover:text-primary transition"
+                onClick={() => navigate("/edit-pdf")}
+              >
+                Edit PDF
+              </button>
               <button
                 className=" hover:text-primary transition"
                 onClick={() => navigate("/merge-pdfs")}

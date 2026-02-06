@@ -13,6 +13,8 @@ const Size = ({
 }) => {
   const totalPages = useSplitStore((state) => state.totalPages);
   const { selectedFile } = useFileSessionStore();
+  const setSizeUnit = useSplitStore((state) => state.setSizeUnit);
+  const sizeUnit = useSplitStore((state) => state.sizeUnit);
   const setResults = useSplitStore((state) => state.setResults);
   const clearResults = useSplitStore((state) => state.clearResults);
   const setLoading = useFilesStore((state) => state.setLoading);
@@ -63,7 +65,12 @@ const Size = ({
             onChange={(e) => setValue(parseInt(e.target.value))}
           />
           <div>
-            <SwitchButton />
+            <SwitchButton
+              value1="MB"
+              value2="KB"
+              onChange={(value) => setSizeUnit(value as "MB" | "KB")}
+              activeValue={sizeUnit}
+            />
           </div>
         </div>
       </div>

@@ -9,6 +9,8 @@ export interface PageResult {
   fileName: string;
 }
 
+
+
 export interface PageNumberOptions {
   position: PageNumberPosition;
   startFrom?: number;
@@ -26,6 +28,14 @@ export interface ImageResult {
   name: string;
   url: string;
   blob: Blob;
+}
+
+export interface EditPdfResult {
+  name: string;
+  blob: Blob;
+  url: string;
+  fileName: string;
+  
 }
 
 export interface CropPdfResult {

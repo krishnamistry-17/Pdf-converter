@@ -30,6 +30,7 @@ import CropPdf from "../Pages/pdfs/CropPdf";
 import PdfToText from "../Pages/pdfs/PdfToText";
 import ExtractText from "../Pages/ExtractText/ExtractText";
 import CompressImage from "../Pages/Image/CompressImage";
+import PdfEdit from "../Pages/pdfs/Edit/PdfEdit";
 
 const routes = createBrowserRouter([
   {
@@ -155,6 +156,10 @@ const routes = createBrowserRouter([
       {
         path: "/extract-text",
         element: <ExtractText />,
+      },
+      {
+        path: "/edit-pdf",
+        element: <PdfEdit />,
       },
     ],
   },

@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import pdfWorker from "pdfjs-dist/legacy/build/pdf.worker.min.js?url";
+import type { DrawTool } from "../store/useEditPdfStore";
 
 //this is for pdf to text conversion
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -1192,6 +1193,42 @@ const useUploadData = () => {
     return true;
   };
 
+  const addTextToPdf = async (file: File, text: string, pageIndex: number) => {
+    const existingPdfBytes = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const page = pdfDoc.getPages()[pageIndex];
+    page.drawText(text, {
+      x: 50,
+      y: 500,
+      size: 14,
+      color: rgb(0, 0, 0),
+    });
+    const editedPdf = await pdfDoc.save();
+    return editedPdf;
+  };
+
+  const DrawIntoPdf = async (
+    file: File,
+    draws: DrawTool[],
+    pageIndex: number
+  ) => {
+    const existingPdfBytes = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const page = pdfDoc.getPages()[pageIndex];
+    for (const draw of draws) {
+      if (draw.pageIndex === pageIndex) {
+        page.drawRectangle({
+          x: draw.x,
+          y: draw.y,
+          width: draw.width,
+          height: draw.width,
+        });
+      }
+    }
+    const editedPdf = await pdfDoc.save();
+    return editedPdf;
+  };
+
   return {
     ConvertExcelToJson,
     ConvertExcelToCsv,
@@ -1231,6 +1268,8 @@ const useUploadData = () => {
     downloadImage,
     compressImage,
     compressPdfs,
+    addTextToPdf,
+    DrawIntoPdf,
   };
 };
 
