@@ -9,7 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import type { EditPdfResult } from "../../../types/pageResult";
 import { toast } from "react-toastify";
 import useFilesStore from "../../../store/useSheetStore";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import PdfEditSidebar from "../../../components/PdfEdit/PdfEditSidebar";
 import Toolbar from "../../../components/PdfEdit/Toolbar";
 
@@ -30,7 +30,7 @@ const PdfEdit = () => {
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  const imgRefs = useRef<HTMLImageElement[]>([]);
+
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
   const isSidebarVisible = results.length > 0;
@@ -68,7 +68,7 @@ const PdfEdit = () => {
     <div className="relative ">
       {results.length > 0 && (
         <div className="sticky top-0 z-40 border-b border-border bg-bg-card">
-          <Toolbar imgRefs={imgRefs} />
+          <Toolbar />
         </div>
       )}
 

@@ -12,17 +12,14 @@ import {
 import ToolButton from "./ToolbarButton";
 import { saveEditedPdf } from "../../utils/saveEditPdf";
 
-const Toolbar = ({
-  imgRefs,
-}: {
-  imgRefs: React.RefObject<HTMLImageElement[]>;
-}) => {
+const Toolbar = ({}: {}) => {
   const {
     activeTool,
     setActiveTool,
     activeToolFeature,
     setActiveToolFeature,
     textElements,
+    drawElements,
   } = useEditPdfStore();
   const selectedFile = useEditPdfStore((state) => state.selectedFile);
 
@@ -32,6 +29,7 @@ const Toolbar = ({
     const editedPdf = await saveEditedPdf({
       file: selectedFile,
       textElements,
+      drawElements,
     });
 
     const blob = new Blob([new Uint8Array(editedPdf)], {

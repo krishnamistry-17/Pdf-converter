@@ -1,12 +1,17 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-import type { TextTool } from "../store/useEditPdfStore";
+import type { DrawTool, TextTool } from "../store/useEditPdfStore";
 
 interface SavePdfParams {
   file: File;
   textElements: TextTool[];
+  drawElements: DrawTool[];
 }
 
-export const saveEditedPdf = async ({ file, textElements }: SavePdfParams) => {
+export const saveEditedPdf = async ({
+  file,
+  textElements,
+  drawElements,
+}: SavePdfParams) => {
   const pdfBytes = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(pdfBytes);
 
@@ -14,7 +19,6 @@ export const saveEditedPdf = async ({ file, textElements }: SavePdfParams) => {
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   for (const textEl of textElements) {
-    console.log("textEl----------saveEditPdf", textElements);
     const page = pages[textEl.pageIndex];
     if (!page || !textEl.text) continue;
 
@@ -22,7 +26,6 @@ export const saveEditedPdf = async ({ file, textElements }: SavePdfParams) => {
     const pdfHeight = page.getHeight();
 
     const pdfX = textEl.xRatio * pdfWidth;
-    console.log("pdfX----------saveEditPdf", pdfX);
     const pdfFontSize = Number.isFinite(textEl.fontSizeRatio)
       ? textEl.fontSizeRatio * pdfHeight
       : 12; // fallback font size
@@ -36,6 +39,35 @@ export const saveEditedPdf = async ({ file, textElements }: SavePdfParams) => {
       font,
       color: rgb(0, 0, 0),
     });
+  }
+
+  for (const draw of drawElements) {
+    const page = pages[draw.pageIndex];
+    if (!page) continue;
+
+    const pdfWidth = page.getWidth();
+    const pdfHeight = page.getHeight();
+
+    // Convert path ratios to PDF coordinates
+    const pathPoints = draw.path.map((p) => ({
+      x: p.x * pdfWidth,
+      y: pdfHeight - p.y * pdfHeight, // invert Y
+    }));
+
+    for (let i = 0; i < pathPoints.length - 1; i++) {
+      const from = pathPoints[i];
+      const to = pathPoints[i + 1];
+      page.drawLine({
+        start: { x: from.x, y: from.y },
+        end: { x: to.x, y: to.y },
+        thickness: draw.width,
+        color: rgb(
+          draw.color[0] / 255,
+          draw.color[1] / 255,
+          draw.color[2] / 255
+        ),
+      });
+    }
   }
 
   return await pdfDoc.save();

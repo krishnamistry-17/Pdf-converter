@@ -10,20 +10,19 @@ export interface TextTool {
   fontSizeRatio: number;
 }
 
-export interface DrawTool {
-  pageIndex: number;
-  id: string;
-  xRatio: number;
-  yRatio: number;
-  color: string;
-  width: number;
-}
-
 export interface Path {
   pageIndex: number;
   id: string;
   positions: { xRatio: number; yRatio: number }[];
-  color: string;
+  color: [number, number, number];
+  width: number;
+}
+
+export interface DrawTool {
+  pageIndex: number;
+  id: string;
+  path: { x: number; y: number }[];
+  color: [number, number, number];
   width: number;
 }
 
@@ -54,19 +53,12 @@ interface EditPdfStore {
 
   addDraw: (
     pageIndex: number,
-    xRatio: number,
-    yRatio: number,
-    color: string,
+    path: { x: number; y: number }[],
+    color: [number, number, number],
     width: number
   ) => void;
+  updateDraw: (id: string, path: { x: number; y: number }[]) => void;
   removeDraw: (id: string) => void;
-  updateDraw: (
-    id: string,
-    xRatio: number,
-    yRatio: number,
-    color: string,
-    width: number
-  ) => void;
 
   addText: (
     pageIndex: number,
@@ -107,44 +99,30 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
 
   drawElements: [] as DrawTool[],
   setDrawElements: (elements: DrawTool[]) => set({ drawElements: elements }),
+
   addDraw: (
     pageIndex: number,
-    xRatio: number,
-    yRatio: number,
-    color: string,
+    path: { x: number; y: number }[],
+    color: [number, number, number],
     width: number
   ) =>
     set((state) => ({
       drawElements: [
         ...state.drawElements,
-        {
-          id: crypto.randomUUID(),
-          pageIndex,
-          xRatio,
-          yRatio,
-          color,
-          width,
-        },
+        { id: crypto.randomUUID(), pageIndex, path, color, width },
       ],
+    })),
+
+  updateDraw: (id: string, path: { x: number; y: number }[]) =>
+    set((state) => ({
+      drawElements: state.drawElements.map((d) =>
+        d.id === id ? { ...d, path } : d
+      ),
     })),
 
   removeDraw: (id: string) =>
     set((state) => ({
-      drawElements: state.drawElements.filter(
-        (element: DrawTool) => element.id !== id
-      ),
-    })),
-  updateDraw: (
-    id: string,
-    xRatio: number,
-    yRatio: number,
-    color: string,
-    width: number
-  ) =>
-    set((state) => ({
-      drawElements: state.drawElements.map((element: DrawTool) =>
-          element.id === id ? { ...element, xRatio, yRatio, color, width } : element
-      ),
+      drawElements: state.drawElements.filter((d) => d.id !== id),
     })),
 
   addText: (pageIndex, xRatio, yRatio, fontSizeRatio) =>

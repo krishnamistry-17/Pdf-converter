@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import EditableText from "../DrawTool/EditableText";
+import EditableDraw from "../DrawTool/EditableDraw";
 
 interface Props {
   image: string;
@@ -28,13 +29,14 @@ const PageEditor = ({
   addText,
   updateText,
 }: Props) => {
+  console.log("activeToolFeature", activeToolFeature);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   const handleClick = (e: React.MouseEvent) => {
     if (!imgRef.current) return;
     if (activeToolFeature !== "text") return;
-    // If user clicked on an input or existing text, do nothing
+
     if ((e.target as HTMLElement).tagName === "INPUT") return;
 
     const rect = imgRef.current.getBoundingClientRect();
@@ -92,9 +94,14 @@ const PageEditor = ({
       </div>
 
       {/* DRAW LAYER */}
-      {/* {active && activeToolFeature === "draw" && (
-        <EditableDraw imgRef={imgRef} />
-      )} */}
+      {active && activeToolFeature === "draw" && (
+        <EditableDraw
+          imgRef={imgRef}
+          color={[0, 0, 0]}
+          width={2}
+          pageIndex={pageIndex}
+        />
+      )}
     </div>
   );
 };
