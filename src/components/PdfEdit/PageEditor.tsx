@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import EditableText from "../DrawTool/EditableText";
-import EditableDraw from "../DrawTool/EditableDraw";
 
 interface Props {
   image: string;
@@ -35,13 +34,24 @@ const PageEditor = ({
   const handleClick = (e: React.MouseEvent) => {
     if (!imgRef.current) return;
     if (activeToolFeature !== "text") return;
+    // If user clicked on an input or existing text, do nothing
+    if ((e.target as HTMLElement).tagName === "INPUT") return;
 
     const rect = imgRef.current.getBoundingClientRect();
+    const imgWidth = rect.width;
+    const imgHeight = rect.height;
+
+    if (!imgWidth || !imgHeight) return;
 
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    addText(pageIndex, x, y, 14);
+    addText(
+      pageIndex,
+      x / imgWidth,
+      y / imgHeight,
+      16 / imgHeight // now SAFE
+    );
   };
 
   return (
@@ -57,7 +67,7 @@ const PageEditor = ({
         ref={imgRef}
         src={image}
         className="block w-full max-h-[70vh] object-contain rounded"
-        alt={`page-${pageIndex}`}
+        style={{ transform: "scaleX(1) scaleY(1)" }}
         draggable={false}
       />
 
@@ -67,18 +77,24 @@ const PageEditor = ({
         style={{
           width: imgRef.current?.clientWidth,
           height: imgRef.current?.clientHeight,
+          transform: "scaleX(1) scaleY(1)",
         }}
         onClick={handleClick}
       >
         {textElements.map((el) => (
-          <EditableText key={el.id} element={el} updateText={updateText} />
+          <EditableText
+            key={el.id}
+            element={el}
+            updateText={updateText}
+            imgHeight={imgRef.current?.clientHeight}
+          />
         ))}
       </div>
 
       {/* DRAW LAYER */}
-      {active && activeToolFeature === "draw" && (
+      {/* {active && activeToolFeature === "draw" && (
         <EditableDraw imgRef={imgRef} />
-      )}
+      )} */}
     </div>
   );
 };

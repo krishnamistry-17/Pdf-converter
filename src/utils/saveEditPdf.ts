@@ -1,49 +1,42 @@
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import type { TextTool } from "../store/useEditPdfStore";
 
 interface SavePdfParams {
   file: File;
   textElements: TextTool[];
-  pageImages: HTMLImageElement[]; 
 }
 
-export const saveEditedPdf = async ({
-  file,
-  textElements,
-  pageImages,
-}: SavePdfParams) => {
+export const saveEditedPdf = async ({ file, textElements }: SavePdfParams) => {
   const pdfBytes = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(pdfBytes);
 
   const pages = pdfDoc.getPages();
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
   for (const textEl of textElements) {
+    console.log("textEl----------saveEditPdf", textElements);
     const page = pages[textEl.pageIndex];
-    const image = pageImages[textEl.pageIndex];
+    if (!page || !textEl.text) continue;
 
-    if (!page || !image) continue;
-
-    // DOM image size
-    const imgWidth = image.clientWidth;
-    const imgHeight = image.clientHeight;
-
-    // PDF page size
     const pdfWidth = page.getWidth();
     const pdfHeight = page.getHeight();
 
-    // DOM → PDF conversion
-    const pdfX = (textEl.x / imgWidth) * pdfWidth;
-    const pdfY =
-      pdfHeight - (textEl.y / imgHeight) * pdfHeight - textEl.fontSize;
+    const pdfX = textEl.xRatio * pdfWidth;
+    console.log("pdfX----------saveEditPdf", pdfX);
+    const pdfFontSize = Number.isFinite(textEl.fontSizeRatio)
+      ? textEl.fontSizeRatio * pdfHeight
+      : 12; // fallback font size
+
+    const pdfY = pdfHeight - textEl.yRatio * pdfHeight - pdfFontSize;
 
     page.drawText(textEl.text, {
       x: pdfX,
       y: pdfY,
-      size: textEl.fontSize,
+      size: pdfFontSize,
+      font,
       color: rgb(0, 0, 0),
     });
   }
 
-  const editedPdfBytes = await pdfDoc.save();
-  return editedPdfBytes;
+  return await pdfDoc.save();
 };

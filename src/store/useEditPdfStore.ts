@@ -5,16 +5,16 @@ export interface TextTool {
   pageIndex: number;
   id: string;
   text: string;
-  x: number;
-  y: number;
-  fontSize: number;
+  xRatio: number;
+  yRatio: number;
+  fontSizeRatio: number;
 }
 
 export interface DrawTool {
   pageIndex: number;
   id: string;
-  x: number;
-  y: number;
+  xRatio: number;
+  yRatio: number;
   color: string;
   width: number;
 }
@@ -22,7 +22,7 @@ export interface DrawTool {
 export interface Path {
   pageIndex: number;
   id: string;
-  positions: { x: number; y: number }[];
+  positions: { xRatio: number; yRatio: number }[];
   color: string;
   width: number;
 }
@@ -54,28 +54,33 @@ interface EditPdfStore {
 
   addDraw: (
     pageIndex: number,
-    x: number,
-    y: number,
+    xRatio: number,
+    yRatio: number,
     color: string,
     width: number
   ) => void;
   removeDraw: (id: string) => void;
   updateDraw: (
     id: string,
-    x: number,
-    y: number,
+    xRatio: number,
+    yRatio: number,
     color: string,
     width: number
   ) => void;
 
-  addText: (pageIndex: number, x: number, y: number, fontSize: number) => void;
+  addText: (
+    pageIndex: number,
+    xRatio: number,
+    yRatio: number,
+    fontSizeRatio: number
+  ) => void;
   removeText: (id: string) => void;
   updateText: (
     id: string,
     text: string,
-    x: number,
-    y: number,
-    fontSize: number
+    xRatio: number,
+    yRatio: number,
+    fontSizeRatio: number
   ) => void;
 }
 
@@ -104,8 +109,8 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
   setDrawElements: (elements: DrawTool[]) => set({ drawElements: elements }),
   addDraw: (
     pageIndex: number,
-    x: number,
-    y: number,
+    xRatio: number,
+    yRatio: number,
     color: string,
     width: number
   ) =>
@@ -115,8 +120,8 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
         {
           id: crypto.randomUUID(),
           pageIndex,
-          x,
-          y,
+          xRatio,
+          yRatio,
           color,
           width,
         },
@@ -131,28 +136,28 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
     })),
   updateDraw: (
     id: string,
-    x: number,
-    y: number,
+    xRatio: number,
+    yRatio: number,
     color: string,
     width: number
   ) =>
     set((state) => ({
       drawElements: state.drawElements.map((element: DrawTool) =>
-        element.id === id ? { ...element, x, y, color, width } : element
+          element.id === id ? { ...element, xRatio, yRatio, color, width } : element
       ),
     })),
 
-  addText: (pageIndex, x, y, fontSize) =>
+  addText: (pageIndex, xRatio, yRatio, fontSizeRatio) =>
     set((state) => ({
       textElements: [
         ...state.textElements,
         {
           id: crypto.randomUUID(),
           pageIndex,
-          x,
-          y,
+          xRatio,
+          yRatio,
+          fontSizeRatio: Number.isFinite(fontSizeRatio) ? fontSizeRatio : 0.02, // safe default
           text: "",
-          fontSize,
         },
       ],
     })),
@@ -166,13 +171,15 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
   updateText: (
     id: string,
     text: string,
-    x: number,
-    y: number,
-    fontSize: number
+    xRatio: number,
+    yRatio: number,
+    fontSizeRatio: number
   ) =>
     set((state) => ({
       textElements: state.textElements.map((element: TextTool) =>
-        element.id === id ? { ...element, text, x, y, fontSize } : element
+        element.id === id
+          ? { ...element, text, xRatio, yRatio, fontSizeRatio }
+          : element
       ),
     })),
 }));

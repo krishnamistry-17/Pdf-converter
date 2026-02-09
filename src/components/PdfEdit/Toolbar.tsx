@@ -27,17 +27,17 @@ const Toolbar = ({
   const selectedFile = useEditPdfStore((state) => state.selectedFile);
 
   const handleSave = async () => {
-    if (!selectedFile) return;
-
+    if (!selectedFile || textElements.length === 0) return;
+    console.log("textElements----------toolbar", selectedFile, textElements);
     const editedPdf = await saveEditedPdf({
       file: selectedFile,
       textElements,
-      pageImages: imgRefs.current,
     });
 
     const blob = new Blob([new Uint8Array(editedPdf)], {
       type: "application/pdf",
     });
+
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");

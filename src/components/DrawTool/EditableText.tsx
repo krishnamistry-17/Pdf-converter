@@ -1,49 +1,43 @@
-import { useRef, useEffect } from "react";
-
-interface Props {
-  element: {
-    id: string;
-    text: string;
-    x: number;
-    y: number;
-    fontSize: number;
-  };
-  updateText: (
-    id: string,
-    text: string,
-    x: number,
-    y: number,
-    fontSize: number
-  ) => void;
-}
-
-const EditableText = ({ element, updateText }: Props) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    ref.current?.focus();
-  }, []);
-
+const EditableText = ({ element, updateText, imgHeight }: any) => {
   return (
     <div
-      contentEditable
-      className="absolute max-w-[40px] h-[20px] px-4 cursor-text  border border-blue-500"
       style={{
-        left: element.x,
-        top: element.y,
-        fontSize: element.fontSize,
+        position: "absolute",
+        left: `${element.xRatio * 100}%`,
+        top: `${element.yRatio * 100}%`,
+        transform: "scaleX(-1)",
       }}
-      onInput={(e) =>
-        updateText(
-          element.id,
-          e.currentTarget.innerText,
-          element.x,
-          element.y,
-          element.fontSize
-        )
-      }
+      onClick={(e) => e.stopPropagation()}
     >
-      {element.text}
+      <input
+        value={element.text}
+        placeholder="Type here"
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onChange={(e) =>
+          updateText(
+            element.id,
+            e.target.value,
+            element.xRatio,
+            element.yRatio,
+            element.fontSize
+          )
+        }
+        className="
+          min-w-[40px]
+          px-1 py-0.5
+          bg-transparent
+          border border-dashed border-blue-400
+          rounded
+          focus:outline-none
+          focus:bg-white/80
+        "
+        style={{
+          fontSize: `${element.fontSizeRatio * imgHeight}px`,  // use imgHeight to scale the font size
+          transform: "scaleX(-1)",
+          direction: "ltr",
+        }}
+      />
     </div>
   );
 };
