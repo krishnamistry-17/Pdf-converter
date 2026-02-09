@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import EditableText from "../DrawTool/EditableText";
 import EditableDraw from "../DrawTool/EditableDraw";
+import { useEditPdfStore } from "../../store/useEditPdfStore";
 
 interface Props {
   image: string;
@@ -32,6 +33,7 @@ const PageEditor = ({
   console.log("activeToolFeature", activeToolFeature);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const { addDraw } = useEditPdfStore();
 
   const handleClick = (e: React.MouseEvent) => {
     if (!imgRef.current) return;
@@ -54,6 +56,22 @@ const PageEditor = ({
       y / imgHeight,
       16 / imgHeight // now SAFE
     );
+  };
+
+  const handleDrawClick = (e: React.MouseEvent) => {
+    if (!imgRef.current) return;
+    if (activeToolFeature !== "draw") return;
+
+    const rect = imgRef.current.getBoundingClientRect();
+    const imgWidth = rect.width;
+    const imgHeight = rect.height;
+
+    if (!imgWidth || !imgHeight) return;
+
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    addDraw(pageIndex, [{ x: x / imgWidth, y: y / imgHeight }], [0, 0, 0], 2);
   };
 
   return (
@@ -83,24 +101,28 @@ const PageEditor = ({
         }}
         onClick={handleClick}
       >
-        {textElements.map((el) => (
-          <EditableText
-            key={el.id}
-            element={el}
-            updateText={updateText}
-            imgHeight={imgRef.current?.clientHeight}
-          />
-        ))}
+        {textElements
+          .filter((el) => el.pageIndex === pageIndex)
+          .map((el) => (
+            <EditableText
+              key={el.id}
+              element={el}
+              updateText={updateText}
+              imgHeight={imgRef.current?.clientHeight}
+              enabled={activeToolFeature === "text"}
+            />
+          ))}
       </div>
 
-      {/* DRAW LAYER */}
-      {active && activeToolFeature === "draw" && (
-        <EditableDraw
-          imgRef={imgRef}
-          color={[0, 0, 0]}
-          width={2}
-          pageIndex={pageIndex}
-        />
+      {activeToolFeature === "draw" && (
+        <div className="absolute top-0 left-0" onClick={handleDrawClick}>
+          <EditableDraw
+            imgRef={imgRef}
+            color={[0, 0, 0]}
+            width={2}
+            pageIndex={pageIndex}
+          />
+        </div>
       )}
     </div>
   );

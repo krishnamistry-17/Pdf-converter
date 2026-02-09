@@ -45,7 +45,7 @@ const PdfToJson = () => {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
-      // window.open(url);
+      window.open(url);
       toast.success("Conversion successful!");
       clearSelectedFile();
       setDownloadCompleted(true);
