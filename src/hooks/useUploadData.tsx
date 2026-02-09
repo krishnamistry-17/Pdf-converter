@@ -1192,6 +1192,40 @@ const useUploadData = () => {
     return true;
   };
 
+  const editPdf = async (file: File, text: string) => {
+    const existingPdfBytes = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    firstPage.drawText(text, {
+      x: 50,
+      y: 500,
+      size: 24,
+      font: helveticaFont,
+      color: rgb(0, 0, 0),
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([new Uint8Array(pdfBytes)], { type: "application/pdf" });
+    return URL.createObjectURL(blob);
+  };
+
+  const extractTextFromPdf = async (file: File) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let fullText = "";
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item: any) => item.str).join(" ");
+      fullText += pageText + "\n\n" + '"\n\n';
+    }
+    return fullText;
+  };
+
   return {
     ConvertExcelToJson,
     ConvertExcelToCsv,
@@ -1231,6 +1265,8 @@ const useUploadData = () => {
     downloadImage,
     compressImage,
     compressPdfs,
+    editPdf,
+    extractTextFromPdf,
   };
 };
 

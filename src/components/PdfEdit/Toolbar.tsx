@@ -5,8 +5,6 @@ import {
   FaHighlighter,
   FaImage,
   FaDownload,
-  // FaUndo,
-  // FaRedo,
   FaFont,
 } from "react-icons/fa";
 import ToolButton from "./ToolbarButton";
@@ -20,20 +18,23 @@ const Toolbar = ({}: {}) => {
     setActiveToolFeature,
     textElements,
     drawElements,
+    imageElements,
+    addImage,
   } = useEditPdfStore();
   const selectedFile = useEditPdfStore((state) => state.selectedFile);
 
   const handleSave = async () => {
     if (!selectedFile || textElements.length === 0) return;
-    console.log("textElements----------toolbar", selectedFile, textElements);
+
     const editedPdf = await saveEditedPdf({
       file: selectedFile,
       textElements,
       drawElements,
+      imageElements,
     });
 
     const blob = new Blob([new Uint8Array(editedPdf)], {
-      type: "application/pdf",
+      type: "application/pdf" + selectedFile.type,
     });
 
     const url = URL.createObjectURL(blob);
@@ -44,6 +45,23 @@ const Toolbar = ({}: {}) => {
     a.click();
 
     URL.revokeObjectURL(url);
+  };
+
+  const handleImageUpload = () => {
+    if (activeToolFeature !== "image") return;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".jpg,.jpeg,.png";
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (!files) return;
+      const file = files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      addImage(0, url, 0, 0, file.size, file.size);
+    };
+
+    input.click();
   };
 
   return (
@@ -58,45 +76,53 @@ const Toolbar = ({}: {}) => {
           />
         </div>
 
-        <div className="flex items-center gap-1">
-          <ToolButton
-            icon={<FaFont />}
-            onClick={() => {
-              setActiveToolFeature("text");
-            }}
-            active={activeToolFeature === "text"}
-          />
-          <ToolButton
-            icon={<FaPen />}
-            onClick={() => setActiveToolFeature("draw")}
-            active={activeToolFeature === "draw"}
-          />
-          <ToolButton
-            icon={<FaHighlighter />}
-            onClick={() => setActiveToolFeature("highlight")}
-            active={activeToolFeature === "highlight"}
-          />
-          <ToolButton
-            icon={<FaImage />}
-            onClick={() => setActiveToolFeature("image")}
-            active={activeToolFeature === "image"}
-          />
-        </div>
+        {activeTool === "annotate" && (
+          <>
+            <div className="flex items-center gap-1">
+              <ToolButton
+                icon={<FaFont />}
+                onClick={() => {
+                  setActiveToolFeature("text");
+                }}
+                active={activeToolFeature === "text"}
+              />
+              <ToolButton
+                icon={<FaPen />}
+                onClick={() => setActiveToolFeature("draw")}
+                active={activeToolFeature === "draw"}
+              />
+              <ToolButton
+                icon={<FaHighlighter />}
+                onClick={() => setActiveToolFeature("highlight")}
+                active={activeToolFeature === "highlight"}
+              />
+              <ToolButton
+                icon={<FaImage />}
+                onClick={() => {
+                  setActiveToolFeature("image");
+                  handleImageUpload();
+                }}
+                active={activeToolFeature === "image"}
+              />
+            </div>
 
-        <div className="mx-2 h-6 w-px bg-border" />
+            <div className="mx-2 h-6 w-px bg-border" />
 
-        <div>
-          <ToolButton
-            icon={<FaDownload />}
-            onClick={handleSave}
-            active={false}
-          />
-        </div>
-        {/*
-        <div className="flex items-center gap-1">
-          <ToolButton icon={<FaUndo />} />
-          <ToolButton icon={<FaRedo />} />
-        </div> */}
+            <div>
+              <ToolButton
+                icon={<FaDownload />}
+                onClick={handleSave}
+                active={false}
+              />
+            </div>
+          </>
+        )}
+
+        {activeTool === "edit" && (
+          <>
+            <p>select text</p>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,16 +1,18 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-import type { DrawTool, TextTool } from "../store/useEditPdfStore";
+import type { DrawTool, ImageTool, TextTool } from "../store/useEditPdfStore";
 
 interface SavePdfParams {
   file: File;
   textElements: TextTool[];
   drawElements: DrawTool[];
+  imageElements: ImageTool[];
 }
 
 export const saveEditedPdf = async ({
   file,
   textElements,
   drawElements,
+  imageElements,
 }: SavePdfParams) => {
   const pdfBytes = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(pdfBytes);
@@ -68,6 +70,21 @@ export const saveEditedPdf = async ({
         ),
       });
     }
+  }
+
+  for (const image of imageElements) {
+    const page = pages[image.pageIndex];
+    if (!page) continue;
+
+    const pdfWidth = page.getWidth();
+    const pdfHeight = page.getHeight();
+
+    page.drawImage(await pdfDoc.embedPng(image.url), {
+      x: image.x * pdfWidth,
+      y: image.y * pdfHeight,
+      width: image.width * pdfWidth,
+      height: image.height * pdfHeight,
+    });
   }
 
   return await pdfDoc.save();

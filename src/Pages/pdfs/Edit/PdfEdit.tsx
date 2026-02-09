@@ -23,17 +23,20 @@ const PdfEdit = () => {
     clearSelectedFile,
   } = useEditPdfStore();
   const setLoading = useFilesStore((state) => state.setLoading);
-  const { ConvertPdfToPng } = useUploadData();
+  const { ConvertPdfToPng, extractTextFromPdf } = useUploadData();
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-
+  const selectedFile = useEditPdfStore((state) => state.selectedFile);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
   const isSidebarVisible = results.length > 0;
+  const [selectFirstPageText, setSelectFirstPageText] = useState<string | null>(
+    null
+  );
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,6 +58,17 @@ const PdfEdit = () => {
       toast.error("Failed to generate previews");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const selectTextFromPdf = async () => {
+    const fullText = await extractTextFromPdf(selectedFile as File);
+    console.log("fullText", fullText);
+    const selectFirstPageText = fullText.split("\n\n")[0];
+    const selectFirstPageTextArray = selectFirstPageText.split("\n");
+    console.log("selectFirstPageText", selectFirstPageText);
+    if (selectFirstPageText) {
+      setSelectFirstPageText(selectFirstPageText);
     }
   };
 
@@ -102,6 +116,8 @@ const PdfEdit = () => {
                   images={previewImages}
                   setActivePageIndex={setActivePageIndex}
                   activePageIndex={activePageIndex}
+                  selectTextFromPdf={selectTextFromPdf}
+                  selectFirstPageText={selectFirstPageText}
                 />
               </div>
             )}

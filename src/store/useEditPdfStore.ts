@@ -26,6 +26,16 @@ export interface DrawTool {
   width: number;
 }
 
+export interface ImageTool {
+  pageIndex: number;
+  id: string;
+  url: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 interface EditPdfStore {
   results: EditPdfResult[];
   setResults: (results: EditPdfResult[]) => void;
@@ -44,6 +54,22 @@ interface EditPdfStore {
     feature: "text" | "draw" | "highlight" | "image"
   ) => void;
   clearActiveToolFeature: () => void;
+
+  imgUrl: string | null;
+  setImgUrl: (url: string) => void;
+  clearImgUrl: () => void;
+
+  imageElements: ImageTool[];
+  setImageElements: (elements: ImageTool[]) => void;
+
+  addImage: (
+    pageIndex: number,
+    url: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => void;
 
   textElements: TextTool[];
   setTextElements: (elements: TextTool[]) => void;
@@ -93,6 +119,29 @@ export const useEditPdfStore = create<EditPdfStore>((set) => ({
   setActiveToolFeature: (feature: "text" | "draw" | "highlight" | "image") =>
     set({ activeToolFeature: feature }),
   clearActiveToolFeature: () => set({ activeToolFeature: "text" }),
+
+  imgUrl: null,
+  setImgUrl: (url: string) => set({ imgUrl: url }),
+  clearImgUrl: () => set({ imgUrl: null }),
+
+  imageElements: [] as ImageTool[],
+  setImageElements: (elements: ImageTool[]) => set({ imageElements: elements }),
+ 
+ 
+  addImage: (
+    pageIndex: number,
+    url: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) =>
+    set((state) => ({
+      imageElements: [
+        ...state.imageElements,
+        { id: crypto.randomUUID(), pageIndex, url, x, y, width, height },
+      ],
+    })),
 
   textElements: [] as TextTool[],
   setTextElements: (elements: TextTool[]) => set({ textElements: elements }),

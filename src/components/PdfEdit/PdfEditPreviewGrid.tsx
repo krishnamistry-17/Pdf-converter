@@ -5,12 +5,16 @@ interface Props {
   images: string[];
   activePageIndex: number | null;
   setActivePageIndex: (index: number) => void;
+  selectFirstPageText: string | null;
+  selectTextFromPdf: () => void;
 }
 
 const PdfEditPreviewGrid = ({
   images,
   activePageIndex,
   setActivePageIndex,
+  selectFirstPageText,
+  selectTextFromPdf,
 }: Props) => {
   const { activeToolFeature, textElements, addText, updateText } =
     useEditPdfStore();
@@ -28,6 +32,8 @@ const PdfEditPreviewGrid = ({
           textElements={textElements.filter((t) => t.pageIndex === pageIndex)}
           addText={addText}
           updateText={updateText}
+          selectFirstPageText={selectFirstPageText}
+          selectTextFromPdf={selectTextFromPdf}
         />
       ))}
     </div>
