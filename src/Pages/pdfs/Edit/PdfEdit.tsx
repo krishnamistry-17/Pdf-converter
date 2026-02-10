@@ -26,6 +26,7 @@ const PdfEdit = () => {
   );
 
   const isSidebarVisible = results.length > 0;
+  console.log("isSidebarVisible", isSidebarVisible);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

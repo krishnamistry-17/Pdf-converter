@@ -1,161 +1,252 @@
 import { useEffect, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import "pdfjs-dist/web/pdf_viewer.css";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-interface WordSelection {
-  pageIndex: number;
-  text: string;
-  rects: { x: number; y: number; width: number; height: number }[];
+interface TextItem {
+  str: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  page: number;
 }
 
-interface PdfEditorProps {
+interface PageEditorProps {
   file: File;
 }
 
-const PdfEditor = ({ file }: PdfEditorProps) => {
+const PageEditor = ({ file }: PageEditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [pdf, setPdf] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
-  const [selections, setSelections] = useState<WordSelection[]>([]);
-  const [replacementText, setReplacementText] = useState("");
+  const [textItems, setTextItems] = useState<TextItem[]>([]);
+  const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
 
-  // Load and render PDF pages
+  const hasLoaded = useRef(false);
+  // Load PDF and extract text
   useEffect(() => {
+    if (hasLoaded.current) return;
     const loadPdf = async () => {
+      if (!containerRef.current) return;
+      containerRef.current.innerHTML = "";
+
       const arrayBuffer = await file.arrayBuffer();
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdfDoc = await loadingTask.promise;
-      setPdf(pdfDoc);
+      const doc = await loadingTask.promise;
+      setPdfDoc(doc);
 
-      if (!containerRef.current) return;
+      const allTextItems: TextItem[] = [];
 
-      containerRef.current.innerHTML = ""; // clear previous render
+      for (let i = 1; i <= doc.numPages; i++) {
+        const page = await doc.getPage(i);
+        const viewport = page.getViewport({ scale: 1 });
 
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const page = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 0.5 });
-
-        // Canvas
+        // Render canvas
         const canvas = document.createElement("canvas");
         canvas.width = viewport.width;
         canvas.height = viewport.height;
         canvas.style.display = "block";
         canvas.style.marginBottom = "10px";
-        const context = canvas.getContext("2d")!;
-        await page.render({ canvasContext: context, viewport }).promise;
+        const ctx = canvas.getContext("2d")!;
+        await page.render({ canvasContext: ctx, viewport }).promise;
         containerRef.current.appendChild(canvas);
 
-        // Text Layer
-        const textContent = await page.getTextContent();
-        const textLayerDiv = document.createElement("div");
-        textLayerDiv.style.position = "absolute";
-        textLayerDiv.style.top = `${canvas.offsetTop}px`;
-        textLayerDiv.style.left = `${canvas.offsetLeft}px`;
-        textLayerDiv.style.height = `${viewport.height}px`;
-        textLayerDiv.style.width = `${viewport.width}px`;
-        textLayerDiv.style.pointerEvents = "auto";
-        containerRef.current.appendChild(textLayerDiv);
-
-        pdfjsLib.renderTextLayer({
-          textContent,
-          container: textLayerDiv,
-          viewport,
-          textDivs: [],
-        } as any);
-
-      
-        textLayerDiv.addEventListener("click", () => {
-          const selection = window.getSelection();
-          if (!selection || selection.toString().trim() === "") return;
-
-          const range = selection.getRangeAt(0);
-          const rects = Array.from(range.getClientRects()).map((r) => ({
-            x: r.x - canvas.offsetLeft,
-            y: r.y - canvas.offsetTop,
-            width: r.width,
-            height: r.height,
-          }));
-
-          setSelections((prev) => [
-            ...prev,
-            { pageIndex: i - 1, text: selection.toString(), rects },
-          ]);
-
-          selection.removeAllRanges();
+        // Extract text positions
+        const content = await page.getTextContent();
+        content.items.forEach((item: any) => {
+          if (item.str.trim()) {
+            allTextItems.push({
+              str: item.str,
+              x: item.transform[4],
+              y: viewport.height - item.transform[5],
+              width: item.width,
+              height: item.height,
+              page: i,
+            });
+          }
         });
       }
+
+      setTextItems(allTextItems);
     };
 
     loadPdf();
   }, [file]);
 
-  // Save edited PDF
-  const saveEditedPdf = async () => {
-    if (!pdf) return;
+  // Edit text in place
+  const handleEditText = async (index: number) => {
+    const newText = prompt("Enter new text:", textItems[index].str);
+    if (!newText || !pdfDoc) return;
 
     const arrayBuffer = await file.arrayBuffer();
-    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const pages = pdf.getPages();
+    const font = await pdf.embedFont(StandardFonts.Helvetica);
 
-    for (const sel of selections) {
-      const page = pdfDoc.getPages()[sel.pageIndex];
+    const item = textItems[index];
+    const page = pages[item.page - 1];
 
-      // Cover original text
-      sel.rects.forEach((r) => {
-        page.drawRectangle({
-          x: r.x,
-          y: page.getHeight() - r.y - r.height,
-          width: r.width,
-          height: r.height,
-          color: rgb(1, 1, 1),
-        });
-      });
+    // Cover old text
+    page.drawRectangle({
+      x: item.x,
+      y: item.y - item.height,
+      width: item.width,
+      height: item.height,
+      color: rgb(1, 1, 1),
+    });
 
-      // Draw replacement
-      page.drawText(replacementText || sel.text, {
-        x: sel.rects[0].x,
-        y: page.getHeight() - sel.rects[0].y - sel.rects[0].height,
-        size: 12,
-        color: rgb(0, 0, 0),
-      });
-    }
+    // Draw new text
+    page.drawText(newText, {
+      x: item.x,
+      y: item.y - item.height,
+      size: item.height, // match original height
+      font,
+      color: rgb(0, 0, 0),
+    });
+    console.log("x", item.x);
+    console.log("y", item.y);
 
-    const pdfBytes = await pdfDoc.save();
+    console.log("item", item);
+    console.log("newText", newText);
+
+    // Save updated PDF
+    const pdfBytes = await pdf.save();
     const blob = new Blob([new Uint8Array(pdfBytes)], {
       type: "application/pdf",
     });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "edited.pdf";
-    a.click();
-    URL.revokeObjectURL(url);
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "edited.pdf";
+    link.click();
+  };
+
+  const handleRemoveText = async (index: number) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const pages = pdf.getPages();
+    const item = textItems[index];
+    const page = pages[item.page - 1];
+    page.drawText("", {
+      x: item.x,
+      y: item.y - item.height,
+      size: item.height,
+      color: rgb(0, 0, 0),
+    });
+    const pdfBytes = await pdf.save();
   };
 
   return (
     <div style={{ position: "relative" }}>
-      <div ref={containerRef} className="border p-2 relative"></div>
+      <div ref={containerRef}></div>
 
-      {selections.length > 0 && (
-        <div className="mt-8">
-          <input
-            type="text"
-            placeholder="Replacement text"
-            value={replacementText}
-            onChange={(e) => setReplacementText(e.target.value)}
-            className="border p-1 mr-2 bg-white z-30"
-          />
-          <button
-            onClick={saveEditedPdf}
-            className="px-4 py-2 bg-blue-500 text-white"
+      <div style={{ marginTop: "10px" }}>
+        <h3>Edit Text Items:</h3>
+        {textItems.map((item, idx) => (
+          <div
+            key={idx}
+            style={{ marginBottom: "4px" }}
+            className="flex items-center gap-2"
           >
-            Save PDF
-          </button>
-        </div>
-      )}
+            <button
+              onClick={() => handleEditText(idx)}
+              className=" flex items-center gap-2 cursor-pointer"
+            >
+              <p> Edit: "{item.str}"</p>
+              <span
+                className="text-red-500 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveText(idx);
+                }}
+              >
+                Remove
+              </span>
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default PdfEditor;
+export default PageEditor;
+{
+  /*// import { useEffect, useRef, useState } from "react";
+// import * as pdfjsLib from "pdfjs-dist";
+// import { PDFDocument, rgb } from "pdf-lib";
+// import "pdfjs-dist/web/pdf_viewer.css";
+
+// pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// interface Props {
+//   file: File;
+// }
+
+// const PdfEditor = ({ file }: Props) => {
+//   const containerRef = useRef<HTMLDivElement>(null);
+
+//   const hasLoadedRef = useRef(false);
+
+//   useEffect(() => {
+//     if (hasLoadedRef.current) return;
+//     hasLoadedRef.current = true;
+
+//     const loadPdf = async () => {
+//       if (!containerRef.current) return;
+
+//       containerRef.current.innerHTML = ""; // clear previous
+//       const arrayBuffer = await file.arrayBuffer();
+//       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+//       const pdfDoc = await loadingTask.promise;
+
+//       for (let i = 1; i <= pdfDoc.numPages; i++) {
+//         const page = await pdfDoc.getPage(i);
+//         const viewport = page.getViewport({ scale: 0.5 });
+
+//         const canvas = document.createElement("canvas");
+//         canvas.width = viewport.width;
+//         canvas.height = viewport.height;
+//         canvas.style.display = "block";
+//         canvas.style.marginBottom = "10px";
+
+//         const context = canvas.getContext("2d")!;
+//         await page.render({ canvasContext: context, viewport }).promise;
+//         containerRef.current.appendChild(canvas);
+//       }
+//     };
+
+//     loadPdf();
+//   }, [file]);
+
+//   const handleSelectAllText = async () => {
+//     const arrayBuffer = await file.arrayBuffer();
+//     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+//     const pdfDoc = await loadingTask.promise;
+//     const allText: any[] = [];
+//     for (let i = 1; i <= pdfDoc.numPages; i++) {
+//       const page = await pdfDoc.getPage(i);
+//       const content = await page.getTextContent();
+//       const filteredContent = content.items.filter(
+//         (item: any) => item.str !== "" && item.str !== "\n"
+//       );
+//       console.log("filteredContent---------", filteredContent);
+//       allText.push(content);
+//     }
+//     console.log("allText---------", allText.join("\n"));
+//   };
+
+//   return (
+//     <div style={{ position: "relative" }}>
+//       <div
+//         ref={containerRef}
+//         className=" p-2 relative cursor-pointer rounded-md"
+//       ></div>
+//       <button onClick={handleSelectAllText}>Select All Text</button>
+//     </div>
+//   );
+// };
+
+// export default PdfEditor;
+ */
+}

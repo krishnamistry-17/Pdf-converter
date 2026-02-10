@@ -53,3 +53,13 @@ export interface CompressPercentage {
   compressedSize: string;
   compressPercentage: string;
 }
+
+
+export interface TextItem {
+  str: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  page: number;
+}
