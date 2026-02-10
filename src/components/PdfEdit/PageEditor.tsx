@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
+import * as fabric from "fabric";
 import "pdfjs-dist/web/pdf_viewer.css";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
+{/*pf view some error,window space reduce,  */}
 interface TextItem {
   str: string;
   x: number;
@@ -12,6 +13,7 @@ interface TextItem {
   width: number;
   height: number;
   page: number;
+  fabricObj?: fabric.Textbox;
 }
 
 interface PageEditorProps {
@@ -19,98 +21,124 @@ interface PageEditorProps {
 }
 
 const PageEditor = ({ file }: PageEditorProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
+  const fabricCanvasRef = useRef<fabric.Canvas>(null);
   const [textItems, setTextItems] = useState<TextItem[]>([]);
   const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
 
-  const hasLoaded = useRef(false);
-  // Load PDF and extract text
+  // Load PDF and render first page
   useEffect(() => {
-    if (hasLoaded.current) return;
     const loadPdf = async () => {
-      if (!containerRef.current) return;
-      containerRef.current.innerHTML = "";
-
       const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const doc = await loadingTask.promise;
-      setPdfDoc(doc);
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      setPdfDoc(pdf);
 
-      const allTextItems: TextItem[] = [];
+      const page = await pdf.getPage(1); // for simplicity, first page
+      const viewport = page.getViewport({ scale: 0.5 });
 
-      for (let i = 1; i <= doc.numPages; i++) {
-        const page = await doc.getPage(i);
-        const viewport = page.getViewport({ scale: 1 });
+      // Render PDF to canvas
+      const canvas = pdfCanvasRef.current!;
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext("2d")!;
+      await page.render({ canvasContext: ctx, viewport }).promise;
 
-        // Render canvas
-        const canvas = document.createElement("canvas");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        canvas.style.display = "block";
-        canvas.style.marginBottom = "10px";
-        const ctx = canvas.getContext("2d")!;
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        containerRef.current.appendChild(canvas);
+      // Initialize Fabric.js
+      const fCanvas = new fabric.Canvas("fabric-canvas", {
+        width: viewport.width,
+        height: viewport.height,
+      });
+      fabricCanvasRef.current = fCanvas;
 
-        // Extract text positions
-        const content = await page.getTextContent();
-        content.items.forEach((item: any) => {
-          if (item.str.trim()) {
-            allTextItems.push({
-              str: item.str,
-              x: item.transform[4],
-              y: viewport.height - item.transform[5],
-              width: item.width,
-              height: item.height,
-              page: i,
-            });
-          }
+      // Set PDF as background image
+      const pdfImg = new fabric.Image(canvas, { selectable: false });
+      fCanvas.backgroundImage = pdfImg;
+      fCanvas.renderAll();
+
+      // Extract text positions from PDF
+      const content = await page.getTextContent();
+      const items: TextItem[] = content.items
+        .filter((item: any) => item.str.trim())
+        .map((item: any) => {
+          const x = item.transform[4];
+          const y = viewport.height - item.transform[5];
+          const width = item.width;
+          const height = item.height;
+
+          // Create Fabric Textbox for editable text
+          const textObj = new fabric.Textbox(item.str, {
+            left: x,
+            top: y - height,
+            width,
+            height,
+            fontSize: 12,
+            fill: "black",
+          });
+
+          fCanvas.add(textObj);
+
+          return {
+            str: item.str,
+            x,
+            y,
+            width,
+            height,
+            page: 1,
+            fabricObj: textObj,
+          };
         });
-      }
 
-      setTextItems(allTextItems);
+      setTextItems(items);
     };
 
     loadPdf();
   }, [file]);
 
-  // Edit text in place
-  const handleEditText = async (index: number) => {
-    const newText = prompt("Enter new text:", textItems[index].str);
-    if (!newText || !pdfDoc) return;
+  // Handle edit from sidebar
+  const handleEditText = (index: number) => {
+    const item = textItems[index];
+    if (!item.fabricObj) return;
 
+    const newText = prompt("Enter new text:", item.str);
+    if (!newText) return;
+
+    item.fabricObj.text = newText;
+    textItems[index].str = newText;
+    fabricCanvasRef.current?.renderAll();
+  };
+
+  // Handle remove text
+  const handleRemoveText = (index: number) => {
+    const item = textItems[index];
+    if (item.fabricObj) {
+      fabricCanvasRef.current?.remove(item.fabricObj);
+    }
+    const newItems = [...textItems];
+    newItems.splice(index, 1);
+    setTextItems(newItems);
+  };
+
+  // Download edited PDF
+  const handleDownload = async () => {
+    if (!pdfDoc) return;
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    const pages = pdf.getPages();
-    const font = await pdf.embedFont(StandardFonts.Helvetica);
+    const page = pdf.getPages()[0];
 
-    const item = textItems[index];
-    const page = pages[item.page - 1];
+    // Export Fabric canvas as image
+    const imgData = fabricCanvasRef.current?.toDataURL({
+      multiplier: 1,
+      format: "png",
+    })!;
+    const pngImage = await pdf.embedPng(imgData);
 
-    // Cover old text
-    page.drawRectangle({
-      x: item.x,
-      y: item.y - item.height,
-      width: item.width,
-      height: item.height,
-      color: rgb(1, 1, 1),
+    page.drawImage(pngImage, {
+      x: 0,
+      y: 0,
+      width: page.getWidth(),
+      height: page.getHeight(),
     });
 
-    // Draw new text
-    page.drawText(newText, {
-      x: item.x,
-      y: item.y - item.height,
-      size: item.height, // match original height
-      font,
-      color: rgb(0, 0, 0),
-    });
-    console.log("x", item.x);
-    console.log("y", item.y);
-
-    console.log("item", item);
-    console.log("newText", newText);
-
-    // Save updated PDF
     const pdfBytes = await pdf.save();
     const blob = new Blob([new Uint8Array(pdfBytes)], {
       type: "application/pdf",
@@ -121,48 +149,40 @@ const PageEditor = ({ file }: PageEditorProps) => {
     link.click();
   };
 
-  const handleRemoveText = async (index: number) => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await PDFDocument.load(arrayBuffer);
-    const pages = pdf.getPages();
-    const item = textItems[index];
-    const page = pages[item.page - 1];
-    page.drawText("", {
-      x: item.x,
-      y: item.y - item.height,
-      size: item.height,
-      color: rgb(0, 0, 0),
-    });
-    const pdfBytes = await pdf.save();
-  };
-
   return (
-    <div style={{ position: "relative" }}>
-      <div ref={containerRef}></div>
+    <div className="flex flex-col gap-6">
+      {/* PDF + Fabric canvas */}
+      <div style={{ position: "relative" }}>
+        <canvas ref={pdfCanvasRef} style={{ display: "none" }} />
+        <canvas id="fabric-canvas" style={{ border: "1px solid #ccc" }} />
+        <button
+          onClick={handleDownload}
+          className="mt-2 px-4 py-1 bg-blue-500 text-white rounded"
+        >
+          Download PDF
+        </button>
+      </div>
 
-      <div style={{ marginTop: "10px" }}>
-        <h3>Edit Text Items:</h3>
+      {/* Sidebar for edits */}
+      <div className="w-[300px] border-l border-gray-300 p-4 h-[600px] overflow-y-auto">
+        <h3 className="font-bold mb-2">Text Items</h3>
         {textItems.map((item, idx) => (
-          <div
-            key={idx}
-            style={{ marginBottom: "4px" }}
-            className="flex items-center gap-2"
-          >
-            <button
-              onClick={() => handleEditText(idx)}
-              className=" flex items-center gap-2 cursor-pointer"
-            >
-              <p> Edit: "{item.str}"</p>
-              <span
-                className="text-red-500 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveText(idx);
-                }}
+          <div key={idx} className="flex justify-between items-center mb-2">
+            <span className="text-sm">{item.str}</span>
+            <div className="flex gap-2">
+              <button
+                className="text-blue-500 text-sm"
+                onClick={() => handleEditText(idx)}
               >
-                Remove
-              </span>
-            </button>
+                Edit
+              </button>
+              <button
+                className="text-red-500 text-sm"
+                onClick={() => handleRemoveText(idx)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -171,82 +191,3 @@ const PageEditor = ({ file }: PageEditorProps) => {
 };
 
 export default PageEditor;
-{
-  /*// import { useEffect, useRef, useState } from "react";
-// import * as pdfjsLib from "pdfjs-dist";
-// import { PDFDocument, rgb } from "pdf-lib";
-// import "pdfjs-dist/web/pdf_viewer.css";
-
-// pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
-// interface Props {
-//   file: File;
-// }
-
-// const PdfEditor = ({ file }: Props) => {
-//   const containerRef = useRef<HTMLDivElement>(null);
-
-//   const hasLoadedRef = useRef(false);
-
-//   useEffect(() => {
-//     if (hasLoadedRef.current) return;
-//     hasLoadedRef.current = true;
-
-//     const loadPdf = async () => {
-//       if (!containerRef.current) return;
-
-//       containerRef.current.innerHTML = ""; // clear previous
-//       const arrayBuffer = await file.arrayBuffer();
-//       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-//       const pdfDoc = await loadingTask.promise;
-
-//       for (let i = 1; i <= pdfDoc.numPages; i++) {
-//         const page = await pdfDoc.getPage(i);
-//         const viewport = page.getViewport({ scale: 0.5 });
-
-//         const canvas = document.createElement("canvas");
-//         canvas.width = viewport.width;
-//         canvas.height = viewport.height;
-//         canvas.style.display = "block";
-//         canvas.style.marginBottom = "10px";
-
-//         const context = canvas.getContext("2d")!;
-//         await page.render({ canvasContext: context, viewport }).promise;
-//         containerRef.current.appendChild(canvas);
-//       }
-//     };
-
-//     loadPdf();
-//   }, [file]);
-
-//   const handleSelectAllText = async () => {
-//     const arrayBuffer = await file.arrayBuffer();
-//     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-//     const pdfDoc = await loadingTask.promise;
-//     const allText: any[] = [];
-//     for (let i = 1; i <= pdfDoc.numPages; i++) {
-//       const page = await pdfDoc.getPage(i);
-//       const content = await page.getTextContent();
-//       const filteredContent = content.items.filter(
-//         (item: any) => item.str !== "" && item.str !== "\n"
-//       );
-//       console.log("filteredContent---------", filteredContent);
-//       allText.push(content);
-//     }
-//     console.log("allText---------", allText.join("\n"));
-//   };
-
-//   return (
-//     <div style={{ position: "relative" }}>
-//       <div
-//         ref={containerRef}
-//         className=" p-2 relative cursor-pointer rounded-md"
-//       ></div>
-//       <button onClick={handleSelectAllText}>Select All Text</button>
-//     </div>
-//   );
-// };
-
-// export default PdfEditor;
- */
-}
