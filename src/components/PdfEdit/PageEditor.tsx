@@ -1,170 +1,161 @@
-import { useRef } from "react";
-import EditableText from "../DrawTool/EditableText";
-import EditableDraw from "../DrawTool/EditableDraw";
-import { useEditPdfStore } from "../../store/useEditPdfStore";
-import EditableImage from "../DrawTool/EditableImage";
+import { useEffect, useRef, useState } from "react";
+import * as pdfjsLib from "pdfjs-dist";
+import { PDFDocument, rgb } from "pdf-lib";
+import "pdfjs-dist/web/pdf_viewer.css";
 
-interface Props {
-  image: string;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+interface WordSelection {
   pageIndex: number;
-  active: boolean;
-  setActivePageIndex: (i: number) => void;
-  activeToolFeature: "text" | "draw" | "highlight" | "image";
-  textElements: any[];
-  addText: (pageIndex: number, x: number, y: number, fontSize: number) => void;
-  updateText: (
-    id: string,
-    text: string,
-    x: number,
-    y: number,
-    fontSize: number
-  ) => void;
-  selectFirstPageText: string | null;
-  selectTextFromPdf: () => void;
+  text: string;
+  rects: { x: number; y: number; width: number; height: number }[];
 }
 
-const PageEditor = ({
-  image,
-  pageIndex,
-  active,
-  setActivePageIndex,
-  activeToolFeature,
-  textElements,
-  addText,
-  updateText,
-  selectFirstPageText,
-  selectTextFromPdf,
-}: Props) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const { addDraw } = useEditPdfStore();
+interface PdfEditorProps {
+  file: File;
+}
 
-  const { activeTool } = useEditPdfStore();
-  const handleClick = (e: React.MouseEvent) => {
-    if (!imgRef.current) return;
-    if (activeToolFeature !== "text") return;
+const PdfEditor = ({ file }: PdfEditorProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pdf, setPdf] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
+  const [selections, setSelections] = useState<WordSelection[]>([]);
+  const [replacementText, setReplacementText] = useState("");
 
-    if ((e.target as HTMLElement).tagName === "INPUT") return;
+  // Load and render PDF pages
+  useEffect(() => {
+    const loadPdf = async () => {
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdfDoc = await loadingTask.promise;
+      setPdf(pdfDoc);
 
-    const rect = imgRef.current.getBoundingClientRect();
-    const imgWidth = rect.width;
-    const imgHeight = rect.height;
+      if (!containerRef.current) return;
 
-    if (!imgWidth || !imgHeight) return;
+      containerRef.current.innerHTML = ""; // clear previous render
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        const page = await pdfDoc.getPage(i);
+        const viewport = page.getViewport({ scale: 0.5 });
 
-    addText(
-      pageIndex,
-      x / imgWidth,
-      y / imgHeight,
-      16 / imgHeight // now SAFE
-    );
-  };
+        // Canvas
+        const canvas = document.createElement("canvas");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        canvas.style.display = "block";
+        canvas.style.marginBottom = "10px";
+        const context = canvas.getContext("2d")!;
+        await page.render({ canvasContext: context, viewport }).promise;
+        containerRef.current.appendChild(canvas);
 
-  const handleDrawClick = (e: React.MouseEvent) => {
-    if (!imgRef.current) return;
-    if (activeToolFeature !== "draw") return;
+        // Text Layer
+        const textContent = await page.getTextContent();
+        const textLayerDiv = document.createElement("div");
+        textLayerDiv.style.position = "absolute";
+        textLayerDiv.style.top = `${canvas.offsetTop}px`;
+        textLayerDiv.style.left = `${canvas.offsetLeft}px`;
+        textLayerDiv.style.height = `${viewport.height}px`;
+        textLayerDiv.style.width = `${viewport.width}px`;
+        textLayerDiv.style.pointerEvents = "auto";
+        containerRef.current.appendChild(textLayerDiv);
 
-    const rect = imgRef.current.getBoundingClientRect();
-    const imgWidth = rect.width;
-    const imgHeight = rect.height;
+        pdfjsLib.renderTextLayer({
+          textContent,
+          container: textLayerDiv,
+          viewport,
+          textDivs: [],
+        } as any);
 
-    if (!imgWidth || !imgHeight) return;
+      
+        textLayerDiv.addEventListener("click", () => {
+          const selection = window.getSelection();
+          if (!selection || selection.toString().trim() === "") return;
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+          const range = selection.getRangeAt(0);
+          const rects = Array.from(range.getClientRects()).map((r) => ({
+            x: r.x - canvas.offsetLeft,
+            y: r.y - canvas.offsetTop,
+            width: r.width,
+            height: r.height,
+          }));
 
-    addDraw(pageIndex, [{ x: x / imgWidth, y: y / imgHeight }], [0, 0, 0], 2);
-  };
+          setSelections((prev) => [
+            ...prev,
+            { pageIndex: i - 1, text: selection.toString(), rects },
+          ]);
 
-  const handleDoubleClick = async () => {
-    if (!selectFirstPageText) {
-      await selectTextFromPdf();
-      return;
+          selection.removeAllRanges();
+        });
+      }
+    };
+
+    loadPdf();
+  }, [file]);
+
+  // Save edited PDF
+  const saveEditedPdf = async () => {
+    if (!pdf) return;
+
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+
+    for (const sel of selections) {
+      const page = pdfDoc.getPages()[sel.pageIndex];
+
+      // Cover original text
+      sel.rects.forEach((r) => {
+        page.drawRectangle({
+          x: r.x,
+          y: page.getHeight() - r.y - r.height,
+          width: r.width,
+          height: r.height,
+          color: rgb(1, 1, 1),
+        });
+      });
+
+      // Draw replacement
+      page.drawText(replacementText || sel.text, {
+        x: sel.rects[0].x,
+        y: page.getHeight() - sel.rects[0].y - sel.rects[0].height,
+        size: 12,
+        color: rgb(0, 0, 0),
+      });
     }
-    const text = selectFirstPageText.split("\n\n")[pageIndex];
-    if (!text) {
-      return <div className=" border border-primary rounded-md p-2"></div>;
-    }
-    console.log("text", text);
-    addText(pageIndex, 0.5, 0.5, 16 / (imgRef.current?.clientHeight ?? 0));
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([new Uint8Array(pdfBytes)], {
+      type: "application/pdf",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "edited.pdf";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <>
-      {activeTool === "annotate" && (
-        <div
-          ref={wrapperRef}
-          className={`relative bg-white rounded-xl shadow-md p-2 ${
-            active ? "ring-2 ring-primary" : ""
-          }`}
-          onClick={() => setActivePageIndex(pageIndex)}
-        >
-          {/* IMAGE */}
-          <img
-            ref={imgRef}
-            src={image}
-            className="block w-full max-h-[70vh] object-contain rounded"
-            style={{ transform: "scaleX(1) scaleY(1)" }}
-            draggable={false}
-          />
+    <div style={{ position: "relative" }}>
+      <div ref={containerRef} className="border p-2 relative"></div>
 
-          {/* TEXT LAYER */}
-          <div
-            className="absolute top-0 left-0"
-            style={{
-              width: imgRef.current?.clientWidth,
-              height: imgRef.current?.clientHeight,
-              transform: "scaleX(1) scaleY(1)",
-            }}
-            onClick={handleClick}
+      {selections.length > 0 && (
+        <div className="mt-8">
+          <input
+            type="text"
+            placeholder="Replacement text"
+            value={replacementText}
+            onChange={(e) => setReplacementText(e.target.value)}
+            className="border p-1 mr-2 bg-white z-30"
+          />
+          <button
+            onClick={saveEditedPdf}
+            className="px-4 py-2 bg-blue-500 text-white"
           >
-            {textElements
-              .filter((el) => el.pageIndex === pageIndex)
-              .map((el) => (
-                <EditableText
-                  key={el.id}
-                  element={el}
-                  updateText={updateText}
-                  imgHeight={imgRef.current?.clientHeight}
-                  enabled={activeToolFeature === "text"}
-                />
-              ))}
-          </div>
-
-          {activeToolFeature === "draw" && (
-            <div className="absolute top-0 left-0" onClick={handleDrawClick}>
-              <EditableDraw
-                imgRef={imgRef}
-                color={[0, 0, 0]}
-                width={2}
-                pageIndex={pageIndex}
-              />
-            </div>
-          )}
-
-          {activeToolFeature === "image" && (
-            <div className="absolute top-0 left-0">
-              <EditableImage imgRef={imgRef} pageIndex={pageIndex} />
-            </div>
-          )}
+            Save PDF
+          </button>
         </div>
       )}
-      {activeTool === "edit" && (
-        <div>
-          <img
-            src={image}
-            
-            alt="editable image"
-            className="w-full h-full object-contain"
-            onDoubleClick={handleDoubleClick}
-          />
-        </div>
-      )}
-    </>
+    </div>
   );
 };
 
-export default PageEditor;
+export default PdfEditor;

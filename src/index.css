@@ -57,3 +57,10 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
 }
+
+@layer components { 
+  .textLayer {
+   pointer-events: none;
+   user-select: text;
+  }
+}

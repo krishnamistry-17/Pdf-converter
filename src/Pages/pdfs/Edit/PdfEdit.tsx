@@ -3,13 +3,9 @@ import UploadModal from "../../../components/UploadModal";
 import useMobileSize from "../../../hooks/useMobileSize";
 import { useEditPdfStore } from "../../../store/useEditPdfStore";
 import { useFileSessionStore } from "../../../store/useFileSessionStore";
-import useUploadData from "../../../hooks/useUploadData";
 import PdfEditPreviewGrid from "../../../components/PdfEdit/PdfEditPreviewGrid";
 import { IoMdClose } from "react-icons/io";
 import type { EditPdfResult } from "../../../types/pageResult";
-import { toast } from "react-toastify";
-import useFilesStore from "../../../store/useSheetStore";
-import { useState } from "react";
 import PdfEditSidebar from "../../../components/PdfEdit/PdfEditSidebar";
 import Toolbar from "../../../components/PdfEdit/Toolbar";
 
@@ -22,21 +18,14 @@ const PdfEdit = () => {
     clearResults,
     clearSelectedFile,
   } = useEditPdfStore();
-  const setLoading = useFilesStore((state) => state.setLoading);
-  const { ConvertPdfToPng, extractTextFromPdf } = useUploadData();
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
   );
-  const selectedFile = useEditPdfStore((state) => state.selectedFile);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [activePageIndex, setActivePageIndex] = useState<number | null>(null);
+
   const isSidebarVisible = results.length > 0;
-  const [selectFirstPageText, setSelectFirstPageText] = useState<string | null>(
-    null
-  );
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -51,31 +40,11 @@ const PdfEdit = () => {
         fileName: file.name,
       } as unknown as EditPdfResult,
     ]);
-    try {
-      const { previews } = await ConvertPdfToPng(file);
-      setPreviewImages(previews);
-    } catch (err) {
-      toast.error("Failed to generate previews");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const selectTextFromPdf = async () => {
-    const fullText = await extractTextFromPdf(selectedFile as File);
-    console.log("fullText", fullText);
-    const selectFirstPageText = fullText.split("\n\n")[0];
-    const selectFirstPageTextArray = selectFirstPageText.split("\n");
-    console.log("selectFirstPageText", selectFirstPageText);
-    if (selectFirstPageText) {
-      setSelectFirstPageText(selectFirstPageText);
-    }
   };
 
   const handleReset = () => {
     clearResults();
     clearSelectedFile();
-    setPreviewImages([]);
   };
 
   return (
@@ -112,13 +81,7 @@ const PdfEdit = () => {
               </>
             ) : (
               <div className="rounded-xl border border-border bg-bg-canvas shadow-sm">
-                <PdfEditPreviewGrid
-                  images={previewImages}
-                  setActivePageIndex={setActivePageIndex}
-                  activePageIndex={activePageIndex}
-                  selectTextFromPdf={selectTextFromPdf}
-                  selectFirstPageText={selectFirstPageText}
-                />
+                <PdfEditPreviewGrid />
               </div>
             )}
           </div>
