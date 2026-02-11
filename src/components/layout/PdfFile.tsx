@@ -116,7 +116,7 @@ const PdfFile = ({
           </div>
 
           {fileSelected && !isDownloadCompleted && (
-            <div className="mt-10 flex justify-center items-center gap-4">
+            <div className="mt-4 flex flex-col  justify-center items-center gap-4">
               {isPdfPreview && (
                 <button
                   className="bg-primary hover:bg-primary-hover text-white font-semibold lg:block hidden

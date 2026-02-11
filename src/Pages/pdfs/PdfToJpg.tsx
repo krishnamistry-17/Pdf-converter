@@ -41,7 +41,6 @@ const PdfToJpg = () => {
 
   const isSidebarVisible = results.length > 0;
 
- 
   useEffect(() => {
     return () => {
       clearResults();
@@ -139,14 +138,17 @@ const PdfToJpg = () => {
         >
           <div
             className={`mx-auto
-            ${results.length > 0 ? "max-w-2xl w-auto" : "max-w-xl"}
+            ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
           >
             <SelectFile
               heading="PDF to JPG"
               description="Convert a PDF file to JPG images."
             />
-            <div className="bg-white/40 text-text-heading rounded-2xl shadow-lg border border-gray-100 p-10">
+            <div
+              className="bg-white/40 text-text-heading rounded-2xl shadow-lg
+             border border-gray-100 p-4"
+            >
               {results.length === 0 && (
                 <UploadModal
                   fileSelected={results.length > 0}

@@ -4,7 +4,7 @@ export const parsePdf = async (file: File) => {
   const arrayBuffer = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(arrayBuffer);
 
-  const pages = pdfDoc.getPages().map((page, index) => ({
+  const pages = pdfDoc.getPages().map((_page, index) => ({
     pageNumber: index + 1,
     text: "", // We'll keep text empty for now (pdf-lib doesn’t extract easily)
   }));

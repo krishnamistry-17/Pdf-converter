@@ -212,7 +212,8 @@ const Organize = () => {
             heading="Organize PDF"
             description="Sort, add, delete, reorder, rotate pages and more."
           />
-          <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-6 sm:pt-10 sm:pb-14">
+          <div className="bg-white/40 text-text-body rounded-2xl shadow-lg 
+          border border-gray-100 p-4">
             {results.length === 0 && (
               <UploadModal
                 handleFileUpload={handleFileUpload}

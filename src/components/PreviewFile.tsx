@@ -172,10 +172,10 @@ const PreviewFile = ({
   const showPptPreview = () => <PptPreview />;
 
   return (
-    <div className="w-full flex flex-col items-center gap-3">
+    <div className="w-full flex flex-col items-center">
       <div className="w-full max-w-full sm:max-w-md my-4 flex flex-col items-center gap-2 px-2">
         {type === "pdf" && (
-          <div className="w-full max-w-full sm:max-w-md flex flex-col items-center gap-2">
+          <div className="w-full max-w-full sm:max-w-sm flex flex-col items-center gap-2">
             <iframe
               src={previewFileDesign}
               title="PDF Preview"

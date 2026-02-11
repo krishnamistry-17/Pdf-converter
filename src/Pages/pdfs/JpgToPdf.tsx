@@ -176,7 +176,8 @@ const JpgToPdf = () => {
               heading="Convert Jpg to Pdf"
               description="This tool will convert Jpg files to Pdf files."
             />
-            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg border border-gray-100 p-10">
+            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg
+             border border-gray-100 p-4">
               {results.length === 0 && (
                 <UploadModal
                   fileSelected={results.length > 0}

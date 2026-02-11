@@ -3,7 +3,6 @@ import * as pdfjsLib from "pdfjs-dist";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import * as fabric from "fabric";
 
-
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface TextBlock {
@@ -36,8 +35,8 @@ const PageEditor = ({ file }: PageEditorProps) => {
   const [searchText, setSearchText] = useState("");
 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [scale, setScale] = useState(1);
-  const [pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 });
+  const [scale, _setScale] = useState(1);
+  const [_pdfDimensions, setPdfDimensions] = useState({ width: 0, height: 0 });
 
   // Group text items into paragraphs based on vertical proximity
   const groupTextItemsIntoParagraphs = (
@@ -61,7 +60,7 @@ const PageEditor = ({ file }: PageEditorProps) => {
     let currentParagraph: any[] = [];
     let lastY = sortedItems[0]?.transform[5] || 0;
 
-    sortedItems.forEach((item, index) => {
+    sortedItems.forEach((item, _index) => {
       const currentY = item.transform[5];
       const yDiff = Math.abs(lastY - currentY);
       const isSameLine = yDiff < 5;
@@ -363,7 +362,7 @@ const PageEditor = ({ file }: PageEditorProps) => {
       const page = pdfDoc.getPages()[0];
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-      const { width: pageWidth, height: pageHeight } = page.getSize();
+      const { width: _pageWidth, height: pageHeight } = page.getSize();
 
       // Draw updated text blocks
       textBlocks.forEach((block) => {
@@ -535,3 +534,686 @@ const PageEditor = ({ file }: PageEditorProps) => {
 };
 
 export default PageEditor;
+
+// Generate a React component for a PDF editor with the following features:
+
+// 1. Load a PDF file and render the first page on a Fabric.js canvas.
+// 2. Extract all text blocks from the PDF using pdfjs-dist.
+// 3. Display the text blocks in a sidebar with a search input.
+// 4. When the user types in the search box, filter the text blocks.
+// 5. On the canvas, highlight only the filtered text blocks:
+//    - Black text color
+//    - White background (hiding the original PDF text underneath)
+//    - Maintain the original position and font size.
+// 6. Support multi-line paragraphs: split long text into words and wrap properly inside Fabric Textbox.
+// 7. Update the canvas live as the user edits text in the sidebar.
+// 8. Include a "Download PDF" button that:
+//    - Draws the updated text blocks with proper wrapping using pdf-lib
+//    - Embeds any Fabric annotations as PNG
+//    - Saves the PDF for download.
+// 9. Use React functional components with hooks (`useState`, `useEffect`, `useRef`).
+// 10. Ensure proper cleanup so that switching routes resets the state.
+
+// Provide the complete component code with all imports, type definitions, and Fabric.js integration.
+
+// import { useEffect, useRef, useState } from "react";
+// import * as pdfjsLib from "pdfjs-dist";
+// import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+// import * as fabric from "fabric";
+
+// pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// interface TextBlock {
+//   id: string;
+//   page: number;
+//   x: number;
+//   y: number;
+//   fontSize: number;
+//   text: string;
+//   fabricObj?: fabric.IText;
+// }
+
+// interface PageEditorProps {
+//   file: File;
+// }
+
+// const PageEditor = ({ file }: PageEditorProps) => {
+//   const fabricRef = useRef<fabric.Canvas | null>(null);
+//   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+//   const [textBlocks, setTextBlocks] = useState<TextBlock[]>([]);
+
+//   useEffect(() => {
+//     const loadPdf = async () => {
+//       const arrayBuffer = await file.arrayBuffer();
+//       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+//       const page = await pdf.getPage(1);
+
+//       const scale = 1;
+//       const viewport = page.getViewport({ scale });
+
+//       // Temp canvas to render PDF image
+//       const tempCanvas = document.createElement("canvas");
+//       const ctx = tempCanvas.getContext("2d")!;
+//       tempCanvas.width = viewport.width;
+//       tempCanvas.height = viewport.height;
+
+//       await page.render({ canvasContext: ctx, viewport }).promise;
+
+//       // Create Fabric canvas same size
+//       const fabricCanvas = new fabric.Canvas(canvasRef.current!, {
+//         width: viewport.width,
+//         height: viewport.height,
+//         preserveObjectStacking: true,
+//       });
+
+//       fabricRef.current = fabricCanvas;
+
+//       // Set PDF image as background
+//       const bgImage = new fabric.Image(tempCanvas, {
+//         left: 0,
+//         top: 0,
+//         width: viewport.width,
+//         height: viewport.height,
+//         originX: "left",
+//         originY: "top",
+//         selectable: false,
+//         evented: false,
+//       });
+//       fabricCanvas.backgroundImage = bgImage;
+//       fabricCanvas.renderAll();
+
+//       // Extract text for sidebar
+//       const textContent = await page.getTextContent();
+//       const blocks: TextBlock[] = textContent.items
+//         .filter((item: any) => item.str.trim())
+//         .map((item: any, idx: number) => {
+//           const [a, b, c, d, e, f] = item.transform;
+//           const x = e;
+//           const y = viewport.height - f;
+
+//           // Create IText but only show updated text later
+//           const textbox = new fabric.IText(item.str, {
+//             left: x,
+//             top: y - item.height, // adjust to top-left
+//             fontSize: item.height,
+//             fill: "black",
+//             originX: "left",
+//             originY: "top",
+//             backgroundColor: "white",
+//             editable: false,
+//           });
+//           // Don't add original text yet
+//           return {
+//             id: `${idx}`,
+//             page: 1,
+//             x,
+//             y,
+//             fontSize: item.height,
+//             text: item.str,
+//             fabricObj: textbox,
+//           };
+//         });
+
+//       setTextBlocks(blocks);
+//     };
+
+//     loadPdf();
+//   }, [file]);
+
+//   // Update sidebar text and reflect on canvas
+//   const updateTextBlock = (index: number, newText: string) => {
+//     const blocks = [...textBlocks];
+//     blocks[index].text = newText;
+
+//     const fabricCanvas = fabricRef.current;
+//     const obj = blocks[index].fabricObj;
+
+//     if (obj) {
+//       obj.text = newText;
+//       if (!fabricCanvas?.getObjects().includes(obj)) {
+//         fabricCanvas?.add(obj);
+//       }
+//       fabricCanvas?.renderAll();
+//     }
+
+//     setTextBlocks(blocks);
+//   };
+
+//   const handleDownload = async () => {
+//     if (!fabricRef.current) return;
+
+//     const arrayBuffer = await file.arrayBuffer();
+//     const pdfDoc = await PDFDocument.load(arrayBuffer);
+//     const page = pdfDoc.getPages()[0];
+//     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+//     // Draw updated text blocks
+//     textBlocks.forEach((block) => {
+//       const pdfY = page.getHeight() - block.y - block.fontSize; // Convert top-left to bottom-left
+//       page.drawText(block.text, {
+//         x: block.x,
+//         y: pdfY,
+//         size: block.fontSize,
+//         font,
+//         color: rgb(0, 0, 0),
+//       });
+//     });
+
+//     const pdfBytes = await pdfDoc.save();
+//     const blob = new Blob([new Uint8Array(pdfBytes)], { type: "application/pdf" });
+//     const link = document.createElement("a");
+//     link.href = URL.createObjectURL(blob);
+//     link.download = "edited.pdf";
+//     link.click();
+//   };
+
+//   return (
+//     <div className="flex gap-6">
+//       {/* Main editor */}
+//       <div className="flex-1 border rounded shadow overflow-auto flex justify-center">
+//         <canvas ref={canvasRef} className="border" />
+//       </div>
+
+//       {/* Sidebar */}
+//       <aside className="w-80 border-l p-4 overflow-auto">
+//         <h3 className="font-bold mb-2">Editable Text</h3>
+//         {textBlocks.map((block, idx) => (
+//           <div key={block.id} className="mb-2">
+//             <textarea
+//               value={block.text}
+//               onChange={(e) => updateTextBlock(idx, e.target.value)}
+//               className="w-full border p-1 rounded"
+//             />
+//           </div>
+//         ))}
+//         <button
+//           onClick={handleDownload}
+//           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+//         >
+//           Download PDF
+//         </button>
+//       </aside>
+//     </div>
+//   );
+// };
+
+// export default PageEditor;
+
+//-----------
+// import { useEffect, useRef, useState } from "react";
+// import * as pdfjsLib from "pdfjs-dist";
+// import { PDFDocument, StandardFonts, rgb, PDFPage } from "pdf-lib";
+// import * as fabric from "fabric";
+// import { FabricText } from "fabric";
+
+// pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// FabricText.ownDefaults.fontFamily = "inter";
+// interface TextBlock {
+//   id: string;
+//   page: number;
+//   x: number;
+//   y: number;
+//   fontSize: number;
+//   text: string;
+//   width?: number; // optional wrap width for long paragraphs
+// }
+
+// interface PageEditorProps {
+//   file: File;
+// }
+
+// const PageEditor = ({ file }: PageEditorProps) => {
+//   const fabricRef = useRef<fabric.Canvas | null>(null);
+//   const canvasRef = useRef<HTMLCanvasElement>(null);
+//   const [textBlocks, setTextBlocks] = useState<TextBlock[]>([]);
+//   const [searchText, setSearchText] = useState("");
+
+//   console.log(searchText);
+
+//   useEffect(() => {
+//     const loadPdf = async () => {
+//       const arrayBuffer = await file.arrayBuffer();
+//       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+//       const page = await pdf.getPage(1);
+
+//       const scale = 1;
+//       const viewport = page.getViewport({ scale });
+
+//       // Temp canvas to render PDF page
+//       const tempCanvas = document.createElement("canvas");
+//       const ctx = tempCanvas.getContext("2d")!;
+//       tempCanvas.width = viewport.width;
+//       tempCanvas.height = viewport.height;
+//       await page.render({ canvasContext: ctx, viewport }).promise;
+
+//       // Fabric canvas
+//       const fabricCanvas = new fabric.Canvas(canvasRef.current!, {
+//         width: viewport.width,
+//         height: viewport.height,
+//         preserveObjectStacking: true,
+//       });
+//       fabricRef.current = fabricCanvas;
+
+//       // Set PDF as Fabric background
+//       const bgImage = new fabric.Image(tempCanvas, {
+//         left: 0,
+//         top: 0,
+//         width: viewport.width,
+//         height: viewport.height,
+//         selectable: false,
+//         evented: false,
+//         originX: "left",
+//         originY: "top",
+//       });
+//       fabricCanvas.backgroundImage = bgImage;
+//       fabricCanvas.renderAll();
+
+//       // Extract text for sidebar
+//       const textContent = await page.getTextContent();
+//       const blocks: TextBlock[] = textContent.items
+//         .filter((item: any) => item.str.trim())
+//         .map((item: any, idx: number) => {
+//           const [a, b, c, d, e, f] = item.transform;
+//           return {
+//             id: `${idx}`,
+//             page: 1,
+//             x: e,
+//             y: viewport.height - f - item.height,
+//             fontSize: item.height,
+//             fill: "black",
+//             backgroundColor: "white",
+//             text: item.str,
+//             width: 500, // default wrap width
+//           };
+//         });
+//       setTextBlocks(blocks);
+//     };
+
+//     loadPdf();
+//   }, [file]);
+
+//   const updateTextBlock = (index: number, newText: string) => {
+//     const blocks = [...textBlocks];
+//     blocks[index].text = newText;
+//     setTextBlocks(blocks);
+//     console.log("blocks", blocks);
+//     console.log("newText", newText);
+//     console.log(textBlocks.length);
+//     // Update Fabric canvas
+//     const fCanvas = fabricRef.current;
+//     if (!fCanvas) return;
+
+//     // Remove existing object with same ID
+//     const existing = fCanvas
+//       .getObjects()
+//       .find((obj: any) => obj.id === blocks[index].id);
+//     if (existing) fCanvas.remove(existing);
+//     // Add new Fabric textbox
+//     const textbox = new fabric.Textbox(newText, {
+//       left: blocks[index].x,
+//       top: blocks[index].y,
+//       width: blocks[index].width,
+//       fontSize: blocks[index].fontSize,
+//       fill: "black",
+//       backgroundColor: "white",
+//       id: blocks[index].id,
+//       editable: true,
+//     });
+//     fCanvas.add(textbox);
+//     fCanvas.renderAll();
+//   };
+
+//   const drawWrappedText = (
+//     page: PDFPage,
+//     text: string,
+//     x: number,
+//     y: number,
+//     fontSize: number,
+//     font: any,
+//     maxWidth: number
+//   ) => {
+//     const words = text.split(" ");
+//     let line = "";
+//     let currentY = y;
+//     console.log("words", words);
+
+//     for (let n = 0; n < words.length; n++) {
+//       const testLine = line ? line + " " + words[n] : words[n];
+//       const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+//       if (testWidth > maxWidth && line) {
+//         page.drawText(line, {
+//           x,
+//           y: currentY,
+//           size: fontSize,
+//           font,
+//           color: rgb(0, 0, 0),
+//         });
+//         line = words[n];
+//         currentY -= fontSize * 1.2;
+//       } else {
+//         line = testLine;
+//       }
+//     }
+//   };
+
+//   const handleDownload = async () => {
+//     if (!fabricRef.current) return;
+//     const arrayBuffer = await file.arrayBuffer();
+//     const pdfDoc = await PDFDocument.load(arrayBuffer);
+//     const pages = pdfDoc.getPages();
+//     const page = pages[0];
+//     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+//     // Draw textBlocks (sidebar edits) with wrapping
+//     textBlocks.forEach((block) => {
+//       const pdfY = page.getHeight() - block.y - block.fontSize;
+//       drawWrappedText(
+//         page,
+//         block.text,
+//         block.x,
+//         pdfY,
+//         block.fontSize,
+//         font,
+//         block.width || 300
+//       );
+//     });
+
+//     // Add Fabric annotations (drawn on canvas)
+//     const fCanvas = fabricRef.current;
+//     const dataUrl = fCanvas.toDataURL({ format: "png", multiplier: 1 });
+//     const pngImage = await pdfDoc.embedPng(dataUrl);
+
+//     page.drawImage(pngImage, {
+//       x: 0,
+//       y: 0,
+//       width: page.getWidth(),
+//       height: page.getHeight(),
+//     });
+
+//     const pdfBytes = await pdfDoc.save();
+//     const blob = new Blob([new Uint8Array(pdfBytes)], {
+//       type: "application/pdf",
+//     });
+//     const link = document.createElement("a");
+//     link.href = URL.createObjectURL(blob);
+//     link.download = "edited.pdf";
+//     link.click();
+//     setSearchText("");
+//   };
+
+//   return (
+//     <div className="flex gap-6">
+//       {/* Main editor */}
+//       <div className="flex-1 border rounded shadow overflow-auto flex justify-center">
+//         <canvas ref={canvasRef} className="border" />
+//       </div>
+
+//       {/* Sidebar */}
+//       <aside className="w-80 border-l p-4 overflow-auto">
+//         <h3 className="font-bold mb-2">Editable Text</h3>
+//         <div className="my-2">
+//           <input
+//             type="search"
+//             placeholder="Search by text"
+//             className="w-full border p-2 rounded"
+//             onChange={(e) => setSearchText(e.target.value)}
+//             value={searchText}
+//           />
+//         </div>
+
+//         {searchText.length > 0 ? (
+//           <>
+//             <div className="max-h-[500px] overflow-y-auto my-4 border rounded p-2">
+//               {textBlocks
+//                 .filter((block) =>
+//                   block.text.toLowerCase().includes(searchText.toLowerCase())
+//                 )
+//                 .map((block, idx) => (
+//                   <div key={block.id} className="mb-2">
+//                     <textarea
+//                       value={block.text}
+//                       onChange={(e) => updateTextBlock(idx, e.target.value)}
+//                       className="w-full border p-1 rounded"
+//                       rows={Math.ceil(block.text.length / 40)}
+//                     />
+//                   </div>
+//                 ))}
+//             </div>
+//           </>
+//         ) : (
+//           <>
+//             <p>No text found</p>
+//           </>
+//         )}
+
+//         <button
+//           onClick={handleDownload}
+//           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+//         >
+//           Download PDF
+//         </button>
+//       </aside>
+//     </div>
+//   );
+// };
+
+// export default PageEditor;
+
+// //search
+
+///-------------
+// //second search
+// import { useEffect, useRef, useState } from "react";
+// import * as pdfjsLib from "pdfjs-dist";
+// import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+// import * as fabric from "fabric";
+
+// pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// interface TextBlock {
+//   id: string;
+//   page: number;
+//   x: number;
+//   y: number;
+//   fontSize: number;
+//   text: string;
+//   fabricObj?: fabric.IText;
+// }
+
+// interface PageEditorProps {
+//   file: File;
+// }
+
+// const PageEditor = ({ file }: PageEditorProps) => {
+//   const fabricRef = useRef<fabric.Canvas | null>(null);
+//   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+//   const [textBlocks, setTextBlocks] = useState<TextBlock[]>([]);
+//   const [searchText, setSearchText] = useState("");
+
+//   useEffect(() => {
+//     const loadPdf = async () => {
+//       const arrayBuffer = await file.arrayBuffer();
+//       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+//       const page = await pdf.getPage(1);
+
+//       const scale = 1;
+//       const viewport = page.getViewport({ scale });
+
+//       // Temp canvas to render PDF image
+//       const tempCanvas = document.createElement("canvas");
+//       const ctx = tempCanvas.getContext("2d")!;
+//       tempCanvas.width = viewport.width;
+//       tempCanvas.height = viewport.height;
+
+//       await page.render({ canvasContext: ctx, viewport }).promise;
+
+//       // Create Fabric canvas same size
+//       const fabricCanvas = new fabric.Canvas(canvasRef.current!, {
+//         width: viewport.width,
+//         height: viewport.height,
+//         preserveObjectStacking: true,
+//       });
+
+//       fabricRef.current = fabricCanvas;
+
+//       // Set PDF image as background
+//       const bgImage = new fabric.Image(tempCanvas, {
+//         left: 0,
+//         top: 0,
+//         width: viewport.width,
+//         height: viewport.height,
+//         originX: "left",
+//         originY: "top",
+//         selectable: false,
+//         evented: false,
+//       });
+//       fabricCanvas.backgroundImage = bgImage;
+//       fabricCanvas.renderAll();
+
+//       // Extract text for sidebar
+//       const textContent = await page.getTextContent();
+//       const blocks: TextBlock[] = textContent.items
+//         .filter((item: any) => item.str.trim())
+//         .map((item: any, idx: number) => {
+//           const [a, b, c, d, e, f] = item.transform;
+//           const x = e;
+//           const y = viewport.height - f;
+
+//           // Create IText but only show updated text later
+//           const textbox = new fabric.IText(item.str, {
+//             left: x,
+//             top: y - item.height, // adjust to top-left
+//             fontSize: item.height,
+//             fill: "black",
+//             originX: "left",
+//             originY: "top",
+//             backgroundColor: "white",
+//             editable: false,
+//           });
+//           // Don't add original text yet
+//           return {
+//             id: `${idx}`,
+//             page: 1,
+//             x,
+//             y,
+//             fontSize: item.height,
+//             text: item.str,
+//             fabricObj: textbox,
+//           };
+//         });
+
+//       setTextBlocks(blocks);
+//     };
+
+//     loadPdf();
+//   }, [file]);
+
+//   // Update sidebar text and reflect on canvas
+//   const updateTextBlock = (index: number, newText: string) => {
+//     const blocks = [...textBlocks];
+//     blocks[index].text = newText;
+
+//     const fabricCanvas = fabricRef.current;
+//     const obj = blocks[index].fabricObj;
+
+//     if (obj) {
+//       obj.text = newText;
+//       if (!fabricCanvas?.getObjects().includes(obj)) {
+//         fabricCanvas?.add(obj);
+//       }
+//       fabricCanvas?.renderAll();
+//     }
+
+//     setTextBlocks(blocks);
+//   };
+
+//   const handleDownload = async () => {
+//     if (!fabricRef.current) return;
+
+//     const arrayBuffer = await file.arrayBuffer();
+//     const pdfDoc = await PDFDocument.load(arrayBuffer);
+//     const page = pdfDoc.getPages()[0];
+//     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+//     // Draw updated text blocks
+//     textBlocks.forEach((block) => {
+//       const pdfY = page.getHeight() - block.y - block.fontSize; // Convert top-left to bottom-left
+//       page.drawText(block.text, {
+//         x: block.x,
+//         y: pdfY,
+//         size: block.fontSize,
+//         font,
+//         color: rgb(0, 0, 0),
+//       });
+//     });
+
+//     const pdfBytes = await pdfDoc.save();
+//     const blob = new Blob([new Uint8Array(pdfBytes)], {
+//       type: "application/pdf",
+//     });
+//     const link = document.createElement("a");
+//     link.href = URL.createObjectURL(blob);
+//     link.download = "edited.pdf";
+//     link.click();
+//   };
+
+//   return (
+//     <div className="flex gap-6">
+//       {/* Main editor */}
+//       <div className="flex-1 border rounded shadow overflow-auto flex justify-center">
+//         <canvas ref={canvasRef} className="border" />
+//       </div>
+
+//       {/* Sidebar */}
+//       <aside className="w-80 border-l p-4 overflow-auto">
+//         <h3 className="font-bold mb-2">Editable Text</h3>
+//         <div className="my-2">
+//           <input
+//             type="search"
+//             placeholder="Search by text"
+//             className="w-full border p-2 rounded"
+//             onChange={(e) => setSearchText(e.target.value)}
+//             value={searchText}
+//           />
+//         </div>
+
+//         {searchText.length > 0 ? (
+//           <>
+//             <div className="max-h-[500px] overflow-y-auto my-4 border rounded p-2">
+//               {textBlocks
+//                 .filter((block) =>
+//                   block.text.toLowerCase().includes(searchText.toLowerCase())
+//                 )
+//                 .map((block, idx) => (
+//                   <div key={block.id} className="mb-2">
+//                     <textarea
+//                       value={block.text}
+//                       onChange={(e) => updateTextBlock(idx, e.target.value)}
+//                       className="w-full border p-1 rounded"
+//                       rows={Math.ceil(block.text.length / 40)}
+//                     />
+//                   </div>
+//                 ))}
+//             </div>
+//           </>
+//         ) : (
+//           <>
+//             <p>No text found</p>
+//           </>
+//         )}
+
+//         <button
+//           onClick={handleDownload}
+//           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+//         >
+//           Download PDF
+//         </button>
+//       </aside>
+//     </div>
+//   );
+// };
+
+// export default PageEditor;

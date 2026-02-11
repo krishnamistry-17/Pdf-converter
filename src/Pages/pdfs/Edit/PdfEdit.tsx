@@ -19,10 +19,10 @@ const PdfEdit = () => {
     clearSelectedFile,
   } = useEditPdfStore();
   const downloadCompleted = useFileSessionStore(
-    (state) => state.downloadCompleted,
+    (state) => state.downloadCompleted
   );
   const clearDownloadCompleted = useFileSessionStore(
-    (state) => state.clearDownloadCompleted,
+    (state) => state.clearDownloadCompleted
   );
 
   const isSidebarVisible = results.length > 0;
@@ -44,7 +44,6 @@ const PdfEdit = () => {
     e.target.value = "";
   };
 
-
   useEffect(() => {
     return () => {
       clearResults();
@@ -53,7 +52,7 @@ const PdfEdit = () => {
   }, []);
 
   return (
-    <div className="relative ">
+    <div className="relative lg:flex flex-col   px-4 py-12">
       {results.length > 0 && (
         <div className="sticky top-0 z-40 border-b border-border bg-bg-card">
           <Toolbar />
@@ -62,14 +61,17 @@ const PdfEdit = () => {
 
       <div className="flex">
         <main className="flex-1 transition-all duration-300">
-          <div className="mx-auto max-w-xl px-4 py-6">
+          <div className="mx-auto max-w-xl">
             {results.length === 0 && (
               <>
                 <SelectFile
                   heading="Edit PDF"
                   description="Edit text, images, and pages."
                 />
-                <div className="mt-6 rounded-xl border border-border bg-bg-card p-8 shadow-sm">
+                <div
+                  className="bg-white/40 text-text-body rounded-2xl shadow-lg
+           border border-gray-100 p-4"
+                >
                   <UploadModal
                     handleFileUpload={handleFileUpload}
                     accept=".pdf"
