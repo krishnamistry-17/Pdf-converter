@@ -24,7 +24,7 @@ const JpgToPdf = () => {
   const { ConvertJpgToPdf } = useUploadData();
   const { results, setResults, selectedFile, setSelectedFile } =
     useImageStore();
-
+  const [fileSelected, setFileSelected] = useState(false);
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
   );
@@ -51,6 +51,8 @@ const JpgToPdf = () => {
         pages: 1,
       } as ImageResult,
     ]);
+    e.target.value = "";
+    setFileSelected(true);
   };
 
   const handleAddMoreFiles = () => {
@@ -71,6 +73,7 @@ const JpgToPdf = () => {
           pages: 1,
         } as ImageResult,
       ]);
+      input.value = "";
     };
     input.click();
   };
@@ -96,6 +99,7 @@ const JpgToPdf = () => {
       clearResults();
       clearSelectedFile();
       setDownloadCompleted(true);
+      setFileSelected(false);
     } catch (error) {
       console.error(error);
       toast.error("Conversion failed!");
@@ -158,7 +162,7 @@ const JpgToPdf = () => {
         >
           <div
             className={`mx-auto
-            ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
+            ${fileSelected ? "max-w-xl w-auto" : "max-w-xl"}
           `}
           >
             <SelectFile

@@ -95,7 +95,7 @@ const PdfFile = ({
 
         <div
           className="bg-white/40 text-text-body rounded-2xl shadow-lg
-         border border-gray-100 p-10"
+         border border-gray-100 p-4"
         >
           <UploadModal
             fileSelected={fileSelected}

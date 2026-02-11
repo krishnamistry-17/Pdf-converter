@@ -1,25 +1,19 @@
 import SelectFile from "../../../components/SelectFile";
 import UploadModal from "../../../components/UploadModal";
-import useMobileSize from "../../../hooks/useMobileSize";
+
 import { useEditPdfStore } from "../../../store/useEditPdfStore";
 import { useFileSessionStore } from "../../../store/useFileSessionStore";
 import PdfEditPreviewGrid from "../../../components/PdfEdit/PdfEditPreviewGrid";
-import { IoMdClose } from "react-icons/io";
+
 import type { EditPdfResult } from "../../../types/pageResult";
-import PdfEditSidebar from "../../../components/PdfEdit/PdfEditSidebar";
+
 import Toolbar from "../../../components/PdfEdit/Toolbar";
 
+
 const PdfEdit = () => {
-  const isMobile = useMobileSize();
-  const {
-    results,
-    setSelectedFile,
-    setResults,
-    clearResults,
-    clearSelectedFile,
-  } = useEditPdfStore();
+  const { results, setSelectedFile, setResults } = useEditPdfStore();
   const downloadCompleted = useFileSessionStore(
-    (state) => state.downloadCompleted
+    (state) => state.downloadCompleted  
   );
   const clearDownloadCompleted = useFileSessionStore(
     (state) => state.clearDownloadCompleted
@@ -41,11 +35,7 @@ const PdfEdit = () => {
         fileName: file.name,
       } as unknown as EditPdfResult,
     ]);
-  };
-
-  const handleReset = () => {
-    clearResults();
-    clearSelectedFile();
+    e.target.value = "";
   };
 
   return (
@@ -57,11 +47,7 @@ const PdfEdit = () => {
       )}
 
       <div className="flex">
-        <main
-          className={`flex-1 transition-all duration-300 ${
-            !isMobile && isSidebarVisible ? "mr-[380px]" : ""
-          }`}
-        >
+        <main className="flex-1 transition-all duration-300">
           <div className="mx-auto max-w-xl px-4 py-6">
             {results.length === 0 && (
               <>
@@ -88,20 +74,6 @@ const PdfEdit = () => {
             </div>
           )}
         </main>
-
-        {!isMobile && isSidebarVisible && (
-          <aside className="fixed right-0 top-0 z-50 h-screen w-[380px] border-l border-border bg-bg-card shadow-lg">
-            <div className="relative h-full p-6">
-              <button
-                className="absolute right-4 top-4 text-text-muted hover:text-text-body"
-                onClick={handleReset}
-              >
-                <IoMdClose size={20} />
-              </button>
-              <PdfEditSidebar />
-            </div>
-          </aside>
-        )}
       </div>
     </div>
   );

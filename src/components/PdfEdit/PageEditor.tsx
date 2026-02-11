@@ -11,7 +11,6 @@ interface PageEditorProps {
 }
 
 FabricText.ownDefaults.fontFamily = "inter";
-console.log("FabricText.ownDefaults", FabricText.ownDefaults);
 
 const PageEditor = ({ file }: PageEditorProps) => {
   const fabricRef = useRef<fabric.Canvas | null>(null);
@@ -48,8 +47,8 @@ const PageEditor = ({ file }: PageEditorProps) => {
 
       fabricRef.current = fabricCanvas;
 
-      console.log("viewport.width", viewport.width); //595.56
-      console.log("viewport.height", viewport.height); // 842.52
+      console.log("viewport.width", viewport.width);
+      console.log("viewport.height", viewport.height);
 
       // Add PDF as locked image
       const bgImage = new fabric.Image(tempCanvas, {
@@ -63,6 +62,8 @@ const PageEditor = ({ file }: PageEditorProps) => {
         evented: false,
         backgroundColor: "transparent",
       });
+      console.log("bgImage.width", bgImage.width);
+      console.log("bgImage.height", bgImage.height);
 
       fabricCanvas.add(bgImage);
       fabricCanvas.sendObjectToBack(bgImage);
@@ -128,14 +129,17 @@ const PageEditor = ({ file }: PageEditorProps) => {
   };
 
   return (
-    <>
-      <div className="w-full overflow-auto flex justify-center">
+    <div>
+      <div className="w-full overflow-auto flex flex-col gap-4 justify-center">
         <canvas ref={canvasRef} className=" " />
+        <button
+          onClick={handleDownload}
+          className="bg-primary text-white px-4 py-2 rounded-md transition w-full max-w-xs mx-auto"
+        >
+          Download PDF
+        </button>
       </div>
-      <button onClick={handleDownload} style={{ marginTop: 10 }}>
-        Download PDF
-      </button>
-    </>
+    </div>
   );
 };
 

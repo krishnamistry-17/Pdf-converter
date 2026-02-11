@@ -142,7 +142,8 @@ const allOptions = [
     label: "Edit PDF",
     path: "/edit-pdf",
     icon: FaFilePdf,
-    description: "Edit a PDF file.",
+    description:
+      "Edit a PDF file.  Use a toolbar to modify, add text or images to the PDF",
   },
   {
     label: "Merge PDFs",
