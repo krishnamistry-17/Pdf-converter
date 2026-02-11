@@ -81,6 +81,15 @@ const ExtractText = () => {
     }
   }, [summaryStatus]);
 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+      clearResults();
+      setPreviewFile(null);
+      setFileSelected(false);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col   px-4 py-12 relative">
       {ocrLoading && <OCRLoader />}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRotatedPdfStore } from "../../store/useRotatePdfStore";
 import SelectFile from "../../components/SelectFile";
 import RotatePreviewGrid from "../../components/rotatepdf/RotatePreviewGrid";
@@ -37,6 +37,14 @@ const RotatePdf = () => {
     (state) => state.clearDownloadCompleted
   );
 
+ 
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectRotateFile();
+      setNewSelectedFiles([]);
+    };
+  }, []);
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

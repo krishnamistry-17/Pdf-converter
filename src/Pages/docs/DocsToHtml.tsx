@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import PdfFile from "../../components/layout/PdfFile";
 import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const DocsToHtml = () => {
@@ -51,6 +51,11 @@ const DocsToHtml = () => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
   return (
     <>
       <PdfFile

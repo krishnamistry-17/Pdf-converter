@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectFile from "../../components/SelectFile";
 import { useOrganizeStore } from "../../store/useOrganizeStore";
 import OrganizePreviewGrid from "../../components/organize/OrganizePreviewGrid";
@@ -126,6 +126,17 @@ const Organize = () => {
       setLoading(false);
     }
   };
+
+
+ 
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectOrganizeFile();
+      setNewSelectedFiles([]);
+      clearBlankPage();
+    };
+  }, []);
 
   const handleSortFiles = () => {
     setResults(

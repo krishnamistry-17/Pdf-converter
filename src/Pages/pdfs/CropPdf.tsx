@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCropPdfStore } from "../../store/useCropPdf";
 import SelectFile from "../../components/SelectFile";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
@@ -14,7 +14,7 @@ import useMobileSize from "../../hooks/useMobileSize";
 const CropPdf = () => {
   const isMobile = useMobileSize();
   const { ConvertPdfToPng } = useUploadData();
-  const { results, setResults, setCropResults, clearSelectCropPdfFile } =
+  const { results, setResults, setCropResults, clearSelectCropPdfFile, clearResults } =
     useCropPdfStore((state) => state);
 
   const downloadCompleted = useFileSessionStore(
@@ -49,6 +49,18 @@ const CropPdf = () => {
       toast.error("Failed to convert PDF");
     }
   };
+
+
+
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectCropPdfFile();
+      clearDownloadCompleted();
+      setPreviewImages([]);
+      setActiveCropIndex(null);
+    };
+  }, []);
 
   const handleReset = () => {
     setResults([]);

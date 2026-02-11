@@ -1,7 +1,7 @@
 import PdfFile from "../../components/layout/PdfFile";
 import useFilesStore from "../../store/useSheetStore";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
 import { toast } from "react-toastify";
@@ -63,7 +63,7 @@ const PdftoExcel = () => {
 
       const excelUrl = response.data.url;
       downloadFile(excelUrl);
-     
+
       // window.open(excelUrl, "_blank");
     } catch (error) {
       console.error(error);
@@ -86,6 +86,13 @@ const PdftoExcel = () => {
       setLoading(false);
     }
   };
+
+ 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
 
   return (
     <>

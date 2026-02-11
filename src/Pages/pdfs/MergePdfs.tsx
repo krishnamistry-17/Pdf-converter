@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
 import SelectFile from "../../components/SelectFile";
@@ -121,6 +121,13 @@ const MergePdfComponent = () => {
       results.filter((file) => file.name !== selectedMergeFile2?.name)
     );
   };
+
+  //clear results when merge page route change
+  useEffect(() => {
+    return () => {
+      handleReset();
+    };
+  }, []);
 
   const handleReset = () => {
     clearResults();

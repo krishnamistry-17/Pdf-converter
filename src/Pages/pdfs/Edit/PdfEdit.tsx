@@ -8,15 +8,21 @@ import PdfEditPreviewGrid from "../../../components/PdfEdit/PdfEditPreviewGrid";
 import type { EditPdfResult } from "../../../types/pageResult";
 
 import Toolbar from "../../../components/PdfEdit/Toolbar";
-
+import { useEffect } from "react";
 
 const PdfEdit = () => {
-  const { results, setSelectedFile, setResults } = useEditPdfStore();
+  const {
+    results,
+    setSelectedFile,
+    setResults,
+    clearResults,
+    clearSelectedFile,
+  } = useEditPdfStore();
   const downloadCompleted = useFileSessionStore(
-    (state) => state.downloadCompleted  
+    (state) => state.downloadCompleted,
   );
   const clearDownloadCompleted = useFileSessionStore(
-    (state) => state.clearDownloadCompleted
+    (state) => state.clearDownloadCompleted,
   );
 
   const isSidebarVisible = results.length > 0;
@@ -37,6 +43,14 @@ const PdfEdit = () => {
     ]);
     e.target.value = "";
   };
+
+
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectedFile();
+    };
+  }, []);
 
   return (
     <div className="relative ">

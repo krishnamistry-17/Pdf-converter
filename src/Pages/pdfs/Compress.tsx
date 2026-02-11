@@ -2,13 +2,14 @@ import PreviewFile from "../../components/PreviewFile";
 import SelectFile from "../../components/SelectFile";
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
 
 const CompressPdf = () => {
   const setSelectedFile = useFilesStore((state) => state.setSelectedFile);
+  const clearResults = useFilesStore((state) => state.clearResults);
   const setLoading = useFilesStore((state) => state.setLoading);
   const clearSelectedFile = useFilesStore((state) => state.clearSelectedFile);
 
@@ -78,6 +79,13 @@ const CompressPdf = () => {
     }
   };
 
+  //clear results when compress page route change
+  useEffect(() => {
+    return () => {
+      clearResults();
+    };
+  }, []);
+
   return (
     <div className="relative flex lg:flex-row flex-col   px-4 py-12">
       <div
@@ -91,7 +99,7 @@ const CompressPdf = () => {
         />
         <div
           className="bg-white/40 text-text-body rounded-2xl shadow-lg 
-          border border-gray-100 p-10"
+          border border-gray-100 p-5"
         >
           {results.length === 0 && (
             <UploadModal

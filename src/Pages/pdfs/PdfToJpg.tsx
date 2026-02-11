@@ -1,6 +1,6 @@
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import JSZip from "jszip";
 import useImageStore from "../../store/useImageStore";
@@ -20,6 +20,7 @@ const PdfToJpg = () => {
   const selectedFile = useFilesStore((s) => s.selectedFile);
   const setLoading = useFilesStore((s) => s.setLoading);
   const clearResults = useImageStore((s) => s.clearResults);
+  const clearSelectedFile = useImageStore((s) => s.clearSelectedFile);
   const setDownloadCompleted = useFileSessionStore(
     (s) => s.setDownloadCompleted
   );
@@ -39,6 +40,14 @@ const PdfToJpg = () => {
   const [_showAllImages, setShowAllImages] = useState<boolean>(false);
 
   const isSidebarVisible = results.length > 0;
+
+ 
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectedFile();
+    };
+  }, []);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

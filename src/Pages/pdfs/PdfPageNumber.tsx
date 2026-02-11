@@ -7,6 +7,7 @@ import PageSidebar from "../../components/pagenumber/PageSidebar";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
 import useMobileSize from "../../hooks/useMobileSize";
+import { useEffect } from "react";
 
 const PdfPageNumber = () => {
   const isMobile = useMobileSize();
@@ -38,6 +39,13 @@ const PdfPageNumber = () => {
   };
 
   const isSidebarVisible = results.length > 0;
+
+ 
+  useEffect(() => {
+    return () => {
+      clearResults();
+    };
+  }, []);
 
   return (
     <>

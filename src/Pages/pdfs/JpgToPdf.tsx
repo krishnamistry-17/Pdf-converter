@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import SelectFile from "../../components/SelectFile";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
@@ -37,6 +37,13 @@ const JpgToPdf = () => {
   const clearSelectedFile = useImageStore((state) => state.clearSelectedFile);
   const clearResults = useImageStore((state) => state.clearResults);
   const isSidebarVisible = results.length > 0;
+
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectedFile();
+    };
+  }, []);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

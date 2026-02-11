@@ -1,5 +1,5 @@
 import useFilesStore from "../../store/useSheetStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { toast } from "react-toastify";
@@ -82,6 +82,13 @@ const WordToPdf = () => {
       setLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
 
   return (
     <>

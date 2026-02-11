@@ -3,7 +3,7 @@ import PdfFile from "../../components/layout/PdfFile";
 import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 
 const ExcelToCsv = () => {
@@ -49,6 +49,13 @@ const ExcelToCsv = () => {
       setLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
 
   return (
     <>

@@ -2,7 +2,7 @@ import PreviewFile from "../../components/PreviewFile";
 import SelectFile from "../../components/SelectFile";
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { compressPdfOptions } from "../../constance/ConvertOptions";
 import { IoMdClose } from "react-icons/io";
 import { toast } from "react-toastify";
@@ -126,6 +126,13 @@ const CompressImage = () => {
     }
   };
 
+ 
+  useEffect(() => {
+    return () => {
+      clearResults();
+      clearSelectedFile();
+    };
+  }, []);
   return (
     <div className="relative flex lg:flex-row flex-col   px-4 py-12">
       <div
@@ -144,7 +151,7 @@ const CompressImage = () => {
           />
           <div
             className="bg-white/40 text-text-body rounded-2xl shadow-lg 
-          border border-gray-100 p-10"
+          border border-gray-100 p-6 sm:pt-10 sm:pb-14"
           >
             {results.length === 0 && (
               <UploadModal

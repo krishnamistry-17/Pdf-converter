@@ -1,6 +1,6 @@
 import useFilesStore from "../../store/useSheetStore";
 import useUploadData from "../../hooks/useUploadData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
@@ -52,6 +52,12 @@ const PdfToCsv = () => {
     }
   };
 
+ 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
   return (
     <>
       <PdfFile

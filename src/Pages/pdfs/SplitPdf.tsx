@@ -65,6 +65,18 @@ const SplitPdfComponent = () => {
     }
   }, [selectedFile, clearResults]);
 
+  //clear results when split page route change
+  useEffect(() => {
+    return () => {
+      handleReset();
+    };
+  }, []);
+
+  const handleReset = () => {
+    clearResults();
+    clearSelectedFile();
+  };
+
   const isSidebarVisible = results.length > 0;
 
   return (
@@ -127,19 +139,8 @@ const SplitPdfComponent = () => {
         `}
         >
           <div className="p-6">
-            <button
-              className="absolute top-5 right-5"
-              onClick={() => {
-                clearSelectedFile();
-                clearResults();
-              }}
-            >
-              <IoMdClose
-                onClick={() => {
-                  clearSelectedFile();
-                  clearResults();
-                }}
-              />
+            <button className="absolute top-5 right-5" onClick={handleReset}>
+              <IoMdClose onClick={handleReset} />
             </button>
             <h2 className="text-lg font-semibold text-text-heading mb-4">
               Split PDF

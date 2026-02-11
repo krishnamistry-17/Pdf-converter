@@ -1,5 +1,5 @@
 import useFilesStore from "../../store/useSheetStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PdfFile from "../../components/layout/PdfFile";
 import api from "../../utils/axios";
 import { API_ROUTES } from "../../constance/apiConstance";
@@ -86,6 +86,15 @@ const ExcelToPdf = () => {
       setLoading(false);
     }
   };
+
+ 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+      setDownloadFilePreview(null);
+      setFileSelected(false);
+    };
+  }, []);
 
   return (
     <>

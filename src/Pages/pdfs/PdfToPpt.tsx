@@ -1,5 +1,5 @@
 import useFilesStore from "../../store/useSheetStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../../utils/axios";
 import PdfFile from "../../components/layout/PdfFile";
 import { API_ROUTES } from "../../constance/apiConstance";
@@ -82,6 +82,13 @@ const PdfToPpt = () => {
       setLoading(false);
     }
   };
+
+ 
+  useEffect(() => {
+    return () => {
+      clearSelectedFile();
+    };
+  }, []);
 
   return (
     <>
