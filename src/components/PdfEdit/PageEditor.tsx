@@ -1,148 +1,126 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
 import * as fabric from "fabric";
-import "pdfjs-dist/web/pdf_viewer.css";
+import { FabricText } from "fabric";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-{/*pf view some error,window space reduce,  */}
-interface TextItem {
-  str: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  page: number;
-  fabricObj?: fabric.Textbox;
-}
 
 interface PageEditorProps {
   file: File;
 }
 
-const PageEditor = ({ file }: PageEditorProps) => {
-  const pdfCanvasRef = useRef<HTMLCanvasElement>(null);
-  const fabricCanvasRef = useRef<fabric.Canvas>(null);
-  const [textItems, setTextItems] = useState<TextItem[]>([]);
-  const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
+FabricText.ownDefaults.fontFamily = "inter";
+console.log("FabricText.ownDefaults", FabricText.ownDefaults);
 
-  // Load PDF and render first page
+const PageEditor = ({ file }: PageEditorProps) => {
+  const fabricRef = useRef<fabric.Canvas | null>(null);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     const loadPdf = async () => {
       const arrayBuffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      setPdfDoc(pdf);
+      const page = await pdf.getPage(1);
 
-      const page = await pdf.getPage(1); // for simplicity, first page
-      const viewport = page.getViewport({ scale: 0.5 });
+      const scale = 1;
+      const viewport = page.getViewport({ scale });
 
-      // Render PDF to canvas
-      const canvas = pdfCanvasRef.current!;
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext("2d")!;
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      // Create temp canvas for PDF render
+      const tempCanvas = document.createElement("canvas");
+      const ctx = tempCanvas.getContext("2d")!;
 
-      // Initialize Fabric.js
-      const fCanvas = new fabric.Canvas("fabric-canvas", {
+      tempCanvas.width = viewport.width;
+      tempCanvas.height = viewport.height;
+      console.log("tempCanvas.width", tempCanvas.width);
+      console.log("tempCanvas.height", tempCanvas.height);
+      await page.render({
+        canvasContext: ctx,
+        viewport,
+      }).promise;
+
+      // Create Fabric canvas EXACT same size
+      const fabricCanvas = new fabric.Canvas(canvasRef.current!, {
         width: viewport.width,
         height: viewport.height,
       });
-      fabricCanvasRef.current = fCanvas;
 
-      // Set PDF as background image
-      const pdfImg = new fabric.Image(canvas, { selectable: false });
-      fCanvas.backgroundImage = pdfImg;
-      fCanvas.renderAll();
+      fabricRef.current = fabricCanvas;
 
-      // Extract text positions from PDF
-      const content = await page.getTextContent();
-      const items: TextItem[] = content.items
-        .filter((item: any) => item.str.trim())
-        .map((item: any) => {
-          const x = item.transform[4];
-          const y = viewport.height - item.transform[5];
-          const width = item.width;
-          const height = item.height;
+      console.log("viewport.width", viewport.width); //595.56
+      console.log("viewport.height", viewport.height); // 842.52
 
-          // Create Fabric Textbox for editable text
-          const textObj = new fabric.Textbox(item.str, {
-            left: x,
-            top: y - height,
-            width,
-            height,
-            fontSize: 12,
-            fill: "black",
-          });
+      // Add PDF as locked image
+      const bgImage = new fabric.Image(tempCanvas, {
+        left: 0,
+        top: 0,
+        width: viewport.width,
+        height: viewport.height,
+        originX: "left",
+        originY: "top",
+        selectable: false,
+        evented: false,
+        backgroundColor: "transparent",
+      });
 
-          fCanvas.add(textObj);
+      fabricCanvas.add(bgImage);
+      fabricCanvas.sendObjectToBack(bgImage);
 
-          return {
-            str: item.str,
-            x,
-            y,
-            width,
-            height,
-            page: 1,
-            fabricObj: textObj,
-          };
+      // Extract text
+      const textContent = await page.getTextContent();
+
+      textContent.items.forEach((item: any) => {
+        if (!item.str.trim()) return;
+
+        const [a, b, c, d, e, f] = item.transform;
+
+        //e is the x position of the text
+        const x = e;
+        const y = viewport.height - f;
+
+        const textbox = new fabric.IText(item.str, {
+          left: x,
+          top: viewport.height - f - item.height,
+          fontSize: item.height,
+          fill: "black",
+          backgroundColor: "white", // hides original text
+          editable: true,
         });
 
-      setTextItems(items);
+        fabricCanvas.add(textbox);
+      });
+
+      fabricCanvas.renderAll();
     };
 
     loadPdf();
   }, [file]);
 
-  // Handle edit from sidebar
-  const handleEditText = (index: number) => {
-    const item = textItems[index];
-    if (!item.fabricObj) return;
-
-    const newText = prompt("Enter new text:", item.str);
-    if (!newText) return;
-
-    item.fabricObj.text = newText;
-    textItems[index].str = newText;
-    fabricCanvasRef.current?.renderAll();
-  };
-
-  // Handle remove text
-  const handleRemoveText = (index: number) => {
-    const item = textItems[index];
-    if (item.fabricObj) {
-      fabricCanvasRef.current?.remove(item.fabricObj);
-    }
-    const newItems = [...textItems];
-    newItems.splice(index, 1);
-    setTextItems(newItems);
-  };
-
-  // Download edited PDF
   const handleDownload = async () => {
-    if (!pdfDoc) return;
+    if (!fabricRef.current) return;
+
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await PDFDocument.load(arrayBuffer);
-    const page = pdf.getPages()[0];
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const page = pdfDoc.getPages()[0];
 
-    // Export Fabric canvas as image
-    const imgData = fabricCanvasRef.current?.toDataURL({
-      multiplier: 1,
+    const png = fabricRef.current.toDataURL({
       format: "png",
-    })!;
-    const pngImage = await pdf.embedPng(imgData);
+      multiplier: 1,
+    });
 
-    page.drawImage(pngImage, {
+    const image = await pdfDoc.embedPng(png);
+
+    page.drawImage(image, {
       x: 0,
       y: 0,
       width: page.getWidth(),
       height: page.getHeight(),
     });
 
-    const pdfBytes = await pdf.save();
-    const blob = new Blob([new Uint8Array(pdfBytes)], {
-      type: "application/pdf",
-    });
+    const bytes = await pdfDoc.save();
+
+    const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "edited.pdf";
@@ -150,43 +128,14 @@ const PageEditor = ({ file }: PageEditorProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* PDF + Fabric canvas */}
-      <div style={{ position: "relative" }}>
-        <canvas ref={pdfCanvasRef} style={{ display: "none" }} />
-        <canvas id="fabric-canvas" style={{ border: "1px solid #ccc" }} />
-        <button
-          onClick={handleDownload}
-          className="mt-2 px-4 py-1 bg-blue-500 text-white rounded"
-        >
-          Download PDF
-        </button>
+    <>
+      <div className="w-full overflow-auto flex justify-center">
+        <canvas ref={canvasRef} className=" " />
       </div>
-
-      {/* Sidebar for edits */}
-      <div className="w-[300px] border-l border-gray-300 p-4 h-[600px] overflow-y-auto">
-        <h3 className="font-bold mb-2">Text Items</h3>
-        {textItems.map((item, idx) => (
-          <div key={idx} className="flex justify-between items-center mb-2">
-            <span className="text-sm">{item.str}</span>
-            <div className="flex gap-2">
-              <button
-                className="text-blue-500 text-sm"
-                onClick={() => handleEditText(idx)}
-              >
-                Edit
-              </button>
-              <button
-                className="text-red-500 text-sm"
-                onClick={() => handleRemoveText(idx)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+      <button onClick={handleDownload} style={{ marginTop: 10 }}>
+        Download PDF
+      </button>
+    </>
   );
 };
 

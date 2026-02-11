@@ -63,7 +63,7 @@ const PdfEdit = () => {
           }`}
         >
           <div className="mx-auto max-w-xl px-4 py-6">
-            {results.length === 0 ? (
+            {results.length === 0 && (
               <>
                 <SelectFile
                   heading="Edit PDF"
@@ -80,12 +80,13 @@ const PdfEdit = () => {
                   />
                 </div>
               </>
-            ) : (
-              <div className="rounded-xl border border-border bg-bg-canvas shadow-sm">
-                <PdfEditPreviewGrid />
-              </div>
             )}
           </div>
+          {results.length > 0 && (
+            <div className="rounded-xl  bg-bg-canvas  mx-4">
+              <PdfEditPreviewGrid />
+            </div>
+          )}
         </main>
 
         {!isMobile && isSidebarVisible && (

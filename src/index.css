@@ -58,9 +58,3 @@
   }
 }
 
-@layer components { 
-  .textLayer {
-   pointer-events: none;
-   user-select: text;
-  }
-}
