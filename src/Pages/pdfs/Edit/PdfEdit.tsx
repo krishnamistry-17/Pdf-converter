@@ -1,13 +1,9 @@
 import SelectFile from "../../../components/SelectFile";
 import UploadModal from "../../../components/UploadModal";
-
 import { useEditPdfStore } from "../../../store/useEditPdfStore";
 import { useFileSessionStore } from "../../../store/useFileSessionStore";
 import PdfEditPreviewGrid from "../../../components/PdfEdit/PdfEditPreviewGrid";
-
 import type { EditPdfResult } from "../../../types/pageResult";
-
-import Toolbar from "../../../components/PdfEdit/Toolbar";
 import { useEffect } from "react";
 
 const PdfEdit = () => {
@@ -52,15 +48,15 @@ const PdfEdit = () => {
   }, []);
 
   return (
-    <div className="relative lg:flex flex-col   px-4 py-12">
-      {results.length > 0 && (
+    <div className="px-4 py-12">
+      {/* {results.length > 0 && (
         <div className="sticky top-0 z-40 border-b border-border bg-bg-card">
           <Toolbar />
         </div>
-      )}
+      )} */}
 
-      <div className="flex">
-        <main className="flex-1 transition-all duration-300">
+      <div className="flex-1">
+        <main className="transition-all duration-300">
           <div className="mx-auto max-w-xl">
             {results.length === 0 && (
               <>

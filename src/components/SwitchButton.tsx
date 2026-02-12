@@ -12,7 +12,7 @@ const SwitchButton = ({
   onChange,
 }: SwitchButtonProps) => {
   const isFirstActive = activeValue === value1;
-  console.log(isFirstActive);
+
 
   return (
     <div className="relative inline-flex items-center gap-2 bg-primary/10 rounded-full p-1 w-full">
