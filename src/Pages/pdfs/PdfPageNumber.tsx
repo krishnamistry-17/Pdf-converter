@@ -49,7 +49,7 @@ const PdfPageNumber = () => {
 
   return (
     <>
-      <div className="relative lg:flex lg:flex-col flex-col-reverse   px-4 py-12">
+      <div className="relative lg:flex lg:flex-col flex-col-reverse  px-4 lg:py-12 py-6">
         <div
           className={`flex-1  transition-all duration-300
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}

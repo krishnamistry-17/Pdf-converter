@@ -1,5 +1,5 @@
 import type { PageNumberPosition } from "./pagenumberPosition";
-
+import * as fabric from "fabric";
 export interface PageResult {
   name: string;
   blob: Blob;
@@ -62,4 +62,16 @@ export interface TextItem {
   width: number;
   height: number;
   page: number;
+}
+
+
+export interface TextBlock {
+  id: string;
+  page: number;
+  x: number;
+  y: number;
+  fontSize: number;
+  text: string;
+  fabricObj?: fabric.IText;
+  originalText: string;
 }

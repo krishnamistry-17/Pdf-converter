@@ -91,7 +91,7 @@ const ExtractText = () => {
   }, []);
 
   return (
-    <div className="flex flex-col   px-4 py-12 relative">
+    <div className="flex flex-col  px-4 lg:py-12 py-6 relative">
       {ocrLoading && <OCRLoader />}
       <div
         className={`flex-1  transition-all duration-300 

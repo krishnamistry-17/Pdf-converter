@@ -87,7 +87,7 @@ const CompressPdf = () => {
   }, []);
 
   return (
-    <div className="relative flex lg:flex-row flex-col   px-4 py-12">
+    <div className="relative flex lg:flex-row flex-col  px-4 lg:py-12 py-6 ">
       <div
         className={`mx-auto flex-1
           ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}

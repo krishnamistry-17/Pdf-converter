@@ -71,7 +71,7 @@ const PdfFile = ({
   };
 
   return (
-    <div className=" px-4 py-12">
+    <div className="px-4 lg:py-12 py-6">
       <div
         className={`mx-auto
         ${fileSelected ? "w-auto max-w-xl" : "max-w-xl"}

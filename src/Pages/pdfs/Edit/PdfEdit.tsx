@@ -21,9 +21,6 @@ const PdfEdit = () => {
     (state) => state.clearDownloadCompleted
   );
 
-  const isSidebarVisible = results.length > 0;
-  console.log("isSidebarVisible", isSidebarVisible);
-
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -47,8 +44,13 @@ const PdfEdit = () => {
     };
   }, []);
 
+  const handleReset = () => {
+    clearResults();
+    clearSelectedFile();
+  };
+
   return (
-    <div className="px-4 py-12">
+    <div className="px-4 lg:py-12 py-6">
       {/* {results.length > 0 && (
         <div className="sticky top-0 z-40 border-b border-border bg-bg-card">
           <Toolbar />
@@ -81,8 +83,8 @@ const PdfEdit = () => {
             )}
           </div>
           {results.length > 0 && (
-            <div className="rounded-xl  bg-bg-canvas  mx-4">
-              <PdfEditPreviewGrid />
+            <div className="rounded-xl  bg-bg-canvas">
+              <PdfEditPreviewGrid handleReset={handleReset} />
             </div>
           )}
         </main>

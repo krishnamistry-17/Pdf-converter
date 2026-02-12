@@ -202,7 +202,7 @@ const MergePdfComponent = () => {
   };
 
   return (
-    <div className=" relative lg:flex flex-col   px-4 py-12">
+    <div className=" relative lg:flex flex-col   px-4 lg:py-12 py-6">
       <div
         className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}

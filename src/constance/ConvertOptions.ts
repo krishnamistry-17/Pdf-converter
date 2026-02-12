@@ -179,13 +179,13 @@ const allOptions = [
     label: "Rotate PDF",
     path: "/rotate-pdf",
     icon: FaFilePdf,
-    description: "Rotate a PDF file.",
+    description: "Rotate a PDF file. Use a toolbar to rotate the PDF file.",
   },
   {
     label: "Crop PDF",
     path: "/crop-pdf",
     icon: FaCrop,
-    description: "Crop a PDF file.",
+    description: "Crop a PDF file. Use a toolbar to crop the PDF file.",
   },
   {
     label: "Convert PDF to Text",

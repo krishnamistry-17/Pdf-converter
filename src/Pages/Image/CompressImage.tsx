@@ -134,7 +134,7 @@ const CompressImage = () => {
     };
   }, []);
   return (
-    <div className="relative flex lg:flex-row flex-col   px-4 py-12">
+    <div className="relative flex lg:flex-row flex-col  px-4 lg:py-12 py-6 ">
       <div
         className={`flex-1 transition-all duration-300 
           
