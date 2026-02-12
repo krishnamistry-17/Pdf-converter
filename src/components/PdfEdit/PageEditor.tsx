@@ -2,6 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import { PDFDocument } from "pdf-lib";
 import * as fabric from "fabric";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaDownload,
+  FaSearch,
+  FaTimes,
+} from "react-icons/fa";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -15,17 +22,21 @@ interface TextBlock {
   fabricObj?: fabric.IText;
   originalText: string;
 }
+
 interface PageEditorProps {
   file: File;
 }
 
 const PageEditor = ({ file }: PageEditorProps) => {
-  const fabricRef = useRef<fabric.Canvas | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fabricCanvasesRef = useRef<Map<number, fabric.Canvas>>(new Map());
+  const canvasRefs = useRef<Map<number, HTMLCanvasElement>>(new Map());
+  const originalPdfBytesRef = useRef<ArrayBuffer | null>(null);
 
   const [textBlocks, setTextBlocks] = useState<TextBlock[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Derived search results from textBlocks
   const searchResults = textBlocks.filter(
@@ -34,101 +45,106 @@ const PageEditor = ({ file }: PageEditorProps) => {
       block.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Filter blocks by current page
+  const currentPageBlocks = textBlocks.filter(
+    (block) => block.page === currentPage
+  );
+
   useEffect(() => {
     const loadPdf = async () => {
       const arrayBuffer = await file.arrayBuffer();
+      originalPdfBytesRef.current = arrayBuffer;
+
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      const page = await pdf.getPage(1);
+      setTotalPages(pdf.numPages);
 
-      const scale = 1;
-      const viewport = page.getViewport({ scale });
+      const allBlocks: TextBlock[] = [];
 
-      // Temp canvas to render PDF image
-      const tempCanvas = document.createElement("canvas");
-      const ctx = tempCanvas.getContext("2d")!;
-      tempCanvas.width = viewport.width;
-      tempCanvas.height = viewport.height;
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 1 });
 
-      console.log("viewport width", viewport.width);
-      console.log("viewport height", viewport.height);
-      await page.render({ canvasContext: ctx, viewport }).promise;
+        const tempCanvas = document.createElement("canvas");
+        const ctx = tempCanvas.getContext("2d")!;
+        tempCanvas.width = viewport.width;
+        tempCanvas.height = viewport.height;
 
-      // Create Fabric canvas same size
-      const fabricCanvas = new fabric.Canvas(canvasRef.current!, {
-        width: viewport.width,
-        height: viewport.height,
-        preserveObjectStacking: true,
-      });
+        await page.render({ canvasContext: ctx, viewport }).promise;
 
-      fabricRef.current = fabricCanvas;
+        const canvasEl = canvasRefs.current.get(pageNumber);
+        if (!canvasEl) continue;
 
-      // Set PDF image as background
-      const bgImage = new fabric.Image(tempCanvas, {
-        left: 0,
-        top: 0,
-        width: viewport.width,
-        height: viewport.height,
-        originX: "left",
-        originY: "top",
-        selectable: false,
-        evented: false,
-      });
-      fabricCanvas.backgroundImage = bgImage;
-      fabricCanvas.renderAll();
+        const fabricCanvas = new fabric.Canvas(canvasEl, {
+          width: viewport.width,
+          height: viewport.height,
+          preserveObjectStacking: true,
+        });
 
-      // Extract text for sidebar
-      const textContent = await page.getTextContent();
-      const blocks: TextBlock[] = textContent.items
-        .filter((item: any) => item.str.trim())
-        .map((item: any, idx: number) => {
+        const bgImage = new fabric.Image(tempCanvas, {
+          left: 0,
+          top: 0,
+          width: viewport.width,
+          height: viewport.height,
+          originX: "left",
+          originY: "top",
+          selectable: false,
+          evented: false,
+        });
+
+        fabricCanvas.backgroundImage = bgImage;
+        fabricCanvas.renderAll();
+
+        fabricCanvasesRef.current.set(pageNumber, fabricCanvas);
+
+        const textContent = await page.getTextContent();
+
+        textContent.items.forEach((item: any, idx: number) => {
+          if (!item.str.trim()) return;
+
           const [_a, _b, _c, _d, e, f] = item.transform;
-          const x = e;
-          const y = viewport.height - f;
 
-          return {
-            id: `${idx}`,
-            page: 1,
-            x,
-            y,
+          allBlocks.push({
+            id: `${pageNumber}-${idx}`,
+            page: pageNumber,
+            x: e,
+            y: viewport.height - f,
             fontSize: item.height,
             text: item.str,
             originalText: item.str,
-          };
+          });
         });
-      setTextBlocks(blocks);
-      fabricCanvas.renderAll();
+      }
+      setTextBlocks(allBlocks);
     };
 
     loadPdf();
   }, [file]);
 
-  const updateTextBlock = (id: string, newText: string) => {
-    const canvas = fabricRef.current;
-    if (!canvas) return;
+  useEffect(() => {
+    textBlocks.forEach((block) => {
+      const canvas = fabricCanvasesRef.current.get(block.page);
+      if (!canvas) return;
 
-    setTextBlocks((prevBlocks) =>
-      prevBlocks.map((block) => {
-        if (block.id !== id) return block;
-
-        // If text is empty → remove from canvas
-        if (!newText.trim()) {
-          if (block.fabricObj) {
-            canvas.remove(block.fabricObj);
-            canvas.renderAll();
-          }
-
-          return { ...block, text: newText, fabricObj: undefined };
-        }
-
-        // If object already exists → update it
+      // remove if empty
+      if (!block.text.trim()) {
         if (block.fabricObj) {
-          block.fabricObj.set("text", newText);
+          canvas.remove(block.fabricObj);
+          block.fabricObj = undefined;
           canvas.renderAll();
-          return { ...block, text: newText };
         }
+        return;
+      }
 
-        // If first time editing → create it
-        const textbox = new fabric.IText(newText, {
+      // update existing
+      if (block.fabricObj) {
+        block.fabricObj.set("text", block.text);
+        canvas.renderAll();
+        return;
+      }
+
+      // create only if edited
+      if (block.text !== block.originalText) {
+        const textbox = new fabric.IText(block.text, {
           left: block.x,
           top: block.y - block.fontSize,
           fontSize: block.fontSize,
@@ -140,68 +156,52 @@ const PageEditor = ({ file }: PageEditorProps) => {
         });
 
         canvas.add(textbox);
+        block.fabricObj = textbox;
         canvas.renderAll();
+      }
+    });
+  }, [textBlocks]);
 
-        return { ...block, text: newText, fabricObj: textbox };
-      })
+  const updateTextBlock = (id: string, newText: string) => {
+    setTextBlocks((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.id === id ? { ...block, text: newText } : block
+      )
     );
   };
 
-  // Search functionality - now just sets the query, results are derived
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  // Clear search
   const clearSearch = () => {
     setSearchQuery("");
     setSelectedBlockId(null);
   };
 
-  // Navigate to search result on canvas
-  const scrollToResult = (block: TextBlock) => {
-    setSelectedBlockId(block.id);
-    const canvas = fabricRef.current;
-    if (canvas && block.fabricObj) {
-      // First clear previous highlights
-      canvas.getObjects().forEach((obj: any) => {
-        if (obj.backgroundColor && obj.backgroundColor !== "transparent") {
-          obj.set({ backgroundColor: "white" });
-        }
-      });
-      // Highlight the selected object
-      block.fabricObj.set({ backgroundColor: "#e2e8f0" });
-      canvas.setActiveObject(block.fabricObj);
-      canvas.renderAll();
-
-      // Scroll the canvas container to show the object
-      const canvasEl = canvas.upperCanvasEl;
-      canvasEl.scrollIntoView({ behavior: "instant", block: "center" });
-    }
-  };
-
   const handleDownload = async () => {
-    if (!fabricRef.current) return;
-
-    const canvas = fabricRef.current;
-
-    // Export canvas exactly as shown
-    const dataUrl = canvas.toDataURL({
-      format: "png",
-      multiplier: 2,
-    });
-
     const pdfDoc = await PDFDocument.create();
-    const pngImage = await pdfDoc.embedPng(dataUrl);
 
-    const page = pdfDoc.addPage([pngImage.width, pngImage.height]);
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber++) {
+      const canvas = fabricCanvasesRef.current.get(pageNumber);
+      if (!canvas) continue;
+      //created png image from canvas
+      const dataUrl = canvas.toDataURL({
+        format: "png",
+        multiplier: 2,
+      });
 
-    page.drawImage(pngImage, {
-      x: 0,
-      y: 0,
-      width: pngImage.width,
-      height: pngImage.height,
-    });
+      const pngImage = await pdfDoc.embedPng(dataUrl);
+
+      const page = pdfDoc.addPage([pngImage.width, pngImage.height]);
+
+      page.drawImage(pngImage, {
+        x: 0,
+        y: 0,
+        width: pngImage.width,
+        height: pngImage.height,
+      });
+    }
 
     const pdfBytes = await pdfDoc.save();
 
@@ -215,108 +215,163 @@ const PageEditor = ({ file }: PageEditorProps) => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
-      {/* Main editor */}
-      <div className="lg:flex-1 border rounded shadow overflow-auto flex justify-center">
-        <canvas ref={canvasRef} className="border" />
-      </div>
-
-      {/* Sidebar */}
-      <aside className="w-80 border-l p-4 overflow-auto">
-        <h3 className="font-bold mb-2">Editable Text</h3>
-
-        {/* Search Input */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Search Text</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search text..."
-              className="flex-1 border p-2 rounded"
-            />
-            {searchQuery && (
-              <button
-                onClick={clearSearch}
-                className="px-3 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Search Results Count */}
-        {searchQuery && (
-          <div className="mb-2 text-sm text-gray-600">
-            Found {searchResults.length} match
-            {searchResults.length !== 1 ? "es" : ""}
-          </div>
-        )}
-
-        {/* Search Results List */}
-        {searchQuery && searchResults.length > 0 && (
-          <div className="mb-4">
-            <h4 className="font-semibold text-sm mb-1">Search Results</h4>
-            <div className="max-h-[200px] overflow-y-auto">
-              {searchResults.map((block) => (
-                <div
-                  key={block.id}
-                  onClick={() => scrollToResult(block)}
-                  className={`p-2 border rounded mb-1 cursor-pointer hover:bg-blue-200 ${
-                    selectedBlockId === block.id ? "bg-blue-200" : "bg-blue-50"
-                  }`}
-                >
-                  <p className="text-sm truncate">{block.text}</p>
-                  <p className="text-xs text-gray-500">Page {block.page}</p>
-                </div>
+    <>
+      <div className="flex flex-col h-screen bg-white">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+          {/* Main editor area */}
+          <main
+            className="flex-1 overflow-auto p-6"
+            style={{ scrollbarWidth: "none" }}
+          >
+            <div className="flex flex-col gap-6 items-center">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <canvas
+                  key={i + 1}
+                  ref={(el) => {
+                    if (el) canvasRefs.current.set(i + 1, el);
+                  }}
+                  className="border"
+                  style={{ maxWidth: "100%", marginBottom: "1rem" }}
+                />
               ))}
             </div>
-          </div>
-        )}
+          </main>
 
-        {/* All Text Blocks */}
-
-        <div className="max-h-[calc(100vh-200px)] overflow-y-auto my-4">
-          <h4 className="font-semibold text-sm mb-2">
-            All Text Blocks ({textBlocks.length})
-          </h4>
-          {textBlocks
-
-            .filter((block) => block.text.trim() !== "")
-            .map((block) => (
-              <div
-                key={block.id}
-                className={`mb-2 ${
-                  selectedBlockId === block.id
-                    ? "bg-blue-100 border-blue-400"
-                    : ""
-                } border rounded p-2`}
-              >
-                <textarea
-                  value={block.text}
-                  onChange={(e) => updateTextBlock(block.id, e.target.value)}
-                  className={`w-full border p-1 rounded ${
-                    searchQuery &&
-                    block.text.toLowerCase().includes(searchQuery.toLowerCase())
-                      ? "bg-yellow-50"
-                      : ""
-                  }`}
-                  placeholder="Edit text..."
-                />
+          {/* Sidebar */}
+          <aside className="w-full lg:w-96 bg-white border-t lg:border-t-0 lg:  border-l shadow-lg flex flex-col">
+            {/* Search Section */}
+            <div className="p-4 border-b ">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-gray-700 mb-3">
+                  Search & Edit
+                </h3>
+                <button onClick={handleDownload}>
+                  <FaDownload />
+                </button>
               </div>
-            ))}
-        </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search text..."
+                  className="w-full pl-10 pr-10 py-2.5 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                />
+                <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <FaTimes />
+                  </button>
+                )}
+              </div>
+            </div>
 
-        <button
-          onClick={handleDownload}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Download PDF
-        </button>
-      </aside>
-    </div>
+            {/* Page Navigation */}
+            {totalPages > 1 && (
+              <div className="p-3 border-b flex items-center justify-between ">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <FaChevronLeft />
+                </button>
+                <span className="text-sm text-gray-600">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <FaChevronRight />
+                </button>
+              </div>
+            )}
+
+            {/* Text Blocks List */}
+            <div
+              className="flex-1 max-h-[calc(100vh-200px)] overflow-y-auto p-4"
+              style={{ scrollbarWidth: "thin" }}
+            >
+              <h4 className="font-medium text-gray-700 mb-3">
+                Text Blocks
+                {searchQuery && (
+                  <span className="ml-2 text-sm text-gray-400">(filtered)</span>
+                )}
+              </h4>
+              <div className="space-y-3">
+                {(searchQuery ? searchResults : currentPageBlocks)
+                  .filter((block) => block.text.trim() !== "")
+                  .map((block) => (
+                    <div
+                      key={block.id}
+                      className={`rounded-lg border transition-all ${
+                        selectedBlockId === block.id
+                          ? "border-indigo-500 bg-indigo-50 shadow-md"
+                          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
+                      }`}
+                    >
+                      <div className="p-3">
+                        <textarea
+                          value={block.text}
+                          onChange={(e) =>
+                            updateTextBlock(block.id, e.target.value)
+                          }
+                          className={`w-full p-2 text-sm border rounded resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all ${
+                            searchQuery &&
+                            block.text
+                              .toLowerCase()
+                              .includes(searchQuery.toLowerCase())
+                              ? "bg-blue-100 border-blue-400"
+                              : ""
+                          }`}
+                          rows={Math.max(2, Math.ceil(block.text.length / 40))}
+                          placeholder="Edit text..."
+                        />
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-xs text-gray-400">
+                            Page {block.page}
+                          </span>
+                          {block.text !== block.originalText && (
+                            <span className="text-xs text-indigo-600 font-medium">
+                              Modified
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                {searchQuery &&
+                  searchResults.filter((b) => b.text.trim()).length === 0 && (
+                    <div className="text-center py-8 text-gray-400">
+                      <svg
+                        className="w-12 h-12 mx-auto mb-2 text-gray-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm">No results found</p>
+                    </div>
+                  )}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </>
   );
 };
 
