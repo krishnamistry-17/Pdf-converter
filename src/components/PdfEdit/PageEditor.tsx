@@ -7,6 +7,8 @@ import useMobileSize from "../../hooks/useMobileSize";
 import type { TextBlock } from "../../types/pageResult";
 import EditorSidebar from "./EditorSidebar";
 import { toast } from "react-toastify";
+import { IoMdClose } from "react-icons/io";
+import { FaBars } from "react-icons/fa";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -27,6 +29,7 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedBlockId, _setSelectedBlockId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
   const searchResults = textBlocks.filter(
     (block) =>
@@ -211,11 +214,33 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+        {isMobile && (
+          <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+            <button
+              onClick={handleReset}
+              className="text-sm font-medium text-gray-600"
+            >
+              Close
+            </button>
+
+            <span className="text-sm font-semibold">
+              Page {currentPage}/{totalPages}
+            </span>
+
+            <button
+              onClick={() => setShowSidebar(true)}
+              className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg"
+            >
+              Edit
+            </button>
+          </div>
+        )}
+
         <main
-          className={`flex-1 overflow-auto p-6 ${
-            !isMobile ? "lg:mr-[384px]" : ""
-          }`}
-          style={{ scrollbarWidth: "none" }}
+          className={`
+        flex-1 overflow-auto
+        ${isMobile ? "p-3 pt-16" : "p-6 lg:mr-[384px]"}
+      `}
         >
           <div
             ref={containerRef}
@@ -250,21 +275,40 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
           />
         </aside>
       </div>
-      {isMobile && (
-        <EditorSidebar
-          handleReset={handleReset}
-          handleDownload={handleDownload}
-          handleSearch={setSearchQuery}
-          clearSearch={() => setSearchQuery("")}
-          setCurrentPage={setCurrentPage}
-          currentPageBlocks={currentPageBlocks}
-          searchQuery={searchQuery}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          searchResults={searchResults}
-          selectedBlockId={selectedBlockId || ""}
-          updateTextBlock={updateTextBlock}
-        />
+      {isMobile && showSidebar && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end">
+          <div className="bg-white w-full h-[85vh] rounded-t-2xl shadow-xl flex flex-col">
+            <div className="flex items-center justify-center px-4 py-3 border-b cursor-grab">
+              <FaBars />
+            </div>
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <h3 className="font-semibold">Search & Edit</h3>
+              <button onClick={() => setShowSidebar(false)}>
+                <IoMdClose />
+              </button>
+            </div>
+
+            {/* Content */}
+
+            <div className="flex-1 overflow-y-auto">
+              <EditorSidebar
+                handleReset={handleReset}
+                handleDownload={handleDownload}
+                handleSearch={setSearchQuery}
+                clearSearch={() => setSearchQuery("")}
+                setCurrentPage={setCurrentPage}
+                currentPageBlocks={currentPageBlocks}
+                searchQuery={searchQuery}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                searchResults={searchResults}
+                selectedBlockId={selectedBlockId || ""}
+                updateTextBlock={updateTextBlock}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

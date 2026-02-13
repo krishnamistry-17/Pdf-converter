@@ -128,14 +128,16 @@ const EditorSidebar = ({
                       onChange={(e) =>
                         updateTextBlock(block.id, e.target.value)
                       }
-                      className={`w-full p-2 text-sm border rounded resize-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all ${
-                        searchQuery &&
-                        block.text
-                          .toLowerCase()
-                          .includes(searchQuery.toLowerCase())
-                          ? "bg-blue-100 border-blue-400"
-                          : ""
-                      }`}
+                      className={`w-full p-2 text-sm border rounded resize-none 
+                        focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 
+                        outline-none transition-all ${
+                          searchQuery &&
+                          block.text
+                            .toLowerCase()
+                            .includes(searchQuery.toLowerCase())
+                            ? "bg-blue-100 border-blue-400"
+                            : ""
+                        }`}
                       rows={Math.max(2, Math.ceil(block.text.length / 40))}
                       placeholder="Edit text..."
                     />
