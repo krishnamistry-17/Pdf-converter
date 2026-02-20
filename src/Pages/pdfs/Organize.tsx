@@ -156,6 +156,8 @@ const Organize = () => {
 
   const isSidebarVisible = results.length > 0;
 
+  const containerWidth = results.length > 1 ? "max-w-2xl" : "max-w-xl";
+
   const mergeDisplayFiles = () => {
     return (
       <div className="flex flex-col gap-2 sm:my-4 my-2">
@@ -204,9 +206,7 @@ const Organize = () => {
       `}
       >
         <div
-          className={`mx-auto
-          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
-          `}
+          className={`mx-auto w-auto ${containerWidth}`}
         >
           <SelectFile
             heading="Organize PDF"

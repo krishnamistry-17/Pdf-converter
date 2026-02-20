@@ -179,11 +179,8 @@ const PreviewFile = ({
             <iframe
               src={previewFileDesign}
               title="PDF Preview"
-              className="w-full max-h-[50vh] sm:max-h-80 rounded "
-              style={{
-                minHeight: "400px",
-                WebkitOverflowScrolling: "touch",
-              }}
+              className="w-full max-h-[50vh] sm:max-h-80 sm:min-h-80 min-h-60 rounded border"
+             
             />
             <a
               href={previewFileDesign}

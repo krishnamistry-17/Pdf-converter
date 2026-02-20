@@ -26,7 +26,7 @@ const Tablayout = ({
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="w-full mx-auto container-custom">
       <div className="text-center mb-14">
         <h2 className="text-text-heading lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight">
           {heading}

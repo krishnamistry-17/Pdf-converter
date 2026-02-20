@@ -11,17 +11,17 @@ const colors = [
 
 const Detail = () => {
   return (
-    <>
-      <div className="mb-5 flex flex-col gap-3">
+    <section className="w-full mx-auto container-custom">
+      <div className="mb-5 flex flex-col gap-3 text-center">
         <h2
           className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight
-       text-text-heading text-center"
+       text-text-heading"
         >
           Why Choose Us?
         </h2>
         <p
-          className=" max-w-xl mx-auto  px-2 lg:text-lg text-md
-         font-medium text-center
+          className=" max-w-xl mx-auto  px-2 xl:text-[18px] lg:text-[16px] text-[14px]
+         font-medium
          text-text-body
          "
         >
@@ -29,18 +29,18 @@ const Detail = () => {
           conversion service.
         </p>
       </div>
-      <div className="grid gap-8 md:grid-cols-2 max-w-[1240px] mx-auto w-full md:px-8 px-4">
+      <div className="grid gap-8 md:grid-cols-2 w-full mx-auto">
         {DetailText.map((item, index) => (
           <div
             key={index}
             className="
             group relative overflow-hidden
-            flex flex-col sm:flex-row items-start sm:items-center gap-5
+            flex flex-col sm:flex-row items-start  gap-5
             bg-white rounded-2xl px-6 py-10
             border border-gray-100
             shadow-sm hover:shadow-xl
             transition-all duration-300
-            hover:-translate-y-1
+            hover:-translate-y-1 cursor-pointer
           "
           >
             <div
@@ -61,17 +61,18 @@ const Detail = () => {
             </div>
 
             <div className="relative z-10 flex flex-col gap-2">
-              <h3 className="text-lg sm:text-xl font-semibold text-text-heading">
+              <h3 className="xl:text-[18px] text-[16px] font-semibold text-text-heading">
                 {item.title}
               </h3>
-              <p className="text-sm text-text-body leading-relaxed font-medium max-w-[380px]">
+              <p className="xl:text-[16px] text-[14px] text-text-body leading-relaxed 
+              font-medium max-w-[380px] xl:max-w-[480px]">
                 {item.description}
               </p>
             </div>
           </div>
         ))}
       </div>
-    </>
+    </section>
   );
 };
 

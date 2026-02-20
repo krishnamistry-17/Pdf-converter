@@ -89,7 +89,7 @@ const CompressPdf = () => {
   return (
     <div className="relative flex lg:flex-row flex-col  px-4 lg:py-12 py-6 ">
       <div
-        className={`mx-auto flex-1
+        className={`mx-auto flex-1 w-full
           ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
           `}
       >
@@ -112,8 +112,26 @@ const CompressPdf = () => {
             />
           )}
 
-          <PreviewFile previewFileDesign={previewFileDesign} />
-
+          {results.length > 0 && (
+            <div className="flex flex-col max-w-sm mx-auto items-center justify-center">
+              <iframe
+                src={previewFileDesign as string}
+                title="PDF Preview"
+                className="w-full max-h-[50vh] sm:max-h-80 sm:min-h-80 min-h-60 rounded border"
+                style={{
+                  WebkitOverflowScrolling: "touch",
+                }}
+              />
+              <a
+                href={previewFileDesign as string}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-body text-sm underline"
+              >
+                Open PDF in new tab
+              </a>
+            </div>
+          )}
           <div className="flex justify-center items-center">
             {results.length > 0 && (
               <button

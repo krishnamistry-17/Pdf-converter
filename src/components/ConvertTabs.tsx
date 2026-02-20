@@ -24,9 +24,9 @@ const ConvertTabs = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="w-full mx-auto container-custom">
       <Tabs selectedIndex={activeTab} onSelect={setActiveTab}>
-        <div className="hidden lg:flex justify-center mb-10">
+        <div className="hidden md:flex justify-center mb-10 max-w-7xl mx-auto w-full">
           <TabList
             className="flex md:flex-row flex-row justify-between 
           sm:bg-white bg-transparent md:w-auto w-full  sm:rounded-full shadow-xl sm:p-2 p-4"
@@ -39,8 +39,8 @@ const ConvertTabs = () => {
                   outline-none transition-all duration-200
                   ${
                     activeTab === index
-                      ? "text-text-heading font-bold underline underline-offset-8 decoration-text-muted"
-                      : "text-text-body font-semibold"
+                      ? "text-text-heading font-bold underline underline-offset-8 decoration-text-muted xl:text-[18px] lg:text-[16px] text-[14px]"
+                      : "text-text-body font-semibold xl:text-[18px] lg:text-[16px] text-[14px]"
                   }
                 `}
               >
@@ -50,7 +50,7 @@ const ConvertTabs = () => {
           </TabList>
         </div>
 
-        <div className="sm:block lg:hidden mb-4 relative z-40">
+        <div className="sm:block md:hidden mb-4 relative z-40">
           <div
             onClick={handleMenuOpen}
             className={`bg-white/40 rounded-3xl shadow-sm border border-border cursor-pointer
@@ -89,7 +89,10 @@ const ConvertTabs = () => {
           )}
         </div>
 
-        <div className="bg-bg-card rounded-3xl shadow-card border border-border p-6 sm:p-10">
+        <div
+          className="bg-bg-card rounded-3xl shadow-card border border-border 
+      w-full mx-auto px-4 py-6 sm:py-10"
+        >
           <TabPanel>
             <AllTab />
           </TabPanel>

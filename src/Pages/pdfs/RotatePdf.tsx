@@ -2,19 +2,15 @@ import { useEffect, useState } from "react";
 import { useRotatedPdfStore } from "../../store/useRotatePdfStore";
 import SelectFile from "../../components/SelectFile";
 import RotatePreviewGrid from "../../components/rotatepdf/RotatePreviewGrid";
-import {
-  IoMdAdd,
-  IoMdArrowForward,
-  IoMdClose,
-  IoMdTrash,
-} from "react-icons/io";
+import { IoMdAdd, IoMdClose, IoMdTrash } from "react-icons/io";
 import useUploadData from "../../hooks/useUploadData";
 import useFilesStore from "../../store/useSheetStore";
-import { FaRotateLeft, FaRotateRight } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
 import useMobileSize from "../../hooks/useMobileSize";
+import Rotatepdfsidebar from "../../components/rotatepdf/Rotatepdfsidebar";
+import { FaBars } from "react-icons/fa";
 
 const RotatePdf = () => {
   const isMobile = useMobileSize();
@@ -28,7 +24,8 @@ const RotatePdf = () => {
     clearResults,
   } = useRotatedPdfStore();
   const { displayPdf, rotatePdfDownload } = useUploadData();
-
+  const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [rotatePdfClicked, setRotatePdfClicked] = useState(false);
   const [newSelectedFiles, setNewSelectedFiles] = useState<File[]>([]);
   const downloadCompleted = useFileSessionStore(
     (state) => state.downloadCompleted
@@ -37,7 +34,6 @@ const RotatePdf = () => {
     (state) => state.clearDownloadCompleted
   );
 
- 
   useEffect(() => {
     return () => {
       clearResults();
@@ -125,6 +121,7 @@ const RotatePdf = () => {
       toast.error("Download failed!");
     } finally {
       setLoading(false);
+      setRotatePdfClicked(false);
     }
   };
 
@@ -132,6 +129,7 @@ const RotatePdf = () => {
     clearResults();
     clearSelectRotateFile();
     setNewSelectedFiles([]);
+    setRotatePdfClicked(false);
   };
 
   const handleRotateFromRight = () => {
@@ -192,25 +190,45 @@ const RotatePdf = () => {
 
   const isSidebarVisible = results.length > 0;
 
+  const containerWidth = results.length > 1 ? "max-w-2xl" : "max-w-xl";
+
   return (
     <>
       <div className="relative lg:flex flex-col   px-4 lg:py-12 py-6">
+        {/**Mobile header */}
+        {isMobile && isSidebarVisible && (
+          <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+            <button
+              onClick={handleReset}
+              className="text-sm font-medium text-gray-600"
+            >
+              Close
+            </button>
+            <button
+              onClick={() => {
+                setIsSidebarOpen(true);
+                setRotatePdfClicked(true);
+              }}
+              className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg"
+            >
+              Rotate PDF
+            </button>
+          </div>
+        )}
         <div
           className={`flex-1  transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
         >
-          <div
-            className={`mx-auto
-            ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
-          `}
-          >
+          <div className={`mx-auto w-auto ${containerWidth}`}>
             <SelectFile
               heading="Rotate PDF"
               description="Rotate a PDF file by 90 degrees."
             />
-            <div className="bg-white/40 text-text-body rounded-2xl shadow-lg 
-            border border-gray-100 p-4">
+            <div
+              className="bg-white/40 text-text-body rounded-2xl shadow-lg 
+            border border-gray-100 p-4"
+            >
               {results.length === 0 && (
                 <UploadModal
                   handleFileUpload={handleFileUpload}
@@ -223,42 +241,6 @@ const RotatePdf = () => {
               )}
               {results.length > 0 && (
                 <>
-                  {isMobile && results.length > 0 && (
-                    <div className=" flex flex-col mt-4">
-                      <h2 className="text-xl font-semibold py-4">
-                        SelectedFiles
-                      </h2>
-                      <div className="flex flex-col gap-2 my-4">
-                        <div
-                          className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
-                          onClick={() => handleRotateFromRight()}
-                        >
-                          <div className="bg-teal p-1 rounded-md">
-                            <FaRotateRight className=" " />
-                          </div>
-                          <p>Rotate From Right</p>
-                        </div>
-                        <div
-                          className="flex items-center gap-2 bg-teal text-white p-2 rounded-md"
-                          onClick={() => handleRotateFromLeft()}
-                        >
-                          <div className="bg-teal p-1 rounded-md">
-                            <FaRotateLeft className=" " />
-                          </div>
-                          <p>Rotate From Left</p>
-                        </div>
-                      </div>
-                      {mergeDisplayFiles()}
-
-                      <button
-                        className="bg-blue hover:bg-gradient-to-r from-blue to-teal text-white w-full py-2 rounded-md flex justify-center items-center"
-                        onClick={handleDownloadRotatedPdf}
-                      >
-                        Download Rotated PDF{" "}
-                        <IoMdArrowForward className="ml-2" />
-                      </button>
-                    </div>
-                  )}
                   <RotatePreviewGrid />
                 </>
               )}
@@ -268,59 +250,13 @@ const RotatePdf = () => {
 
         {!isMobile && isSidebarVisible && (
           <aside className="fixed top-0 right-0 h-full w-[380px] bg-bg-card border-l border-border shadow-lg z-50">
-            <div className="p-6">
-              <button className="absolute top-5 right-5" onClick={handleReset}>
-                <IoMdClose />
-              </button>
-
-              <h2 className="text-xl font-semibold text-text-heading border-b border-border pb-4">
-                Rotate PDF
-              </h2>
-
-              <div className="flex justify-between mt-6">
-                <p className="font-semibold text-text-heading">Files</p>
-                <button
-                  onClick={handleReset}
-                  className="text-text-body text-sm underline"
-                >
-                  Reset All
-                </button>
-              </div>
-
-              {mergeDisplayFiles()}
-
-              <div className=" my-4 bg-primary/10 text-primary border border-primary p-4 rounded-md  transition cursor-pointer">
-                <p>Mouse over below to see the rotation of the pages</p>
-              </div>
-
-              <div className="flex flex-col gap-2 my-4">
-                <div
-                  className="flex items-center gap-2 bg-primary/10 text-primary  p-2 rounded-md"
-                  onClick={() => handleRotateFromRight()}
-                >
-                  <div className="bg-primary/10 text-primary border border-primary p-1 rounded-md">
-                    <FaRotateRight className=" " />
-                  </div>
-                  <p>Rotate From Right</p>
-                </div>
-                <div
-                  className="flex items-center gap-2 bg-primary/10 text-primary  p-2 rounded-md"
-                  onClick={() => handleRotateFromLeft()}
-                >
-                  <div className="bg-primary/10 text-primary border border-primary p-1 rounded-md">
-                    <FaRotateLeft className=" " />
-                  </div>
-                  <p>Rotate From Left</p>
-                </div>
-              </div>
-
-              <button
-                className="bg-primary hover:bg-primary-hover text-white w-full py-2 rounded-md flex justify-center items-center"
-                onClick={handleDownloadRotatedPdf}
-              >
-                Download Rotated PDF <IoMdArrowForward className="ml-2" />
-              </button>
-            </div>
+            <Rotatepdfsidebar
+              handleReset={handleReset}
+              mergeDisplayFiles={mergeDisplayFiles}
+              handleRotateFromRight={handleRotateFromRight}
+              handleRotateFromLeft={handleRotateFromLeft}
+              handleDownloadRotatedPdf={handleDownloadRotatedPdf}
+            />
 
             <div className=" fixed  top-[20%]  z-50 flex flex-col gap-3 -ml-8">
               <button
@@ -333,12 +269,38 @@ const RotatePdf = () => {
           </aside>
         )}
 
-        {isMobile && isSidebarVisible && (
+        {isMobile && rotatePdfClicked && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-end">
+            <div className="bg-white w-full h-[85vh] rounded-t-2xl shadow-xl flex flex-col mx-2">
+              <div className="flex items-center justify-center px-4 py-3 border-b cursor-grab">
+                <FaBars />
+              </div>
+              {/*Header */}
+              <div className="flex items-center justify-end px-4 py-3 border-b">
+                <button onClick={() => setRotatePdfClicked(false)}>
+                  <IoMdClose />
+                </button>
+              </div>
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto mx-4 mt-4">
+                <Rotatepdfsidebar
+                  handleReset={handleReset}
+                  mergeDisplayFiles={mergeDisplayFiles}
+                  handleRotateFromRight={handleRotateFromRight}
+                  handleRotateFromLeft={handleRotateFromLeft}
+                  handleDownloadRotatedPdf={handleDownloadRotatedPdf}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {isMobile && selectRotateFile && (
           <>
             <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
               <button
                 onClick={handleAddMoreFiles}
-                className="bg-teal text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
+                className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow"
               >
                 <IoMdAdd />
               </button>

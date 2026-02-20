@@ -8,6 +8,7 @@ import { useFileSessionStore } from "../../store/useFileSessionStore";
 import UploadModal from "../../components/UploadModal";
 import useMobileSize from "../../hooks/useMobileSize";
 import SplitSidebar from "../../components/split/SplitSidebar";
+import { FaBars } from "react-icons/fa";
 
 const SplitPdfComponent = () => {
   const isMobile = useMobileSize();
@@ -15,7 +16,6 @@ const SplitPdfComponent = () => {
     useFileSessionStore();
 
   const fileSelected = !!selectedFile;
-
   const clearResults = useSplitStore((state) => state.clearResults);
   const results = useSplitStore((state) => state.results);
   const setResults = useSplitStore((state) => state.setResults);
@@ -29,6 +29,7 @@ const SplitPdfComponent = () => {
 
   const [isTabChanged, setIsTabChanged] = useState(false);
   const [_isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [splitPdfClicked, setSplitPdfClicked] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,18 +80,36 @@ const SplitPdfComponent = () => {
 
   const isSidebarVisible = results.length > 0;
 
+  const containerWidth = results.length > 1 ? "max-w-2xl" : "max-w-xl";
+
   return (
-    <div className=" relative lg:flex flex-col   px-4 lg:py-12 py-6">
+    <div className=" relative lg:flex flex-col px-4 lg:py-12 py-6">
+      {isMobile && isSidebarVisible && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+          <button
+            onClick={handleReset}
+            className="text-sm font-medium text-gray-600"
+          >
+            Close
+          </button>
+          <span className="text-sm font-semibold">Split PDF</span>
+          <button
+            onClick={() => {
+              setIsSidebarOpen(true);
+              setSplitPdfClicked(true);
+            }}
+            className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg"
+          >
+            Split Pdf
+          </button>
+        </div>
+      )}
       <div
         className={` flex-1 transition-all duration-300 
         ${!isMobile && isSidebarVisible ? "lg:mr-[380px]" : ""}
         `}
       >
-        <div
-          className={`mx-auto
-          ${results.length > 0 ? "max-w-xl w-auto" : "max-w-xl"}
-          `}
-        >
+        <div className={`mx-auto w-auto ${containerWidth}`}>
           <SelectFile
             heading="Split PDF"
             description="Split a PDF file into multiple pages."
@@ -112,18 +131,7 @@ const SplitPdfComponent = () => {
 
             {results.length > 0 && (
               <>
-                {isMobile && results.length > 0 && (
-                  <div className=" flex flex-col gap-3 mt-3">
-                    <h2 className="text-xl font-semibold py-4">
-                      SelectedFiles
-                    </h2>
-                    <SplitSidebar
-                      setIsSidebarOpen={setIsSidebarOpen}
-                      setIsTabChanged={setIsTabChanged}
-                    />
-                  </div>
-                )}
-                <SplitPreviewGrid />
+                <SplitPreviewGrid isMobile={isMobile}/>
               </>
             )}
           </div>
@@ -151,6 +159,29 @@ const SplitPdfComponent = () => {
             />
           </div>
         </aside>
+      )}
+      {isMobile && splitPdfClicked && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end">
+          <div className="bg-white w-full h-[85vh] rounded-t-2xl shadow-xl flex flex-col mx-2">
+            <div className="flex items-center justify-center px-4 py-3 border-b cursor-grab">
+              <FaBars />
+            </div>
+            {/*Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <h3 className="font-semibold">Split PDF</h3>
+              <button onClick={() => setSplitPdfClicked(false)}>
+                <IoMdClose />
+              </button>
+            </div>
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto mx-4 mt-4">
+              <SplitSidebar
+                setIsSidebarOpen={setIsSidebarOpen}
+                setIsTabChanged={setIsTabChanged}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

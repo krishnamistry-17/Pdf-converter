@@ -20,17 +20,20 @@ const RotatePreviewGrid = () => {
     URL.revokeObjectURL(results[index].url);
     setResults(results.filter((_, i) => i !== index));
   };
+  
+  const containerWidth =
+  results.length > 1 ? "sm:grid-cols-2 grid-cols-1" : "grid-cols-1";
+
 
   return (
     <div className="my-6 w-full">
       <div
-        className=" flex justify-center items-center 
-      flex-wrap mx-auto gap-3"
+        className={`grid ${containerWidth} place-items-center`}
       >
         {results.map((file, index) => (
           <div
             key={`${file.fileName}-${index}`}
-            className="bg-white/40 text-text-body rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
+            className=" w-full max-w-[300px] bg-white/40 text-text-body rounded-xl shadow-md p-4 relative z-40 overflow-x-auto "
           >
             <iframe
               src={file.url}

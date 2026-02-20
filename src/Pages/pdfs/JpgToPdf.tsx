@@ -66,6 +66,10 @@ const JpgToPdf = () => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = ".jpg,.jpeg,.png";
+    if (results.length >= 5) {
+      toast.error("You can only convert up to 5 images");
+      return;
+    }
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;

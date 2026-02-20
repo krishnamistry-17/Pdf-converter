@@ -22,7 +22,7 @@ interface EditorSidebarProps {
   setCurrentPage: (page: number) => void;
   currentPageBlocks: TextBlock[];
 }
-const EditorSidebar = ({
+const   EditorSidebar = ({
   handleReset,
   handleDownload,
   handleSearch,

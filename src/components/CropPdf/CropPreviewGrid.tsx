@@ -40,14 +40,14 @@ const CropPreviewGrid = ({
           <div
             key={index}
             onClick={() => setActiveCropIndex(index)}
-            className={`cursor-pointer border rounded-lg p-2 hover:ring-2 hover:ring-primary ${
+            className={`cursor-pointer border rounded-lg p-2 hover:ring-2 hover:ring-primary w-full max-w-[300px]  ${
               selectedPageType === "current" ? "bg-blue/10" : "bg-white"
             }`}
           >
             <img
               src={image}
               alt={`page-${index + 1}`}
-              className="h-80 object-contain"
+              className="h-80 object-contain w-full"
             />
             <p className="text-sm   text-text-body text-center">Page {index + 1}</p>
           </div>

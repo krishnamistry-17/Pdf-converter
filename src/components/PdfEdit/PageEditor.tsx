@@ -214,6 +214,7 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+
         {isMobile && (
           <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
             <button
@@ -258,7 +259,8 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
           </div>
         </main>
 
-        <aside className="fixed top-0 right-0 h-full w-[380px] z-50 py-3 px-6 bg-white border-l shadow-lg hidden lg:flex flex-col">
+        <aside className="fixed top-0 right-0 h-full w-[380px] z-50 py-3 px-6
+         bg-white border-l shadow-lg hidden lg:flex flex-col">
           <EditorSidebar
             handleReset={handleReset}
             handleDownload={handleDownload}
@@ -275,9 +277,10 @@ const PageEditor = ({ file, handleReset }: PageEditorProps) => {
           />
         </aside>
       </div>
+      
       {isMobile && showSidebar && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-end">
-          <div className="bg-white w-full h-[85vh] rounded-t-2xl shadow-xl flex flex-col">
+          <div className="bg-white w-full h-[85vh] rounded-t-2xl shadow-xl flex flex-col mx-2">
             <div className="flex items-center justify-center px-4 py-3 border-b cursor-grab">
               <FaBars />
             </div>

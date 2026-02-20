@@ -25,7 +25,7 @@ const itemVariants = {
 
 const ConversionFlow = () => {
   return (
-    <section className="max-w-[1100px] mx-auto px-4 py-16">
+    <section className="w-full mx-auto container-custom">
       <div className="text-center mb-14">
         <h2 className="lg:text-4xl md:text-3xl text-2xl font-semibold tracking-tight text-text-heading">
           How File Conversion Works
@@ -61,10 +61,10 @@ const ConversionFlow = () => {
                 <step.icon />
               </div>
 
-              <h3 className="mt-6 text-lg font-semibold text-text-heading">
+              <h3 className="mt-6 xl:text-[18px] text-[16px]  font-semibold text-text-heading">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm text-text-body leading-relaxed font-medium max-w-[240px]">
+              <p className="mt-2 xl:text-[16px] text-[14px] text-text-body leading-relaxed font-medium max-w-[240px]">
                 {step.description}
               </p>
             </motion.div>

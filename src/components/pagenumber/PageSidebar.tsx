@@ -7,7 +7,7 @@ import useSplitStore from "../../store/useSplitStore";
 import useFilesStore from "../../store/useSheetStore";
 import { toast } from "react-toastify";
 
-const PageSidebar = () => {
+const PageSidebar = ({ setPdfPageNumberClicked }: { setPdfPageNumberClicked: (value: boolean) => void }) => {
   const {
     pageMode,
     setPageMode,
@@ -64,8 +64,9 @@ const PageSidebar = () => {
     });
 
     clearResults();
-    toast.success("");
+    toast.success("Page numbers added successfully");
     setLoading(false);
+    setPdfPageNumberClicked(false);
   };
 
   useEffect(() => {
@@ -90,7 +91,7 @@ const PageSidebar = () => {
         Add Page Number
       </h2>
 
-      <div className="flex flex-col gap-3 my-4">
+      <div className="flex flex-col md:gap-3 gap-5 my-4">
         <div>
           <p className="font-semibold mb-2 text-text-body">Page Mode:</p>
           <div className="flex sm:flex-row flex-col gap-2">
@@ -225,7 +226,9 @@ const PageSidebar = () => {
         </div>
 
         <div>
-          <p className="font-semibold mb-2 text-text-body">Select Range Type:</p>
+          <p className="font-semibold mb-2 text-text-body">
+            Select Range Type:
+          </p>
           <div className="flex gap-2 items-center">
             <input
               type="radio"
@@ -282,7 +285,7 @@ const PageSidebar = () => {
             {textMenuOpen && (
               <div className="absolute left-0 top-10 sm:w-full max-w-md  bg-white shadow-md rounded-md z-50">
                 <button
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-bg-soft"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-bg-soft"
                   onClick={() => {
                     setSelectedTextName("Page {current} of {total}");
                     setTextMenuOpen(false);
